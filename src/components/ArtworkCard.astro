@@ -1,0 +1,32 @@
+---
+import { getRelativeLocaleUrl } from 'astro:i18n';
+import ImageCockpit from '../components/ImageCockpit.astro';
+import { getArtistById } from '../services/collections';
+import type { Artwork } from '../types/types';
+
+interface Props {
+  artwork: Artwork;
+  currentLocale: string;
+}
+
+const { artwork, currentLocale } = Astro.props as Props;
+
+const cardLink = getRelativeLocaleUrl(currentLocale, `/artworks/${artwork.slug}`);
+
+const artist = artwork.artist?._id ? await getArtistById(artwork.artist._id, currentLocale) : null;
+---
+<article class="flex rounded-md" data-key={artwork._id}>
+  <a class="grid grid-rows-[2fr_auto]" href={cardLink}>
+    <div class="grid place-content-center ">
+      <ImageCockpit image={artwork.image} resize="bestFit" classes="aspect-square object-contain" />
+    </div>
+    <div class="border-t border-t-gray-300 pt-4 mt-4">
+      <p class="font-medium">{artist ? artist.name : "Artiste inconnu"}</p>
+      <h3 class="pb-2">
+        <span class="italic">{artwork.title}</span>{artwork.year ? ` – ${artwork.year}` : ""}
+      </h3>
+      <p class="text-gray-500">{artwork.size}</p>
+      <p class="text-gray-500">{artwork.medium}</p>
+    </div>
+  </a>
+</article>

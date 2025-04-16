@@ -1,0 +1,97 @@
+---
+import { ClientRouter } from "astro:transitions";
+
+// import '@fontsource-variable/noto-sans';
+// import '@fontsource-variable/noto-sans-jp';
+// import '@fontsource-variable/plus-jakarta-sans';
+import '@fontsource-variable/work-sans';
+// import '@fontsource-variable/ibm-plex-sans';
+
+import '../styles/global.css';
+
+import { SEO } from "astro-seo";
+
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+
+// Définition stricte des props attendues
+type Props = {
+  title: string;
+  description?: string;
+};
+
+// Récupération et typage des props
+const { title, description = "Players Club Concept" } = Astro.props as Props;
+
+const lang = Astro.currentLocale;
+const siteName = "Ikono Art";
+// Récupération du nom de la page actuelle en s'assurant qu'il ne soit jamais `undefined`
+const currentPage: string =
+  Astro.url.pathname.replace(/\/$/, "").split("/").pop() ?? "home";
+
+const titleHead: string = Astro.url.pathname === "/" ? siteName : `${title} — ${siteName}`;
+
+---
+<!doctype html>
+<html class="scroll-smooth" lang={lang} data-page={currentPage}>
+	<head>
+		<SEO
+      title={titleHead}
+      description={description}
+      charset="UTF-8"
+      openGraph={{
+        basic: {
+          title: titleHead,
+          type: "image/jpeg",
+          image: "/playersclub-og.jpg",
+        },
+      }}
+      twitter={{
+        // creator: "@codrops",
+      }}
+      extend={{
+        // extending the default link tags
+        link: [
+          {
+            rel: "icon",
+            type: "image/png",
+            sizes: "16x16",
+            href: "/favicon/favicon-16x16.png",
+          },
+          {
+            rel: "icon",
+            type: "image/png",
+            sizes: "32x32",
+            href: "/favicon/favicon-32x32.png",
+          },
+          {
+            rel: "apple-touch-icon",
+            sizes: "180x180",
+            href: "/favicon/apple-touch-icon.png",
+          },
+          { rel: "manifest", href: "/favicon/site.webmanifest" },
+          { rel: "sitemap", href: "/sitemap-index.xml" },
+        ],
+        // extending the default meta tags
+        meta: [
+          { name: "twitter:image", content: "/playersclub-og.jpg" },
+          { name: "twitter:title", content: titleHead },
+          { name: "twitter:description", content: description },
+          { name: "viewport", content: "width=device-width" },
+          { name: "msapplication-TileColor", content: "#000000" },
+          { name: "theme-color", content: "#ffffff" },
+          { name: "generator", content: Astro.generator },
+        ],
+      }}
+    />
+		<ClientRouter />
+	</head>
+	<body>
+		<Header/>
+    <main class="py-8 px-4 max-w-8xl mx-auto mt-26">
+		  <slot />
+    </main>
+		<Footer/>
+	</body>
+</html>
+

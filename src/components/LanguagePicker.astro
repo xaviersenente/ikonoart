@@ -1,0 +1,15 @@
+---
+import { languages } from '../i18n/ui';
+
+const currentLang = Astro.url.pathname.split('/')[1]; // Langue actuelle
+const currentPath = Astro.url.pathname.split('/').slice(2).join('/'); // Retirer la langue du chemin
+
+// Déterminer l'autre langue
+const availableLanguages = Object.keys(languages);
+const otherLang = availableLanguages.find(lang => lang !== currentLang);
+
+// Construire l'URL pour la langue alternative
+const langUrl = `/${otherLang}/${currentPath || ''}`;
+---
+
+<a href={langUrl} lang={otherLang}>{languages[otherLang]}</a>

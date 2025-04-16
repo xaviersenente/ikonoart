@@ -1,0 +1,52 @@
+---
+import Layout from "../../../layouts/Layout.astro";
+import ImageCockpit from '../../../components/ImageCockpit.astro';
+import { languages } from '../../../i18n/ui';
+import { getArtworks, getArtworkById, getArtistById } from "../../../services/collections";
+
+// Fonction pour générer les chemins statiques pour chaque artiste et langue
+export async function getStaticPaths() {
+  const artworks = await getArtworks();  // Récupère tous les artistes
+  // Créer un tableau de chemins pour chaque artiste et chaque langue
+  return artworks.flatMap(artwork => 
+    Object.keys(languages).map(lang => ({
+      params: { lang, artwork_slug: artwork.slug },
+      props: { artwork_id: artwork._id, lang }, 
+    }))
+  );
+}
+
+const { artwork_slug, lang } = Astro.params;
+const { artwork_id } = Astro.props;
+const artwork = await getArtworkById(artwork_id, lang);
+const artist = artwork.artist?._id ? await getArtistById(artwork.artist._id, lang) : null;
+---
+
+<Layout title={ artwork?.title } currentLocale={lang}>
+  <div class="mb-6">
+    <a href="javascript:history.back()" class="inline-flex items-center text-gray-600 hover:text-black">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+        <path d="M19 12H5M12 19l-7-7 7-7"/>
+      </svg>
+      Retour
+    </a>
+  </div>
+  <div class="grid gap-10 lg:grid-cols-3">
+    <div>
+      <h1 class="text-3xl mb-4">
+        {artist ? (
+          <a href={`/${lang}/artists/${artist.slug}`} class="hover:underline">
+            {artist.name}
+          </a>
+        ) : "Artiste inconnu"}
+      </h1>
+      <h2 class="text-xl mb-4">
+        <span class="italic">{ artwork?.title }</span>{ artwork?.year && ( <span> – { artwork?.year }</span> )}
+      </h2>
+      <p>{ artwork?.description }</p> 
+      <p>{ artwork?.size }</p>
+    </div>
+    <ImageCockpit image={artwork?.image} width={1600} height={1600} resize="bestFit" classes="col-span-2 max-h-[70dvh] w-auto" />
+  </div>
+
+</Layout>

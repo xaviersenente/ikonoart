@@ -1,0 +1,22 @@
+---
+// Importation de la fonction pour générer une URL relative en fonction de la langue courante
+import { getRelativeLocaleUrl } from 'astro:i18n';
+// Importation du composant pour afficher les images depuis Cockpit CMS
+import ImageCockpit from '../components/ImageCockpit.astro';
+import type { Artist } from '../types/types';
+
+interface Props {
+  artist: Artist;
+  currentLocale: string;
+}
+
+const { artist, currentLocale } = Astro.props as Props;
+// Génération du lien vers la page de l'artiste avec la bonne langue
+const cardLink = getRelativeLocaleUrl(currentLocale, `/artists/${artist.slug}`);
+---
+<article data-key={artist._id}>
+  <a href={cardLink}>
+    <ImageCockpit image={artist.image} width={700} height={700} />
+    <h2 class="mt-2 text-lg font-medium">{artist.name}</h2>
+  </a>
+</article>

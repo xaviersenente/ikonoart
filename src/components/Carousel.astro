@@ -1,0 +1,69 @@
+---
+import ImageCockpit from './ImageCockpit.astro';
+
+interface CarouselImage {
+  _id: string;
+  altText?: string;
+  width?: number;
+  height?: number;
+  resize?: string;
+}
+
+interface Props {
+  images: CarouselImage[];
+  perPage?: number;
+  gap?: string;
+}
+
+const { 
+  images = []
+} = Astro.props;
+---
+
+<div class="splide" role="group" aria-label="Carrousel d'images">
+  <div class="splide__track">
+    <ul class="splide__list">
+      {images.map((image) => (
+        <li class="splide__slide">
+          <ImageCockpit 
+            image={{ _id: image._id, altText: image.altText }} 
+            width={1800} 
+            height={750} 
+            resize={image.resize || "thumbnail"} 
+            classes="w-full h-auto object-cover" 
+          />
+        </li>
+      ))}
+    </ul>
+  </div>
+</div>
+
+<script>
+  import Splide from '@splidejs/splide';
+  import '@splidejs/splide/css'; // Importe les styles CSS de base
+  
+  document.addEventListener('astro:page-load', () => {
+    const splideElements = document.querySelectorAll('.splide');
+    
+    splideElements.forEach(element => {
+      new Splide(element, {
+        // Options de configuration
+        perPage: 1,
+        type   : 'fade',
+        rewind: true,
+        rewindSpeed: 3000,
+        speed: 600,
+        autoplay: true,
+        // gap: '1rem',
+        // breakpoints: {
+        //   768: {
+        //     perPage: 2,
+        //   },
+        //   480: {
+        //     perPage: 1,
+        //   },
+        // }
+      }).mount();
+    });
+  });
+</script>

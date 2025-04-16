@@ -1,0 +1,49 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+// import ArtworkCard from '../../../components/ArtworkCard.astro';
+import ArtworkFilter from '../../../components/ArtworkFilter.vue';
+
+import { getArtworks, getArtists } from "../../../services/collections";
+import { languages, ui, defaultLang } from '../../../i18n/ui';
+
+// Génération des chemins statiques pour chaque langue
+export const getStaticPaths = async () => {
+  // Utilisation de l'objet languages pour récupérer les clés de langue dynamiquement
+  return Object.keys(languages).map(lang => ({ params: { lang } }));
+}
+
+const currentLocale = Astro.currentLocale;
+// Récupération des articles au moment du rendu côté serveur
+const artworks = await getArtworks(currentLocale);
+const artists = await getArtists(currentLocale);
+// console.log(artworks);
+const title = ui[currentLocale]?.pageArtworks.title ?? ui[defaultLang].pageArtworks.title;
+
+// Traductions pour le composant de filtre
+const filterTranslations = {
+  filters: {
+    title: ui[currentLocale]?.filters?.title || "Filters",
+    artist: ui[currentLocale]?.filters?.artist || "Artist",
+    medium: ui[currentLocale]?.filters?.medium || "Medium",
+    subject: ui[currentLocale]?.filters?.subject || "Subject",
+    limitedEdition: ui[currentLocale]?.filters?.limitedEdition || "Limited Edition",
+    all: ui[currentLocale]?.filters?.all || "All",
+    apply: ui[currentLocale]?.filters?.apply || "Apply",
+    reset: ui[currentLocale]?.filters?.reset || "Reset"
+  },
+  results: {
+    found: ui[currentLocale]?.results?.found || "artworks found"
+  }
+};
+---
+
+<Layout title={title}>
+	<h1 class="text-4xl my-8">{title}</h1>
+ <ArtworkFilter 
+    allArtworks={artworks} 
+    artists={artists} 
+    currentLocale={currentLocale}
+    translations={filterTranslations}
+    client:load
+  />
+</Layout>

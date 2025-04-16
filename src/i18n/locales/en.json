@@ -1,0 +1,44 @@
+{
+  "header": {
+    "home": "Ikono Art",
+    "artists": "Artists",
+    "artworks": "Artworks",
+    "exhibitions": "Exhibitions",
+    "contact": "Contact"
+  },
+  "footer": {
+    "nav1_title": "Ikono Art",
+    "nav1_item1": "Artists",
+    "nav1_item2": "Artworks",
+    "nav2_title": "Infos",
+    "nav2_item1": "Order process",
+    "nav2_item2": "Portfolio reading",
+    "nav2_item3": "Rental space/artworks",
+    "nav3_title": "About Ikono",
+    "nav3_item1": "Ikono Photography",
+    "nav3_item2": "Ikono Lifeshot",
+    "nav4_title": "About Ikono Art",
+    "nav4_item1": "Contact",
+    "nav4_item2": "Social media"
+  },
+  "pageArtists": {
+    "title": "Artists",
+    "itemMenu1": "Statement",
+    "itemMenu2": "Biography",
+    "itemMenu3": "Works",
+    "itemMenu4": "Limited edition",
+    "itemMenu5": "Achievements",
+    "itemMenu6": "Exhibition"
+  },
+  "pageArtworks": {
+    "title": "Artworks"
+  },
+  "filters": {
+    "artist": "Artist",
+    "medium": "Medium",
+    "subject": "Subject",
+    "lm": "Limited Edition",
+    "reset": "Reset",
+    "apply": "Apply"
+  }
+}

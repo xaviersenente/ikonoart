@@ -1,0 +1,189 @@
+---
+import { ui, defaultLang } from '../../../i18n/ui';
+import Layout from "../../../layouts/Layout.astro";
+import ArtworkCard from '../../../components/ArtworkCard.astro';
+import ImageCockpit from '../../../components/ImageCockpit.astro';
+import Carousel from '../../../components/Carousel.astro';
+import { getArtists, getArtistById, getArtworksByArtist, groupAchievementsByCategoryAndYear } from "../../../services/collections";
+
+import type { Artist } from '../../../types/types'; 
+
+// Définition du type des chemins statiques
+interface StaticPath {
+  params: { lang: string; artist_slug: string };
+  props: { artist_id: string; lang: string };
+}
+
+// Fonction pour générer les chemins statiques pour chaque artiste et langue
+export async function getStaticPaths(): Promise<StaticPath[]> {
+  const languages = ["en", "ja"];  // Liste des langues supportées
+  const artists: Artist[] = await getArtists();  // Récupère tous les artistes
+
+  return artists.flatMap((artist) =>
+    languages.map((lang) => ({
+      params: { lang, artist_slug: artist.slug },
+      props: { artist_id: artist._id, lang },
+    }))
+  );
+}
+
+
+// Définition des types pour Astro.params et Astro.props
+const { artist_slug, lang } = Astro.params as { artist_slug: string; lang: string };
+const { artist_id } = Astro.props as { artist_id: string };
+
+const locale = ui[lang]?.pageArtists ?? ui[defaultLang].pageArtists;
+
+// Récupération des données
+const artist: Artist | null = await getArtistById(artist_id, lang);
+const { standard: standardArtworks, limitedEdition: limitedEditionArtworks } = await getArtworksByArtist(artist_id, lang);
+// Regroupement des achievements
+const groupedAchievements = groupAchievementsByCategoryAndYear(artist);
+
+---
+
+<Layout title={ artist?.name } currentLocale={lang}>
+  <div class="py-6 my-6 lg:flex z-10 lg:justify-between lg:items-center border-b border-gray-300 bg-white transition duration-300" id="menu-artist">
+    <div>
+      <h1 class="text-2xl font-medium">{ artist?.name }</h1>
+      <!-- {(artist?.birthyear || artist?.deathyear) && (
+        <p>{artist?.birthyear} - {artist?.deathyear}</p>
+      )}
+      {artist?.categorySet && artist.categorySet.length > 0 && (
+        <p>{artist.categorySet.map((item, index) => item.category).join(", ")}</p>
+      )} -->
+    </div>
+    <nav>
+      <ul class="flex gap-4 uppercase text-gray-500 overflow-x-auto *:flex-none" >
+        { artist?.statement && (<li><a class="block transition duration-300" href="#statement">{locale.itemMenu1}</a></li>) }
+        { artist?.biography && (<li><a class="block transition duration-300" href="#biography">{locale.itemMenu2}</a></li>) }
+        { standardArtworks.length > 0 && (<li><a class="block transition duration-300" href="#works">{locale.itemMenu3}</a></li>) }
+        { limitedEditionArtworks.length > 0 && (<li><a class="block transition duration-300" href="#limited-edition">{locale.itemMenu4}</a></li>) }
+        { groupedAchievements && Object.entries(groupedAchievements).length > 0 && (<li><a class="block transition duration-300" href="#achievements">{locale.itemMenu5}</a></li>) }
+        <li><a class="block transition duration-300" href="#exhibition">{locale.itemMenu6}</a></li>
+      </ul>
+    </nav>
+  </div>
+  {artist?.carousel && artist?.carousel.length > 0 && (
+    <Carousel images={artist?.carousel}/>
+  )}
+  
+  { (artist?.image || artist?.statement) && (
+    <section class="grid gap-10 lg:grid-cols-3 mt-20 scroll-mt-40" id="statement">
+      { artist?.image && <ImageCockpit image={artist.image} width={600} height={600} />}
+      { artist?.statement && (
+        <div class="space-y-3 md:columns-2 md:gap-10 lg:col-span-2" set:html={artist.statement}></div>
+      )}
+    </section>
+  )}
+
+  { artist?.biography && (
+    <section class="scroll-mt-40" id="biography">
+      <h2 class="text-2xl" id="biography">Biography</h2>
+      <div set:html={ artist?.biography }></div>
+    </section>
+  )}
+
+  {standardArtworks.length > 0 && ( 
+    <section class="scroll-mt-40" id="works">
+      <h2 class="text-2xl mb-10 mt-20 border-t border-gray-300 pt-4">Works</h2>
+      <div class="grid gap-10 md:grid-cols-2 lg:grid-cols-4">
+        {standardArtworks.map((artwork) => (
+          <ArtworkCard artwork={artwork} currentLocale={lang}/>
+        ))}
+      </div>
+    </section>
+  )}
+
+  {limitedEditionArtworks.length > 0 && ( 
+    <section class="scroll-mt-40" id="limited-edition">
+      <h2 class="text-2xl mb-10 mt-20 border-t border-gray-300 pt-4">Limited Edition</h2>
+      <div class="grid gap-10 md:grid-cols-2 lg:grid-cols-4">
+        {limitedEditionArtworks.map((artwork) => (
+          <ArtworkCard artwork={artwork} currentLocale={lang}/>
+        ))}
+      </div>
+    </section>
+  )}
+
+  {groupedAchievements && Object.entries(groupedAchievements).length > 0 && (
+    <section class="scroll-mt-40" id="achievements">
+      <h2 class="text-2xl my-10 border-t border-gray-300 pt-4">Achievements</h2>
+      <div class="grid md:grid-cols-2 gap-10">
+        {Object.entries(groupedAchievements).map(([category, years]) => (
+          <div>
+            <h2 class="text-xl my-4">{category}</h2>
+            {Object.keys(years)
+              .sort((a, b) => Number(b) - Number(a)) // Tri décroissant des années
+              .map((year) => (
+                <div class="flex gap-4 mb-2">
+                  <h3 class="basis-12">{year}</h3>
+                  <ul class="list-disc pl-2">
+                    {years[Number(year)]
+                      // .sort((a, b) => a.title.localeCompare(b.title)) // Trier les titres si nécessaire
+                      .map((achievement) => (
+                        <li>{achievement.title}</li>
+                      ))}
+                  </ul>
+                </div>
+              ))}
+          </div>
+        ))}
+      </div>
+    </section>
+  )}
+
+</Layout>
+
+<script>
+document.addEventListener('astro:page-load', () => {
+  const siteHeader = document.getElementById('menu-artist');
+  const navLinks = document.querySelectorAll('#menu-artist nav a');
+  const sections = document.querySelectorAll('section[id]');
+  
+  if (!siteHeader || !sections.length) return;
+  
+  // Fonction pour gérer la barre de navigation fixe
+  function handleStickyHeader() {
+    const isScrolled = window.scrollY > 50;
+    siteHeader.classList.toggle('sticky', isScrolled);
+    siteHeader.classList.toggle('top-[79px]', isScrolled);
+  }
+  
+  // Fonction pour mettre à jour l'état actif des liens
+  function updateActiveLinks() {
+    // Récupérer la position de défilement actuelle avec une marge pour l'activation précoce
+    const scrollPosition = window.scrollY + 160;
+    
+    // Vérifier chaque section
+    sections.forEach(section => {
+      const sectionTop = section.offsetTop;
+      const sectionHeight = section.offsetHeight;
+      const sectionId = section.getAttribute('id');
+      
+      // Si la position de défilement est dans cette section
+      if (scrollPosition >= sectionTop && scrollPosition < sectionTop + sectionHeight) {
+        // Désactiver tous les liens
+        navLinks.forEach(link => {
+          link.classList.remove('text-black');
+        });
+        
+        // Activer le lien correspondant
+        const activeLink = document.querySelector(`#menu-artist nav a[href="#${sectionId}"]`);
+        if (activeLink) {
+          activeLink.classList.add('text-black');
+        }
+      }
+    });
+  }
+  
+  // Ajouter les écouteurs d'événements
+  window.addEventListener('scroll', () => {
+    handleStickyHeader();
+    updateActiveLinks();
+  });
+  
+  // Exécuter une fois au chargement de la page
+  updateActiveLinks();
+});
+</script>

@@ -1,0 +1,18 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Work Sans Variable", "sans-serif";
+  /* --font-ja: "Noto Sans JP Variable", sans-serif; */
+  --darkikonoart: rgb(80, 63, 90);
+  --verydarkikonoart: rgb(43, 36, 51);
+  --container-8xl: 96rem;
+}
+
+@layer base {
+  body {
+    @apply font-sans font-light text-base/7;
+  }
+  /* [lang="ja"] body {
+    @apply font-ja;
+  } */
+}

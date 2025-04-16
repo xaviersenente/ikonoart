@@ -1,0 +1,25 @@
+---
+import { Image } from "astro:assets";
+import { getOptimizedImage } from "../services/cockpit";
+
+interface Props {
+  image: {
+    _id: string;
+    altText?: string;
+  };
+  width?: number;
+  height?: number;
+  resize?: string;
+  classes?: string;
+}
+
+const { image, width=400, height=600, resize="thumbnail", classes } = Astro.props;
+
+if (!image?._id) {
+  return null;
+}
+
+const optimizedUrl = await getOptimizedImage(image._id, width, height, resize);
+---
+
+<Image class={classes} src={optimizedUrl} alt={image.altText ?? "image"} width={width} height={height} />

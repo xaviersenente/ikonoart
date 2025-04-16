@@ -1,0 +1,44 @@
+{
+  "header": {
+    "home": "イコノアート",
+    "artists": "アーティスト",
+    "artworks": "アートワーク",
+    "exhibitions": "展示会",
+    "contact": "お問い合わせ"
+  },
+  "footer": {
+    "nav1_title": "イコノアート",
+    "nav1_item1": "アーティスト",
+    "nav1_item2": "アートワーク",
+    "nav2_title": "情報",
+    "nav2_item1": "注文プロセス",
+    "nav2_item2": "ポートフォリオの閲覧",
+    "nav2_item3": "レンタルスペース/アート作品",
+    "nav3_title": "イコノについて",
+    "nav3_item1": "イコノ写真",
+    "nav3_item2": "イコノライフショット",
+    "nav4_title": "イコノアートについて",
+    "nav4_item1": "接触",
+    "nav4_item2": "ソーシャルメディア"
+  },
+  "pageArtists": {
+    "title": "アーティスト",
+    "itemMenu1": "ステートメント",
+    "itemMenu2": "バイオグラフィー",
+    "itemMenu3": "作品",
+    "itemMenu4": "限定版",
+    "itemMenu5": "実績",
+    "itemMenu6": "展示"
+  },
+  "pageArtworks": {
+    "title": "ページアートワーク"
+  },
+  "filters": {
+    "artist": "アーティスト",
+    "medium": "中くらい",
+    "subject": "主題",
+    "lm": "限定版",
+    "reset": "リセット",
+    "apply": "適用する"
+  }
+}
