@@ -6,6 +6,9 @@ import sitemap from "@astrojs/sitemap";
 
 import vue from "@astrojs/vue";
 
+import fs from "fs";
+import path from "path";
+
 // https://astro.build/config
 export default defineConfig({
   // Avec les transitions de vue, le prefetch est activé par défaut.
@@ -13,6 +16,13 @@ export default defineConfig({
   // prefetch: {
   //   prefetchAll: false
   // },
+  hooks: {
+    "astro:build:done": () => {
+      const from = path.resolve("./public/_headers");
+      const to = path.resolve("./dist/_headers");
+      fs.copyFileSync(from, to);
+    },
+  },
   vite: {
     plugins: [tailwindcss()],
   },
