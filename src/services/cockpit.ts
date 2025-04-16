@@ -1,6 +1,6 @@
 // URL de l'API Cockpit et clé d'authentification
 
-export const COCKPIT_BASE_URL = "http://localhost:8888/ikonoart";
+export const COCKPIT_BASE_URL = "https://ikonoart.xaviersenente.fr";
 const COCKPIT_API_URL = `${COCKPIT_BASE_URL}/api`;
 const COCKPIT_API_TOKEN = "API-16d53b4cf6f170aa278382e9af9926d36281cee9"; // Remplace par ton token
 
