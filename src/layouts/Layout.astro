@@ -1,5 +1,6 @@
 ---
 import { ClientRouter } from "astro:transitions";
+import PasswordProtection from '../components/PasswordProtection.astro';
 
 // import '@fontsource-variable/noto-sans';
 // import '@fontsource-variable/noto-sans-jp';
@@ -87,6 +88,8 @@ const titleHead: string = Astro.url.pathname === "/" ? siteName : `${title} — 
 		<ClientRouter />
 	</head>
 	<body>
+    <!-- La protection par mot de passe -->
+    {import.meta.env.PROD && <PasswordProtection />}
 		<Header/>
     <main class="py-8 px-4 max-w-8xl mx-auto mt-26">
 		  <slot />
