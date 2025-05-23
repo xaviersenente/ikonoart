@@ -18,7 +18,12 @@ const artist = artwork.artist?._id ? await getArtistById(artwork.artist._id, cur
 <article class="flex rounded-md" data-key={artwork._id}>
   <a class="grid grid-rows-[2fr_auto]" href={cardLink}>
     <div class="grid place-content-center ">
-      <ImageCockpit image={artwork.image} resize="bestFit" classes="aspect-square object-contain" />
+      <ImageCockpit 
+        image={artwork.image} 
+        hoverImage={artwork.image_hover || null} 
+        resize="bestFit" 
+        classes="aspect-square object-contain" 
+      />
     </div>
     <div class="border-t border-t-gray-300 pt-4 mt-4">
       <p class="font-medium">{artist ? artist.name : "Artiste inconnu"}</p>

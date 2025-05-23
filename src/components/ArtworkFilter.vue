@@ -24,7 +24,7 @@
   // État local
   const filteredArtworks = ref([]);
   const currentPage = ref(1);
-  const itemsPerPage = ref(8);
+  const itemsPerPage = ref(40);
   const totalPages = ref(1);
 
   // Filtres

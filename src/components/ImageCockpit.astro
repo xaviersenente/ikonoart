@@ -7,19 +7,43 @@ interface Props {
     _id: string;
     altText?: string;
   };
+  hoverImage?: {
+    _id: string;
+    altText?: string;
+  } | null;
   width?: number;
   height?: number;
   resize?: string;
   classes?: string;
 }
 
-const { image, width=400, height=600, resize="thumbnail", classes } = Astro.props;
+const { image, hoverImage = null, width=400, height=600, resize="thumbnail", classes } = Astro.props;
 
 if (!image?._id) {
   return null;
 }
 
 const optimizedUrl = await getOptimizedImage(image._id, width, height, resize);
+const optimizedHoverUrl = hoverImage?._id ? await getOptimizedImage(hoverImage._id, width, height, resize) : null;
+
 ---
 
-<Image class={classes} src={optimizedUrl} alt={image.altText ?? "image"} width={width} height={height} />
+<div class="relative group">
+  <Image 
+    class={`${classes} transition-opacity duration-300 ${optimizedHoverUrl ? 'group-hover:opacity-0' : ''}`} 
+    src={optimizedUrl} 
+    alt={image.altText ?? "image"} 
+    width={width} 
+    height={height} 
+  />
+  
+  {optimizedHoverUrl && (
+    <Image 
+      class={`${classes} absolute top-0 left-0 transition-opacity duration-300 opacity-0 group-hover:opacity-100`} 
+      src={optimizedHoverUrl} 
+      alt={hoverImage?.altText ?? "image au survol"} 
+      width={width} 
+      height={height} 
+    />
+  )}
+</div>

@@ -45,15 +45,15 @@ const groupedAchievements = groupAchievementsByCategoryAndYear(artist);
 <Layout title={ artist?.name } currentLocale={lang}>
   <div class="py-6 my-6 lg:flex z-10 lg:justify-between lg:items-center border-b border-gray-300 bg-white transition duration-300" id="menu-artist">
     <div>
-      <h1 class="text-2xl font-medium">{ artist?.name }</h1>
-      <!-- {(artist?.birthyear || artist?.deathyear) && (
-        <p>{artist?.birthyear} - {artist?.deathyear}</p>
-      )}
+      <h1 class="text-4xl font-medium">{ artist?.name }</h1>
+      
+        <p>{artist?.birthyear} - {(artist?.deathyear) && (artist?.deathyear)}</p>
+      
       {artist?.categorySet && artist.categorySet.length > 0 && (
         <p>{artist.categorySet.map((item, index) => item.category).join(", ")}</p>
-      )} -->
+      )} 
     </div>
-    <nav>
+    <nav class=" self-end">
       <ul class="flex gap-4 uppercase text-gray-500 overflow-x-auto *:flex-none" >
         { artist?.statement && (<li><a class="block transition duration-300" href="#statement">{locale.itemMenu1}</a></li>) }
         { artist?.biography && (<li><a class="block transition duration-300" href="#biography">{locale.itemMenu2}</a></li>) }

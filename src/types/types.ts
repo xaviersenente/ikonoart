@@ -22,6 +22,8 @@ export interface Artist {
   categorySet?: {
     category: string;
   }[];
+  type: string;
+  level: string;
   statement: string;
   biography?: string;
   achievements?: {
@@ -36,6 +38,7 @@ export interface Artwork {
   title: string;
   slug: string;
   image: Image;
+  image_hover: Image;
   artist: Reference;
   year?: number;
   size?: string;

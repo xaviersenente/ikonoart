@@ -34,6 +34,7 @@
       <div class="grid place-content-center">
         <ImageCockpit
           :image="artwork.image"
+          :hover-image="artwork.image_hover || null"
           :width="700"
           :height="700"
           resize="bestFit"

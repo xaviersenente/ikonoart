@@ -72,7 +72,7 @@ document.addEventListener("astro:page-load", () => {
   const handleScroll = (): void => {
     if (!logoImage || !siteHeader) return;
 
-    const originalWidth: number = 120;
+    const originalWidth: number = 160;
     const smallerWidth: number = 75; // Taille réduite du logo
     const isScrolled: boolean = window.scrollY > 10;
 

@@ -18,5 +18,7 @@ const cardLink = getRelativeLocaleUrl(currentLocale, `/artists/${artist.slug}`);
   <a href={cardLink}>
     <ImageCockpit image={artist.image} width={700} height={700} />
     <h2 class="mt-2 text-lg font-medium">{artist.name}</h2>
+    <p>{artist.type}</p>
+    <p>{artist.level}</p>
   </a>
 </article>

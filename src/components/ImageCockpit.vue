@@ -9,6 +9,7 @@
 
   interface Props {
     image: ImageData;
+    hoverImage?: ImageData | null;
     width?: number;
     height?: number;
     resize?: string;
@@ -20,9 +21,12 @@
     height: 600,
     resize: "thumbnail",
     classes: "",
+    hoverImage: null,
   });
 
   const optimizedUrl = ref<string | null>(null);
+  const optimizedHoverUrl = ref<string | null>(null);
+  const isHovered = ref(false);
 
   onMounted(async () => {
     if (props.image?._id) {
@@ -33,16 +37,50 @@
         props.resize
       );
     }
+    if (props.hoverImage?._id) {
+      optimizedHoverUrl.value = await getOptimizedImage(
+        props.hoverImage._id,
+        props.width,
+        props.height,
+        props.resize
+      );
+    }
   });
+
+  const handleMouseEnter = () => {
+    if (optimizedHoverUrl.value) {
+      isHovered.value = true;
+    }
+  };
+
+  const handleMouseLeave = () => {
+    isHovered.value = false;
+  };
 </script>
 
 <template>
-  <img
+  <div
     v-if="optimizedUrl"
-    :class="classes"
-    :src="optimizedUrl"
-    :alt="image.altText ?? 'image'"
-    :width="width"
-    :height="height"
-  />
+    class="relative"
+    @mouseenter="handleMouseEnter"
+    @mouseleave="handleMouseLeave"
+  >
+    <img
+      v-if="optimizedUrl"
+      :class="classes"
+      :src="optimizedUrl"
+      :alt="image.altText ?? 'image'"
+      :width="width"
+      :height="height"
+    />
+    <img
+      v-if="optimizedHoverUrl"
+      :class="[classes, { 'opacity-100': isHovered, 'opacity-0': !isHovered }]"
+      :src="optimizedHoverUrl"
+      :alt="hoverImage?.altText ?? 'image au survol'"
+      :width="width"
+      :height="height"
+      class="absolute top-0 left-0 transition-opacity duration-300"
+    />
+  </div>
 </template>
