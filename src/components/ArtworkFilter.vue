@@ -39,6 +39,32 @@
   const mediums = ref([]);
   const subjects = ref([]);
 
+  // Fonction pour mélanger un tableau (algorithme Fisher-Yates)
+  function shuffleArray(array) {
+    const shuffled = [...array];
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+    return shuffled;
+  }
+
+  // Fonction pour trier les œuvres par highlight puis aléatoirement
+  function sortArtworksByHighlight(artworks) {
+    // Séparer les œuvres highlighted et non-highlighted
+    const highlighted = artworks.filter(
+      (artwork) => artwork.highlight === true
+    );
+    const regular = artworks.filter((artwork) => artwork.highlight !== true);
+
+    // Mélanger chaque groupe aléatoirement
+    const shuffledHighlighted = shuffleArray(highlighted);
+    const shuffledRegular = shuffleArray(regular);
+
+    // Retourner les highlighted en premier, puis les regular
+    return [...shuffledHighlighted, ...shuffledRegular];
+  }
+
   // Calcul des œuvres visibles avec pagination
   const visibleArtworks = computed(() => {
     const startIndex = (currentPage.value - 1) * itemsPerPage.value;
@@ -67,7 +93,7 @@
   // Appliquer les filtres
   function applyFilters() {
     // Filtrer les œuvres en fonction des critères
-    filteredArtworks.value = props.allArtworks.filter((artwork) => {
+    let filtered = props.allArtworks.filter((artwork) => {
       // Filtre par artiste
       if (
         filters.value.artist &&
@@ -93,6 +119,9 @@
 
       return true;
     });
+
+    // Trier les œuvres filtrées par highlight puis aléatoirement
+    filteredArtworks.value = sortArtworksByHighlight(filtered);
 
     // Mettre à jour la pagination
     totalPages.value = Math.ceil(
