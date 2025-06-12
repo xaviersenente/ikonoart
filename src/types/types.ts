@@ -48,3 +48,15 @@ export interface Artwork {
   subject?: string;
   limited_edition?: boolean;
 }
+
+export interface Exhibition {
+  _id: string;
+  title: string;
+  slug: string;
+  image: Image;
+  location?: string;
+  start_date: Date;
+  end_date: Date;
+  artist?: Reference;
+  description?: string;
+}

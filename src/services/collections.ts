@@ -105,3 +105,29 @@ export function groupAchievementsByCategoryAndYear(artist: Artist) {
 
   return groupedByCategory;
 }
+
+/**
+ * Récupère la liste des expoisitions depuis Cockpit en fonction de la langue.
+ * @param lang - Langue des résultats (ex: "fr", "en", "ja_JP").
+ * @returns Un tableau d'expositions sous forme d'objets typés.
+ */
+export async function getExhibitions(lang: string = "en"): Promise<Artist[]> {
+  return getCollection("exhibition", lang) as Promise<Artist[]>;
+}
+
+/**
+ * Récupère un artiste spécifique par son ID et sa langue.
+ * @param artistId - ID de l'artiste à récupérer.
+ * @param lang - Langue des résultats.
+ * @returns L'objet artiste ou null s'il n'existe pas.
+ */
+export async function getExhibitionById(
+  exhibitionId: string,
+  lang: string = "en"
+): Promise<Artist | null> {
+  return getCollectionItem(
+    "exhibition",
+    exhibitionId,
+    lang
+  ) as Promise<Artist | null>;
+}

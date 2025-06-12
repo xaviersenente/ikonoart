@@ -33,6 +33,9 @@
   "pageArtworks": {
     "title": "Artworks"
   },
+  "pageExhibitions": {
+    "title": "Exhibitions"
+  },
   "filters": {
     "artist": "Artist",
     "medium": "Medium",

@@ -33,6 +33,9 @@
   "pageArtworks": {
     "title": "ページアートワーク"
   },
+  "pageExhibitions": {
+    "title": "展示会"
+  },
   "filters": {
     "artist": "アーティスト",
     "medium": "中くらい",
