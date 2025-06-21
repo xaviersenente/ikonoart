@@ -80,11 +80,23 @@ export async function getCollectionItem(
  */
 export async function getSingleton(
   singletonName: string,
-  lang: string = "en"
+  lang: string = "en",
+  options: { populate?: number } = {}
 ): Promise<any | null> {
   try {
+    // Construction des paramètres de requête
+    const params = new URLSearchParams({
+      token: COCKPIT_API_TOKEN,
+      locale: lang,
+    });
+
+    // Ajout du paramètre populate si spécifié
+    if (options.populate) {
+      params.append("populate", options.populate.toString());
+    }
+
     const data = await fetchCockpit(
-      `content/item/${singletonName}?token=${COCKPIT_API_TOKEN}&locale=${lang}`
+      `content/item/${singletonName}?${params.toString()}`
     );
     return data || null; // Retourne le singleton ou null si inexistant
   } catch (error) {

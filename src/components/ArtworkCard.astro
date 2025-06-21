@@ -7,15 +7,17 @@ import type { Artwork } from '../types/types';
 interface Props {
   artwork: Artwork;
   currentLocale: string;
+  classes: string;
 }
 
-const { artwork, currentLocale } = Astro.props as Props;
+const { artwork, currentLocale, classes = "" } = Astro.props as Props;
+
 
 const cardLink = getRelativeLocaleUrl(currentLocale, `/artworks/${artwork.slug}`);
 
 const artist = artwork.artist?._id ? await getArtistById(artwork.artist._id, currentLocale) : null;
 ---
-<article class="flex rounded-md" data-key={artwork._id}>
+<article class={`${classes} flex rounded-md`} data-key={artwork._id}>
   <a class="grid grid-rows-[2fr_auto]" href={cardLink}>
     <div class="grid place-content-center ">
       <ImageCockpit 

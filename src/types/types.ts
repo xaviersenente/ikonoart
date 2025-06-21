@@ -64,8 +64,17 @@ export interface Exhibition {
 
 export interface HomePage {
   _id: string;
+  heroCarousel?: {
+    heroCarouselImg: Image;
+    heroCarouselTitle: string;
+    heroCarouselText: string;
+  }[];
   introTitle: string;
   introText: string;
   exclusiveTitle: string;
   exclusiveText: string;
+  carouselArtists?: [];
+  carouselArtworks?: [];
+  carouselClassicCollection?: [];
+  carouselJapaneseCollection?: [];
 }

@@ -11,11 +11,9 @@ import IkonoProlab from '../../assets/img/ikono-prolab-logo-600.webp';
 import IkonoDesign from '../../assets/img/ikono-design-logo-600.webp';
 
 import ImageCockpit from '../../components/ImageCockpit.astro';
-// import Carousel from '../../components/Carousel.astro';
-import { getArtists, getHighlightedArtworks, getExhibitions } from "../../services/collections";
-// import ArtistCard from '../../components/ArtistCard.astro';
+import ArtworkCard from '../../components/ArtworkCard.astro';
 
-import type { Artwork, Artist, Exhibition, HomePage } from '../../types/types';
+import type { Artwork, Artist, HomePage } from '../../types/types';
 
 // Génération des chemins statiques pour chaque langue
 export const getStaticPaths = async () => {
@@ -24,33 +22,38 @@ export const getStaticPaths = async () => {
 }
 const currentLocale = Astro.currentLocale;
 // Récupération des articles au moment du rendu côté serveur
-const artists = await getArtists(currentLocale);
-const artworks = await getHighlightedArtworks(currentLocale);
-const exhibitions = await getExhibitions(currentLocale);
-const homePage = await getSingleton("homepage", currentLocale) as HomePage;
+const homePage = await getSingleton("homepage", currentLocale, { populate: 1 }) as HomePage;
+
+// Récupération des artistes sélectionnés depuis la homepage
+const selectedArtists = (homePage.carouselArtists || []) as Artist[];
+const selectedArtworks = (homePage.carouselArtworks || []) as Artwork[];
+const classicCollection = (homePage.carouselClassicCollection || []) as Artwork[];
+const japaneseCollection = (homePage.carouselJapaneseCollection || []) as Artwork[];
+const heroCarousel = homePage.heroCarousel;
 
 const title = "Artists";
 ---
 
 <Layout title={title}>
-  <div class="splide mt-28" role="group" aria-label="Next exhibitions" data-splide='{"perPage":1, "type":"fade"}'>
-    <div class="splide__track">
-      <ul class="splide__list">
-        {exhibitions.map(exhibition => (
+  {heroCarousel && Object.entries(heroCarousel).length > 0 && (
+    <div class="splide mt-28" role="group" aria-label="Next exhibitions" data-splide='{"perPage":1, "type":"fade"}'>
+      <div class="splide__track">
+        <ul class="splide__list">
+        {heroCarousel.map(carousel => (
           <li class="splide__slide relative">
-            <ImageCockpit image={exhibition.image} width={1920} height={900} classes="w-full"/>
+            <ImageCockpit image={carousel.heroCarouselImg} width={1920} height={900} classes="w-full"/>
             <div class="absolute px-24 py-12 min-w-3xl left-0 bottom-0 z-10 text-white bg-linear-to-r from-[rgba(43,36,51,1)] to-[rgba(43,36,51,0)]">
-              <p>Exhibition</p>
-              <h3 class="text-3xl font-medium uppercase">{exhibition.title}</h3>
-              <p>{exhibition.start_date} — {exhibition.end_date}</p>
+              <h3 class="text-3xl font-medium uppercase">{carousel.heroCarouselTitle}</h3>
+              <p>{carousel.heroCarouselText}</p>
               <a href="">More</a>
             </div>
-            
           </li>
         ))}
-      </ul>
+        </ul>
+      </div>
     </div>
-  </div>
+  )}
+
   <div class="text-white bg-linear-to-bl from-(--darkikonoart) to-(--verydarkikonoart) p-12">
     <div class="main-container mt-0 grid grid-cols-2 items-center">
       <div class="flex items-center justify-center"><Logo class="w-80 h-80"/></div>
@@ -58,7 +61,7 @@ const title = "Artists";
         <h1 class="text-4xl font-medium mb-12">{homePage.introTitle}</h1>
         <div set:html={homePage.introText}></div>
       </div>
-  </div>
+    </div>
   </div>
   
   <section class="main-container">
@@ -66,7 +69,7 @@ const title = "Artists";
     <div class="splide px-16" role="group" aria-label="Artists carousel">
       <div class="splide__track">
         <ul class="splide__list">
-          {artists.map(artist => (
+          {selectedArtists.map(artist => (
             <li class="splide__slide">
               <ImageCockpit image={artist.image} width={700} height={700} />
               <h3 class="uppercase font-medium mt-4">{artist.name}</h3>
@@ -78,6 +81,7 @@ const title = "Artists";
       </div>
     </div>
   </section>
+
   <section class="main-container">
     <h2 class="py-24 text-3xl font-medium uppercase relative flex items-center gap-8 after:flex-auto after:bg-black after:h-[1px] after:block">Ikonoart Exclusive representative
     </h2>
@@ -90,22 +94,21 @@ const title = "Artists";
     </div>
   </section>
 
-  <section class="main-container">
-    <h2 class="py-24 text-3xl font-medium uppercase relative flex items-center gap-8 after:flex-auto after:bg-black after:h-[1px] after:block">Artworks highlights
-    </h2>
-    <div class="splide px-16" role="group" aria-label="Artwork's carousel">
-      <div class="splide__track">
-        <ul class="splide__list">
-          {artworks.map(artwork => (
-            <li class="splide__slide">
-              <ImageCockpit image={artwork.image} width={700} height={700} />
-              <h3>{artwork.title}</h3>
-            </li>
-          ))}
-        </ul>
+  {selectedArtworks && selectedArtworks.length > 0 && (
+    <section class="main-container">
+      <h2 class="py-24 text-3xl font-medium uppercase relative flex items-center gap-8 after:flex-auto after:bg-black after:h-[1px] after:block">Artworks highlights
+      </h2>
+      <div class="splide px-16" role="group" aria-label="Artwork's carousel">
+        <div class="splide__track">
+          <div class="splide__list">
+            {selectedArtworks.map(artwork => (
+              <ArtworkCard artwork={artwork} currentLocale={currentLocale} classes="splide__slide"/>
+            ))}
+          </div>
+        </div>
       </div>
-    </div>
-  </section>
+    </section>
+  )}
 
   <section class="text-white bg-linear-to-bl from-(--darkikonoart) to-(--verydarkikonoart) p-12">
     <div class="main-container">
@@ -151,6 +154,39 @@ const title = "Artists";
       </div>
     </div>
   </section>
+
+  {classicCollection && classicCollection.length > 0 && (
+    <section class="main-container">
+      <h2 class="py-24 text-3xl font-medium uppercase relative flex items-center gap-8 after:flex-auto after:bg-black after:h-[1px] after:block">The classic Collection
+      </h2>
+      <div class="splide px-16" role="group" aria-label="Artwork's carousel">
+        <div class="splide__track">
+          <div class="splide__list">
+            {classicCollection.map(artwork => (
+              <ArtworkCard artwork={artwork} currentLocale={currentLocale} classes="splide__slide"/>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+  )}
+
+  {japaneseCollection && japaneseCollection.length > 0 && (
+    <section class="main-container">
+      <h2 class="py-24 text-3xl font-medium uppercase relative flex items-center gap-8 after:flex-auto after:bg-black after:h-[1px] after:block">Japanese Collection
+      </h2>
+      <div class="splide px-16" role="group" aria-label="Artwork's carousel">
+        <div class="splide__track">
+          <div class="splide__list">
+            {japaneseCollection.map(artwork => (
+              <ArtworkCard artwork={artwork} currentLocale={currentLocale} classes="splide__slide"/>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+  )}
+
   <section>
     <section class="main-container">
       <h2 class="py-24 text-3xl font-medium uppercase relative flex items-center gap-8 after:flex-auto after:bg-black after:h-[1px] after:block">Ikono branch & services
