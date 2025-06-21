@@ -17,7 +17,7 @@ interface Props {
   classes?: string;
 }
 
-const { image, hoverImage = null, width=400, height=600, resize="thumbnail", classes } = Astro.props;
+const { image, hoverImage = null, width=400, height=600, resize="thumbnail", classes = "" } = Astro.props;
 
 if (!image?._id) {
   return null;

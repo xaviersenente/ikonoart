@@ -1,5 +1,5 @@
 import { getCollection, getCollectionItem } from "./cockpit";
-import type { Artist, Artwork } from "../types/types";
+import type { Artist, Artwork, Exhibition } from "../types/types";
 
 /**
  * Récupère la liste des artistes depuis Cockpit en fonction de la langue.
@@ -30,6 +30,21 @@ export async function getArtistById(
  */
 export async function getArtworks(lang: string = "en"): Promise<Artwork[]> {
   return getCollection("artwork", lang) as Promise<Artwork[]>;
+}
+
+/**
+ * Récupère la liste des œuvres mises en avant depuis Cockpit en fonction de la langue.
+ * @param lang - Langue des résultats.
+ * @returns Un tableau d'œuvres mises en avant (max 20) sous forme d'objets typés.
+ */
+export async function getHighlightedArtworks(
+  lang: string = "en"
+): Promise<Artwork[]> {
+  const allArtworks = (await getCollection("artwork", lang)) as Artwork[];
+
+  return allArtworks
+    .filter((artwork) => artwork.highlight === true)
+    .slice(0, 20);
 }
 
 /**
@@ -111,8 +126,10 @@ export function groupAchievementsByCategoryAndYear(artist: Artist) {
  * @param lang - Langue des résultats (ex: "fr", "en", "ja_JP").
  * @returns Un tableau d'expositions sous forme d'objets typés.
  */
-export async function getExhibitions(lang: string = "en"): Promise<Artist[]> {
-  return getCollection("exhibition", lang) as Promise<Artist[]>;
+export async function getExhibitions(
+  lang: string = "en"
+): Promise<Exhibition[]> {
+  return getCollection("exhibition", lang) as Promise<Exhibition[]>;
 }
 
 /**
@@ -124,10 +141,10 @@ export async function getExhibitions(lang: string = "en"): Promise<Artist[]> {
 export async function getExhibitionById(
   exhibitionId: string,
   lang: string = "en"
-): Promise<Artist | null> {
+): Promise<Exhibition | null> {
   return getCollectionItem(
     "exhibition",
     exhibitionId,
     lang
-  ) as Promise<Artist | null>;
+  ) as Promise<Exhibition | null>;
 }

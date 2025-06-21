@@ -16,3 +16,12 @@
     @apply font-ja;
   } */
 }
+
+@layer components {
+  .main-container {
+    @apply py-8 px-4 max-w-8xl mx-auto;
+  }
+  .splide__arrow {
+    @apply !bg-transparent;
+  }
+}

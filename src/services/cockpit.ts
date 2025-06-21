@@ -73,6 +73,30 @@ export async function getCollectionItem(
 }
 
 /**
+ * Récupère un singleton en fonction de la langue.
+ * @param singletonName - Nom du singleton à récupérer.
+ * @param lang - Langue des résultats (ex: "fr", "en", "ja_JP").
+ * @returns L'objet singleton ou null s'il n'existe pas.
+ */
+export async function getSingleton(
+  singletonName: string,
+  lang: string = "en"
+): Promise<any | null> {
+  try {
+    const data = await fetchCockpit(
+      `content/item/${singletonName}?token=${COCKPIT_API_TOKEN}&locale=${lang}`
+    );
+    return data || null; // Retourne le singleton ou null si inexistant
+  } catch (error) {
+    console.error(
+      `Erreur lors de la récupération du singleton ${singletonName} :`,
+      error
+    );
+    return null;
+  }
+}
+
+/**
  * Récupère l'URL optimisée d'une image via l'API de Cockpit.
  * @param imageId - ID de l'image dans Cockpit.
  * @param width - Largeur souhaitée pour l'image optimisée.

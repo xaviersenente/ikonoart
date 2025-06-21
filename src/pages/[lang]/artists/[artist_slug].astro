@@ -43,95 +43,97 @@ const groupedAchievements = groupAchievementsByCategoryAndYear(artist);
 ---
 
 <Layout title={ artist?.name } currentLocale={lang}>
-  <div class="py-6 my-6 lg:flex z-10 lg:justify-between lg:items-center border-b border-gray-300 bg-white transition duration-300" id="menu-artist">
-    <div>
-      <h1 class="text-4xl font-medium">{ artist?.name }</h1>
-      
-        <p>{artist?.birthyear} - {(artist?.deathyear) && (artist?.deathyear)}</p>
-      
-      {artist?.categorySet && artist.categorySet.length > 0 && (
-        <p>{artist.categorySet.map((item, index) => item.category).join(", ")}</p>
-      )} 
+  <main class="main-container mt-38">
+    <div class="py-6 my-6 lg:flex z-10 lg:justify-between lg:items-center border-b border-gray-300 bg-white transition duration-300" id="menu-artist">
+      <div>
+        <h1 class="text-4xl font-medium">{ artist?.name }</h1>
+        
+          <p>{artist?.birthyear} - {(artist?.deathyear) && (artist?.deathyear)}</p>
+        
+        {artist?.categorySet && artist.categorySet.length > 0 && (
+          <p>{artist.categorySet.map((item, index) => item.category).join(", ")}</p>
+        )} 
+      </div>
+      <nav class=" self-end">
+        <ul class="flex gap-4 uppercase text-gray-500 overflow-x-auto *:flex-none" >
+          { artist?.statement && (<li><a class="block transition duration-300" href="#statement">{locale.itemMenu1}</a></li>) }
+          { artist?.biography && (<li><a class="block transition duration-300" href="#biography">{locale.itemMenu2}</a></li>) }
+          { standardArtworks.length > 0 && (<li><a class="block transition duration-300" href="#works">{locale.itemMenu3}</a></li>) }
+          { limitedEditionArtworks.length > 0 && (<li><a class="block transition duration-300" href="#limited-edition">{locale.itemMenu4}</a></li>) }
+          { groupedAchievements && Object.entries(groupedAchievements).length > 0 && (<li><a class="block transition duration-300" href="#achievements">{locale.itemMenu5}</a></li>) }
+          <li><a class="block transition duration-300" href="#exhibition">{locale.itemMenu6}</a></li>
+        </ul>
+      </nav>
     </div>
-    <nav class=" self-end">
-      <ul class="flex gap-4 uppercase text-gray-500 overflow-x-auto *:flex-none" >
-        { artist?.statement && (<li><a class="block transition duration-300" href="#statement">{locale.itemMenu1}</a></li>) }
-        { artist?.biography && (<li><a class="block transition duration-300" href="#biography">{locale.itemMenu2}</a></li>) }
-        { standardArtworks.length > 0 && (<li><a class="block transition duration-300" href="#works">{locale.itemMenu3}</a></li>) }
-        { limitedEditionArtworks.length > 0 && (<li><a class="block transition duration-300" href="#limited-edition">{locale.itemMenu4}</a></li>) }
-        { groupedAchievements && Object.entries(groupedAchievements).length > 0 && (<li><a class="block transition duration-300" href="#achievements">{locale.itemMenu5}</a></li>) }
-        <li><a class="block transition duration-300" href="#exhibition">{locale.itemMenu6}</a></li>
-      </ul>
-    </nav>
-  </div>
-  {artist?.carousel && artist?.carousel.length > 0 && (
-    <Carousel images={artist?.carousel}/>
-  )}
+    {artist?.carousel && artist?.carousel.length > 0 && (
+      <Carousel images={artist?.carousel}/>
+    )}
+    
+    { (artist?.image || artist?.statement) && (
+      <section class="grid gap-10 lg:grid-cols-3 mt-20 scroll-mt-40" id="statement">
+        { artist?.image && <ImageCockpit image={artist.image} width={600} height={600} />}
+        { artist?.statement && (
+          <div class="space-y-3 md:columns-2 md:gap-10 lg:col-span-2" set:html={artist.statement}></div>
+        )}
+      </section>
+    )}
   
-  { (artist?.image || artist?.statement) && (
-    <section class="grid gap-10 lg:grid-cols-3 mt-20 scroll-mt-40" id="statement">
-      { artist?.image && <ImageCockpit image={artist.image} width={600} height={600} />}
-      { artist?.statement && (
-        <div class="space-y-3 md:columns-2 md:gap-10 lg:col-span-2" set:html={artist.statement}></div>
-      )}
-    </section>
-  )}
-
-  { artist?.biography && (
-    <section class="scroll-mt-40" id="biography">
-      <h2 class="text-2xl" id="biography">Biography</h2>
-      <div set:html={ artist?.biography }></div>
-    </section>
-  )}
-
-  {standardArtworks.length > 0 && ( 
-    <section class="scroll-mt-40" id="works">
-      <h2 class="text-2xl mb-10 mt-20 border-t border-gray-300 pt-4">Works</h2>
-      <div class="grid gap-10 md:grid-cols-2 lg:grid-cols-4">
-        {standardArtworks.map((artwork) => (
-          <ArtworkCard artwork={artwork} currentLocale={lang}/>
-        ))}
-      </div>
-    </section>
-  )}
-
-  {limitedEditionArtworks.length > 0 && ( 
-    <section class="scroll-mt-40" id="limited-edition">
-      <h2 class="text-2xl mb-10 mt-20 border-t border-gray-300 pt-4">Limited Edition</h2>
-      <div class="grid gap-10 md:grid-cols-2 lg:grid-cols-4">
-        {limitedEditionArtworks.map((artwork) => (
-          <ArtworkCard artwork={artwork} currentLocale={lang}/>
-        ))}
-      </div>
-    </section>
-  )}
-
-  {groupedAchievements && Object.entries(groupedAchievements).length > 0 && (
-    <section class="scroll-mt-40" id="achievements">
-      <h2 class="text-2xl my-10 border-t border-gray-300 pt-4">Achievements</h2>
-      <div class="grid md:grid-cols-2 gap-10">
-        {Object.entries(groupedAchievements).map(([category, years]) => (
-          <div>
-            <h2 class="text-xl my-4">{category}</h2>
-            {Object.keys(years)
-              .sort((a, b) => Number(b) - Number(a)) // Tri décroissant des années
-              .map((year) => (
-                <div class="flex gap-4 mb-2">
-                  <h3 class="basis-12">{year}</h3>
-                  <ul class="list-disc pl-2">
-                    {years[Number(year)]
-                      // .sort((a, b) => a.title.localeCompare(b.title)) // Trier les titres si nécessaire
-                      .map((achievement) => (
-                        <li>{achievement.title}</li>
-                      ))}
-                  </ul>
-                </div>
-              ))}
-          </div>
-        ))}
-      </div>
-    </section>
-  )}
+    { artist?.biography && (
+      <section class="scroll-mt-40" id="biography">
+        <h2 class="text-2xl" id="biography">Biography</h2>
+        <div set:html={ artist?.biography }></div>
+      </section>
+    )}
+  
+    {standardArtworks.length > 0 && ( 
+      <section class="scroll-mt-40" id="works">
+        <h2 class="text-2xl mb-10 mt-20 border-t border-gray-300 pt-4">Works</h2>
+        <div class="grid gap-10 md:grid-cols-2 lg:grid-cols-4">
+          {standardArtworks.map((artwork) => (
+            <ArtworkCard artwork={artwork} currentLocale={lang}/>
+          ))}
+        </div>
+      </section>
+    )}
+  
+    {limitedEditionArtworks.length > 0 && ( 
+      <section class="scroll-mt-40" id="limited-edition">
+        <h2 class="text-2xl mb-10 mt-20 border-t border-gray-300 pt-4">Limited Edition</h2>
+        <div class="grid gap-10 md:grid-cols-2 lg:grid-cols-4">
+          {limitedEditionArtworks.map((artwork) => (
+            <ArtworkCard artwork={artwork} currentLocale={lang}/>
+          ))}
+        </div>
+      </section>
+    )}
+  
+    {groupedAchievements && Object.entries(groupedAchievements).length > 0 && (
+      <section class="scroll-mt-40" id="achievements">
+        <h2 class="text-2xl my-10 border-t border-gray-300 pt-4">Achievements</h2>
+        <div class="grid md:grid-cols-2 gap-10">
+          {Object.entries(groupedAchievements).map(([category, years]) => (
+            <div>
+              <h2 class="text-xl my-4">{category}</h2>
+              {Object.keys(years)
+                .sort((a, b) => Number(b) - Number(a)) // Tri décroissant des années
+                .map((year) => (
+                  <div class="flex gap-4 mb-2">
+                    <h3 class="basis-12">{year}</h3>
+                    <ul class="list-disc pl-2">
+                      {years[Number(year)]
+                        // .sort((a, b) => a.title.localeCompare(b.title)) // Trier les titres si nécessaire
+                        .map((achievement) => (
+                          <li>{achievement.title}</li>
+                        ))}
+                    </ul>
+                  </div>
+                ))}
+            </div>
+          ))}
+        </div>
+      </section>
+    )}
+  </main>
 
 </Layout>
 

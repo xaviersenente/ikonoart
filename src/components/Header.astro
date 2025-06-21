@@ -10,43 +10,45 @@ const currentPath = Astro.url.pathname;
 const header = ui[lang]?.header ?? ui[defaultLang].header;
 ---
 
-<header class="fixed top-0 z-10 max-w-8xl w-full left-1/2 -translate-x-1/2 flex justify-between items-center py-6 px-4 gap-4 bg-white transition-all duration-300" id="site-header">
-  <a class="basis-40 " href={`/${lang}/`} aria-label="Accueil">
-    <Logo class="logo-image transition-all duration-300"/>
-  </a>
-  <nav 
-    class="visible fixed z-10 inset-0 opacity-100 transition-all duration-300 ease-in-out max-lg:bg-white max-lg:data-[state=closed]:invisible max-lg:data-[state=closed]:opacity-0 lg:relative lg:flex lg:items-center lg:opacity-100"
-    id="menu"
-    data-state="closed">
-    <ul class="flex gap-8 uppercase">
-      {[
-        { href: `/${lang}/artists/`, label: header.artists },
-        { href: `/${lang}/artworks/`, label: header.artworks },
-        { href: `/${lang}/exhibitions/`, label: header.exhibitions }
-      ].map(({ href, label }) => (
-        <li>
-          <a 
-            class={`block relative pb-1 after:block after:absolute after:border-b after:border-gray-900 after:bottom-0 after:right-0 after:left-auto after:w-0 after:transition-all after:duration-300 hover:after:w-full hover:after:left-0 hover:after:right-auto ${currentPath.startsWith(href) ? 'after:w-full' : ''}`}
-            href={href}
-          >
-            {label}
-          </a>
-        </li>
-      ))}
-    </ul>
-  </nav>
-  <button 
-    class="group relative z-20 flex h-6 w-8 flex-col justify-between *:h-[2px] *:w-full *:bg-black *:transition-all *:duration-300 *:ease lg:hidden"
-    id="menu-btn"
-    aria-label="Menu"
-    aria-controls="menu"
-    aria-expanded="false"
-  >
-    <span class="group-aria-expanded:translate-y-[10.5px] group-aria-expanded:rotate-45"></span>
-    <span class="group-aria-expanded:opacity-0"></span>
-    <span class="group-aria-expanded:-translate-y-[10.5px] group-aria-expanded:-rotate-45"></span>
-  </button>
-  <LanguagePicker/>
+<header class="fixed top-0 z-10 flex justify-center w-full py-6 px-4 gap-4 bg-white transition-all duration-300" id="site-header">
+  <div class="max-w-8xl flex-1 flex justify-between items-center">
+    <a class="basis-40 " href={`/${lang}/`} aria-label="Accueil">
+      <Logo class="logo-image transition-all duration-300"/>
+    </a>
+    <nav 
+      class="visible fixed z-10 inset-0 opacity-100 transition-all duration-300 ease-in-out max-lg:bg-white max-lg:data-[state=closed]:invisible max-lg:data-[state=closed]:opacity-0 lg:relative lg:flex lg:items-center lg:opacity-100"
+      id="menu"
+      data-state="closed">
+      <ul class="flex gap-8 uppercase">
+        {[
+          { href: `/${lang}/artists/`, label: header.artists },
+          { href: `/${lang}/artworks/`, label: header.artworks },
+          { href: `/${lang}/exhibitions/`, label: header.exhibitions }
+        ].map(({ href, label }) => (
+          <li>
+            <a 
+              class={`block relative pb-1 after:block after:absolute after:border-b after:border-gray-900 after:bottom-0 after:right-0 after:left-auto after:w-0 after:transition-all after:duration-300 hover:after:w-full hover:after:left-0 hover:after:right-auto ${currentPath.startsWith(href) ? 'after:w-full' : ''}`}
+              href={href}
+            >
+              {label}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+    <button 
+      class="group relative z-20 flex h-6 w-8 flex-col justify-between *:h-[2px] *:w-full *:bg-black *:transition-all *:duration-300 *:ease lg:hidden"
+      id="menu-btn"
+      aria-label="Menu"
+      aria-controls="menu"
+      aria-expanded="false"
+    >
+      <span class="group-aria-expanded:translate-y-[10.5px] group-aria-expanded:rotate-45"></span>
+      <span class="group-aria-expanded:opacity-0"></span>
+      <span class="group-aria-expanded:-translate-y-[10.5px] group-aria-expanded:-rotate-45"></span>
+    </button>
+    <LanguagePicker/>
+  </div>
 </header>
 
 <script src="../js/header.ts"></script>

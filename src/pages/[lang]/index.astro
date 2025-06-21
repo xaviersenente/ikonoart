@@ -1,0 +1,214 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { getSingleton } from "../../services/cockpit";
+import { languages, ui, defaultLang } from '../../i18n/ui';
+
+import { Image } from 'astro:assets';
+import Logo from '../../assets/icons/logo-ikonoart-white2.svg';
+import IkonoPhoto from '../../assets/img/ikono-photography-logo-600.webp';
+import IkonoLifeshot from '../../assets/img/ikono-lifeshot-logo-600.webp';
+import IkonoProlab from '../../assets/img/ikono-prolab-logo-600.webp';
+import IkonoDesign from '../../assets/img/ikono-design-logo-600.webp';
+
+import ImageCockpit from '../../components/ImageCockpit.astro';
+// import Carousel from '../../components/Carousel.astro';
+import { getArtists, getHighlightedArtworks, getExhibitions } from "../../services/collections";
+// import ArtistCard from '../../components/ArtistCard.astro';
+
+import type { Artwork, Artist, Exhibition, HomePage } from '../../types/types';
+
+// Génération des chemins statiques pour chaque langue
+export const getStaticPaths = async () => {
+  // Utilisation de l'objet languages pour récupérer les clés de langue dynamiquement
+  return Object.keys(languages).map(lang => ({ params: { lang } }));
+}
+const currentLocale = Astro.currentLocale;
+// Récupération des articles au moment du rendu côté serveur
+const artists = await getArtists(currentLocale);
+const artworks = await getHighlightedArtworks(currentLocale);
+const exhibitions = await getExhibitions(currentLocale);
+const homePage = await getSingleton("homepage", currentLocale) as HomePage;
+
+const title = "Artists";
+---
+
+<Layout title={title}>
+  <div class="splide mt-28" role="group" aria-label="Next exhibitions" data-splide='{"perPage":1, "type":"fade"}'>
+    <div class="splide__track">
+      <ul class="splide__list">
+        {exhibitions.map(exhibition => (
+          <li class="splide__slide relative">
+            <ImageCockpit image={exhibition.image} width={1920} height={900} classes="w-full"/>
+            <div class="absolute px-24 py-12 min-w-3xl left-0 bottom-0 z-10 text-white bg-linear-to-r from-[rgba(43,36,51,1)] to-[rgba(43,36,51,0)]">
+              <p>Exhibition</p>
+              <h3 class="text-3xl font-medium uppercase">{exhibition.title}</h3>
+              <p>{exhibition.start_date} — {exhibition.end_date}</p>
+              <a href="">More</a>
+            </div>
+            
+          </li>
+        ))}
+      </ul>
+    </div>
+  </div>
+  <div class="text-white bg-linear-to-bl from-(--darkikonoart) to-(--verydarkikonoart) p-12">
+    <div class="main-container mt-0 grid grid-cols-2 items-center">
+      <div class="flex items-center justify-center"><Logo class="w-80 h-80"/></div>
+      <div>
+        <h1 class="text-4xl font-medium mb-12">{homePage.introTitle}</h1>
+        <div set:html={homePage.introText}></div>
+      </div>
+  </div>
+  </div>
+  
+  <section class="main-container">
+    <h2 class="py-24 text-3xl font-medium uppercase relative flex items-center gap-8 after:flex-auto after:bg-black after:h-[1px] after:block">Artists highlights</h2>
+    <div class="splide px-16" role="group" aria-label="Artists carousel">
+      <div class="splide__track">
+        <ul class="splide__list">
+          {artists.map(artist => (
+            <li class="splide__slide">
+              <ImageCockpit image={artist.image} width={700} height={700} />
+              <h3 class="uppercase font-medium mt-4">{artist.name}</h3>
+              <p>{artist.type}</p>
+              <p>{artist.level}</p>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  </section>
+  <section class="main-container">
+    <h2 class="py-24 text-3xl font-medium uppercase relative flex items-center gap-8 after:flex-auto after:bg-black after:h-[1px] after:block">Ikonoart Exclusive representative
+    </h2>
+    <div class="grid grid-cols-2 gap-8">
+      <div></div>
+      <div>
+        <h2 class="text-4xl font-medium mb-12">{homePage.exclusiveTitle}</h2>
+        <div set:html={homePage.exclusiveText}></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="main-container">
+    <h2 class="py-24 text-3xl font-medium uppercase relative flex items-center gap-8 after:flex-auto after:bg-black after:h-[1px] after:block">Artworks highlights
+    </h2>
+    <div class="splide px-16" role="group" aria-label="Artwork's carousel">
+      <div class="splide__track">
+        <ul class="splide__list">
+          {artworks.map(artwork => (
+            <li class="splide__slide">
+              <ImageCockpit image={artwork.image} width={700} height={700} />
+              <h3>{artwork.title}</h3>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="text-white bg-linear-to-bl from-(--darkikonoart) to-(--verydarkikonoart) p-12">
+    <div class="main-container">
+      <h2 class="py-23 text-3xl font-medium uppercase relative flex items-center gap-8 after:flex-auto after:bg-white after:h-[1px] after:block">Ikono art Services
+      </h2>
+      <div class="grid grid-cols-4 gap-8 text-center">
+        <div>
+          <h3 class="font-medium uppercase">Curation</h3>
+          <ul>
+            <li>Exhibition</li>
+            <li>Expérience d'achat d'art</li>
+            <li>Galerie d'art en ligne</li>
+            <li>Livraison premium</li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="font-medium uppercase">Expostion</h3>
+          <ul>
+            <li>Exhibition</li>
+            <li>Expérience d'achat d'art</li>
+            <li>Galerie d'art en ligne</li>
+            <li>Livraison premium</li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="font-medium uppercase">Location</h3>
+          <ul>
+            <li>Exhibition</li>
+            <li>Expérience d'achat d'art</li>
+            <li>Galerie d'art en ligne</li>
+            <li>Livraison premium</li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="font-medium uppercase">Vente</h3>
+          <ul>
+            <li>Exhibition</li>
+            <li>Expérience d'achat d'art</li>
+            <li>Galerie d'art en ligne</li>
+            <li>Livraison premium</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section>
+    <section class="main-container">
+      <h2 class="py-24 text-3xl font-medium uppercase relative flex items-center gap-8 after:flex-auto after:bg-black after:h-[1px] after:block">Ikono branch & services
+      </h2>
+      <ul class="grid grid-cols-4 gap-8 *:flex *:flex-col *:items-center">
+        <li>
+          <Image src={IkonoPhoto} alt="IkonoPhoto" class="w-1/2" />
+          <h3>Corporate photography for all businesses</h3>
+        </li>
+        <li>
+          <Image src={IkonoLifeshot} alt="IkonoLifeshot" class="w-1/2" />
+          <h3>Corporate photography for all businesses</h3>
+        </li>
+        <li>
+          <Image src={IkonoProlab} alt="IkonoProlab" class="w-1/2" />
+          <h3>Corporate photography for all businesses</h3>
+        </li>
+        <li>
+          <Image src={IkonoDesign} alt="IkonoDesign" class="w-1/2" />
+          <h3>Corporate photography for all businesses</h3>
+        </li>
+      </ul>
+  </section>
+
+  <script>
+    import Splide, { LOOP } from '@splidejs/splide';
+    import '@splidejs/splide/css'; // Importe les styles CSS de base
+    
+    document.addEventListener('astro:page-load', () => {
+      const splideElements = document.querySelectorAll('.splide');
+      
+      splideElements.forEach(element => {
+        new Splide(element, {
+          // Options de configuration
+          type: LOOP,
+          perPage: 4,
+          perMove: 1,
+          // type   : 'fade',
+          rewind: true,
+          rewindSpeed: 3000,
+          speed: 600,
+          autoplay: false,
+          gap: '2rem',
+          // classes: {
+          //   arrow : 'splide__arrow !bg-none',
+          // }
+          breakpoints: {
+            1024: {
+              perPage: 2,
+            },
+            768: {
+              perPage: 1,
+            },
+          }
+        }).mount();
+      });
+    });
+  </script>
+</Layout>
+
+

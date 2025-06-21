@@ -47,6 +47,7 @@ export interface Artwork {
   medium?: string;
   subject?: string;
   limited_edition?: boolean;
+  highlight?: boolean;
 }
 
 export interface Exhibition {
@@ -59,4 +60,12 @@ export interface Exhibition {
   end_date: Date;
   artist?: Reference;
   description?: string;
+}
+
+export interface HomePage {
+  _id: string;
+  introTitle: string;
+  introText: string;
+  exclusiveTitle: string;
+  exclusiveText: string;
 }

@@ -91,9 +91,7 @@ const titleHead: string = Astro.url.pathname === "/" ? siteName : `${title} — 
     <!-- La protection par mot de passe -->
     {import.meta.env.PROD && <PasswordProtection />}
 		<Header/>
-    <main class="py-8 px-4 max-w-8xl mx-auto mt-38">
-		  <slot />
-    </main>
+    <slot />
 		<Footer/>
 	</body>
 </html>
