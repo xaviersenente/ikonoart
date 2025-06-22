@@ -48,7 +48,7 @@ const formattedDescription = artwork?.description?.replace(/\n/g, '<br>');
         <div set:html={ artwork?.description }></div> 
         <p>{ artwork?.size }</p>
       </div>
-      <ImageCockpit image={artwork?.image} width={1600} height={1600} resize="bestFit" classes="col-span-2 max-h-[70dvh] w-auto" />
+      <ImageCockpit image={artwork?.image} width={1600} height={1600} resize="bestFit" classesContainer="col-span-2" classes="max-h-[75dvh] w-auto" />
     </div>
   </main>
 

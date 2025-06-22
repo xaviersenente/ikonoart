@@ -8,13 +8,14 @@ import type { Artist } from '../types/types';
 interface Props {
   artist: Artist;
   currentLocale: string;
+  classes: string;
 }
 
-const { artist, currentLocale } = Astro.props as Props;
+const { artist, currentLocale, classes = "" } = Astro.props as Props;
 // Génération du lien vers la page de l'artiste avec la bonne langue
 const cardLink = getRelativeLocaleUrl(currentLocale, `/artists/${artist.slug}`);
 ---
-<article data-key={artist._id}>
+<article class={`${classes}`} data-key={artist._id}>
   <a href={cardLink}>
     <ImageCockpit image={artist.image} width={700} height={700} />
     <h2 class="mt-2 text-lg font-medium">{artist.name}</h2>

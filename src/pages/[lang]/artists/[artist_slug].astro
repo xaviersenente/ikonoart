@@ -66,12 +66,18 @@ const groupedAchievements = groupAchievementsByCategoryAndYear(artist);
       </nav>
     </div>
     {artist?.carousel && artist?.carousel.length > 0 && (
-      <Carousel images={artist?.carousel}/>
+      <Carousel 
+        images={artist?.carousel} 
+        type="fade" 
+        class=""
+      />
     )}
     
     { (artist?.image || artist?.statement) && (
       <section class="grid gap-10 lg:grid-cols-3 mt-20 scroll-mt-40" id="statement">
-        { artist?.image && <ImageCockpit image={artist.image} width={600} height={600} />}
+        { artist?.image && (
+          <ImageCockpit image={artist.image} width={600} height={600} legend={true} />
+        )}
         { artist?.statement && (
           <div class="space-y-3 md:columns-2 md:gap-10 lg:col-span-2" set:html={artist.statement}></div>
         )}
@@ -80,8 +86,8 @@ const groupedAchievements = groupAchievementsByCategoryAndYear(artist);
   
     { artist?.biography && (
       <section class="scroll-mt-40" id="biography">
-        <h2 class="text-2xl" id="biography">Biography</h2>
-        <div set:html={ artist?.biography }></div>
+        <h2 class="text-2xl mb-10 mt-20 border-t border-gray-300 pt-4">Biography</h2>
+        <div class="lg:columns-2 lg:gap-8" set:html={ artist?.biography }></div>
       </section>
     )}
   
@@ -138,6 +144,8 @@ const groupedAchievements = groupAchievementsByCategoryAndYear(artist);
 </Layout>
 
 <script>
+import '../../../js/splide-manager.js';
+
 document.addEventListener('astro:page-load', () => {
   const siteHeader = document.getElementById('menu-artist');
   const navLinks = document.querySelectorAll('#menu-artist nav a');

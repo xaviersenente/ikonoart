@@ -6,6 +6,7 @@ interface Props {
   image: {
     _id: string;
     altText?: string;
+    title?: string;
   };
   hoverImage?: {
     _id: string;
@@ -15,9 +16,20 @@ interface Props {
   height?: number;
   resize?: string;
   classes?: string;
+  classesContainer?: string;
+  legend?: boolean;
 }
 
-const { image, hoverImage = null, width=400, height=600, resize="thumbnail", classes = "" } = Astro.props;
+const { 
+  image, 
+  hoverImage = null, 
+  width=400, 
+  height=600, 
+  resize="thumbnail", 
+  classes = "", 
+  classesContainer = "", 
+  legend = false 
+} = Astro.props;
 
 if (!image?._id) {
   return null;
@@ -28,7 +40,7 @@ const optimizedHoverUrl = hoverImage?._id ? await getOptimizedImage(hoverImage._
 
 ---
 
-<div class="relative group">
+<figure class={`${classesContainer} relative group`}>
   <Image 
     class={`${classes} transition-opacity duration-300 ${optimizedHoverUrl ? 'group-hover:opacity-0' : ''}`} 
     src={optimizedUrl} 
@@ -46,4 +58,7 @@ const optimizedHoverUrl = hoverImage?._id ? await getOptimizedImage(hoverImage._
       height={height} 
     />
   )}
-</div>
+  {legend && (
+    <figcaption>{image.title}</figcaption>
+  )}
+</figure>

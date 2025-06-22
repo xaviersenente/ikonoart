@@ -1,6 +1,5 @@
 ---
 import ImageCockpit from './ImageCockpit.astro';
-
 interface CarouselImage {
   _id: string;
   altText?: string;
@@ -8,19 +7,44 @@ interface CarouselImage {
   height?: number;
   resize?: string;
 }
-
 interface Props {
   images: CarouselImage[];
+  type?: 'fade' | 'home' | 'product' | 'testimonial';
   perPage?: number;
   gap?: string;
+  autoplay?: boolean;
+  class?: string;
 }
 
 const { 
-  images = []
+  images = [],
+  type = 'fade',
+  class: additionalClasses = ''
 } = Astro.props;
+
+// Déterminer la classe CSS en fonction du type
+const getCarouselClass = (type: string) => {
+  switch (type) {
+    case 'home':
+      return 'home-carousel';
+    case 'product':
+      return 'product-carousel';
+    case 'testimonial':
+      return 'testimonial-carousel';
+    case 'fade':
+    default:
+      return 'fade-carousel';
+  }
+};
+
+const carouselClass = getCarouselClass(type);
 ---
 
-<div class="splide" role="group" aria-label="Carrousel d'images">
+<div 
+  class={`splide ${carouselClass} ${additionalClasses}`} 
+  role="group" 
+  aria-label="Carrousel d'images"
+>
   <div class="splide__track">
     <ul class="splide__list">
       {images.map((image) => (
@@ -37,33 +61,3 @@ const {
     </ul>
   </div>
 </div>
-
-<script>
-  import Splide from '@splidejs/splide';
-  import '@splidejs/splide/css'; // Importe les styles CSS de base
-  
-  document.addEventListener('astro:page-load', () => {
-    const splideElements = document.querySelectorAll('.splide');
-    
-    splideElements.forEach(element => {
-      new Splide(element, {
-        // Options de configuration
-        perPage: 1,
-        type   : 'fade',
-        rewind: true,
-        rewindSpeed: 3000,
-        speed: 600,
-        autoplay: true,
-        // gap: '1rem',
-        // breakpoints: {
-        //   768: {
-        //     perPage: 2,
-        //   },
-        //   480: {
-        //     perPage: 1,
-        //   },
-        // }
-      }).mount();
-    });
-  });
-</script>
