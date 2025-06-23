@@ -15,7 +15,7 @@ export interface Artist {
   name: string;
   slug: string;
   image: Image;
-  main_artwork: Image;
+  image_hover: Image;
   carousel?: [];
   birthyear?: number;
   deathyear?: number;

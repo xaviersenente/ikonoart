@@ -17,9 +17,16 @@ const cardLink = getRelativeLocaleUrl(currentLocale, `/artists/${artist.slug}`);
 ---
 <article class={`${classes}`} data-key={artist._id}>
   <a href={cardLink}>
-    <ImageCockpit image={artist.image} width={700} height={700} />
+    <ImageCockpit 
+      image={artist.image} 
+      hoverImage={artist.image_hover || null} 
+      width={700} 
+      height={700} 
+    />
     <h2 class="mt-2 text-lg font-medium">{artist.name}</h2>
-    <p>{artist.type}</p>
+    {artist?.categorySet && artist.categorySet.length > 0 && (
+      <p>{artist.categorySet.map((item, index) => item.category).join(", ")}</p>
+    )}
     <p>{artist.level}</p>
   </a>
 </article>
