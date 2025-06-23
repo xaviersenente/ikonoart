@@ -66,48 +66,6 @@ class SplideManager {
       instance.mount();
       this.instances.push(instance);
     });
-
-    // Configuration pour les carousels produits/services (sans fade)
-    const productCarousels = document.querySelectorAll(
-      ".splide.product-carousel"
-    );
-    productCarousels.forEach((element) => {
-      const instance = new Splide(element, {
-        type: LOOP,
-        perPage: 3,
-        perMove: 1,
-        pagination: false,
-        rewind: true,
-        speed: 600,
-        autoplay: false,
-        gap: "1.5rem",
-        breakpoints: {
-          1024: { perPage: 2 },
-          768: { perPage: 1 },
-        },
-      });
-      instance.mount();
-      this.instances.push(instance);
-    });
-
-    // Configuration pour les carousels de témoignages
-    const testimonialCarousels = document.querySelectorAll(
-      ".splide.testimonial-carousel"
-    );
-    testimonialCarousels.forEach((element) => {
-      const instance = new Splide(element, {
-        perPage: 1,
-        rewind: true,
-        speed: 800,
-        autoplay: true,
-        interval: 5000,
-        pauseOnHover: true,
-        pagination: true,
-        arrows: false,
-      });
-      instance.mount();
-      this.instances.push(instance);
-    });
   }
 }
 

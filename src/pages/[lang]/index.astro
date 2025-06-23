@@ -56,9 +56,9 @@ const title = "Artists";
     </div>
   )}
 
-  <div class="text-white bg-linear-to-bl from-(--darkikonoart) to-(--verydarkikonoart) p-12">
-    <div class="main-container mt-0 grid grid-cols-2 items-center">
-      <div class="flex items-center justify-center"><Logo class="w-80 h-80"/></div>
+  <div class="text-white bg-linear-to-bl from-(--darkikonoart) to-(--verydarkikonoart) py-12">
+    <div class="main-container mt-0 lg:grid lg:grid-cols-2 lg:items-center">
+      <div class="hidden lg:flex lg:items-center lg:justify-center"><Logo class="w-80 h-80"/></div>
       <div>
         <h1 class="text-4xl font-medium mb-12">{homePage.introTitle}</h1>
         <div set:html={homePage.introText}></div>
@@ -69,7 +69,7 @@ const title = "Artists";
   {selectedArtists && selectedArtists.length > 0 && (
     <section class="main-container">
       <h2 class="py-24 text-3xl font-medium uppercase relative flex items-center gap-8 after:flex-auto after:bg-black after:h-[1px] after:block">Artists highlights</h2>
-      <div class="splide home-carousel px-16" role="group" aria-label="Artists carousel">
+      <div class="splide home-carousel px-12 lg:px-16" role="group" aria-label="Artists carousel">
         <div class="splide__track">
           <ul class="splide__list">
             {selectedArtists.map(artist => (
@@ -87,7 +87,7 @@ const title = "Artists";
   <section class="main-container">
     <h2 class="py-24 text-3xl font-medium uppercase relative flex items-center gap-8 after:flex-auto after:bg-black after:h-[1px] after:block">Ikonoart Exclusive representative
     </h2>
-    <div class="grid grid-cols-2 gap-8">
+    <div class="lg:grid lg:grid-cols-2 lg:gap-8">
       <div></div>
       <div>
         <h2 class="text-4xl font-medium mb-12">{homePage.exclusiveTitle}</h2>
@@ -100,7 +100,7 @@ const title = "Artists";
     <section class="main-container">
       <h2 class="py-24 text-3xl font-medium uppercase relative flex items-center gap-8 after:flex-auto after:bg-black after:h-[1px] after:block">Artworks highlights
       </h2>
-      <div class="splide home-carousel px-16" role="group" aria-label="Artwork's carousel">
+      <div class="splide home-carousel px-12 lg:px-16" role="group" aria-label="Artwork's carousel">
         <div class="splide__track">
           <div class="splide__list">
             {selectedArtworks.map(artwork => (
@@ -119,7 +119,7 @@ const title = "Artists";
     <div class="main-container">
       <h2 class="py-23 text-3xl font-medium uppercase relative flex items-center gap-8 after:flex-auto after:bg-white after:h-[1px] after:block">Ikono art Services
       </h2>
-      <div class="grid grid-cols-4 gap-8 text-center">
+      <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8 text-center">
         <div>
           <h3 class="font-medium uppercase">Curation</h3>
           <ul>
@@ -164,7 +164,7 @@ const title = "Artists";
     <section class="main-container">
       <h2 class="py-24 text-3xl font-medium uppercase relative flex items-center gap-8 after:flex-auto after:bg-black after:h-[1px] after:block">The classic Collection
       </h2>
-      <div class="splide home-carousel px-16" role="group" aria-label="Artwork's carousel">
+      <div class="splide home-carousel px-12 lg:px-16" role="group" aria-label="Artwork's carousel">
         <div class="splide__track">
           <div class="splide__list">
             {classicCollection.map(artwork => (
@@ -180,7 +180,7 @@ const title = "Artists";
     <section class="main-container">
       <h2 class="py-24 text-3xl font-medium uppercase relative flex items-center gap-8 after:flex-auto after:bg-black after:h-[1px] after:block">Japanese Collection
       </h2>
-      <div class="splide home-carousel px-16" role="group" aria-label="Artwork's carousel">
+      <div class="splide home-carousel px-12 lg:px-16" role="group" aria-label="Artwork's carousel">
         <div class="splide__track">
           <div class="splide__list">
             {japaneseCollection.map(artwork => (
@@ -196,7 +196,7 @@ const title = "Artists";
     <section class="main-container">
       <h2 class="py-24 text-3xl font-medium uppercase relative flex items-center gap-8 after:flex-auto after:bg-black after:h-[1px] after:block">Ikono branch & services
       </h2>
-      <ul class="grid grid-cols-4 gap-8 *:flex *:flex-col *:items-center">
+      <ul class="grid grid-cols-2 gap-8 text-center lg:grid-cols-4 *:flex *:flex-col *:items-center *:gap-4 *:xl:px-8">
         <li>
           <Image src={IkonoPhoto} alt="IkonoPhoto" class="w-1/2" />
           <h3>Corporate photography for all businesses</h3>

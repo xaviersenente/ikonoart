@@ -4,10 +4,17 @@ import type { Artist, Artwork, Exhibition } from "../types/types";
 /**
  * Récupère la liste des artistes depuis Cockpit en fonction de la langue.
  * @param lang - Langue des résultats (ex: "fr", "en", "ja_JP").
- * @returns Un tableau d'artistes sous forme d'objets typés.
+ * @returns Un tableau d'artistes sous forme d'objets typés, triés par type selon l'ordre défini dans Cockpit.
  */
 export async function getArtists(lang: string = "en"): Promise<Artist[]> {
-  return getCollection("artist", lang) as Promise<Artist[]>;
+  const artists = (await getCollection("artist", lang)) as Artist[];
+
+  // Ordre défini dans votre select Cockpit : Represented, Exhibited, Exclusive, Collection
+  const typeOrder = ["Represented", "Exhibited", "Exclusive", "Collection"];
+
+  return artists.sort(
+    (a, b) => typeOrder.indexOf(a.type) - typeOrder.indexOf(b.type)
+  );
 }
 
 /**

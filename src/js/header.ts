@@ -72,7 +72,7 @@ document.addEventListener("astro:page-load", () => {
   const handleScroll = (): void => {
     if (!logoImage || !siteHeader) return;
 
-    const originalWidth: number = 160;
+    const originalWidth: number = 150;
     const smallerWidth: number = 75; // Taille réduite du logo
     const isScrolled: boolean = window.scrollY > 10;
 
@@ -84,10 +84,10 @@ document.addEventListener("astro:page-load", () => {
     // Approche plus efficace pour les classes
     if (isScrolled) {
       siteHeader.classList.add("py-2");
-      siteHeader.classList.remove("py-6");
+      siteHeader.classList.remove("py-4");
     } else {
       siteHeader.classList.remove("py-2");
-      siteHeader.classList.add("py-6");
+      siteHeader.classList.add("py-4");
     }
   };
 
