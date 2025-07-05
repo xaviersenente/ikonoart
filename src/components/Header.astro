@@ -23,7 +23,8 @@ const header = ui[lang]?.header ?? ui[defaultLang].header;
         {[
           { href: `/${lang}/artists/`, label: header.artists },
           { href: `/${lang}/artworks/`, label: header.artworks },
-          { href: `/${lang}/exhibitions/`, label: header.exhibitions }
+          { href: `/${lang}/exhibitions/`, label: header.exhibitions },
+          { href: `/${lang}/contact/`, label: header.contact }
         ].map(({ href, label }) => (
           <li>
             <a 

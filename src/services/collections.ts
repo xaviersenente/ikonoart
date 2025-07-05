@@ -155,3 +155,24 @@ export async function getExhibitionById(
     lang
   ) as Promise<Exhibition | null>;
 }
+
+/**
+ * Récupère la liste des pages depuis Cockpit en fonction de la langue.
+ * @param lang - Langue des résultats (ex: "fr", "en", "ja_JP").
+ * @returns Un tableau des pages sous forme d'objets typés.
+ */
+export async function getPages(lang: string = "en"): Promise<Exhibition[]> {
+  return getCollection("page", lang) as Promise<Exhibition[]>;
+}
+/**
+ * Récupère une page standard spécifique par son ID et sa langue.
+ * @param artworkId - ID de la page à récupérer.
+ * @param lang - Langue des résultats.
+ * @returns L'objet page ou null s'il n'existe pas.
+ */
+export async function getPageById(
+  pageId: string,
+  lang: string = "en"
+): Promise<Artwork | null> {
+  return getCollectionItem("page", pageId, lang) as Promise<Artwork | null>;
+}

@@ -24,4 +24,27 @@
   .splide__arrow {
     @apply !bg-transparent;
   }
+  .page-content {
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+      @apply my-3;
+    }
+    h1,
+    h2 {
+      @apply text-4xl font-medium;
+    }
+    h3 {
+      @apply text-2xl font-medium;
+    }
+    h4 {
+      @apply text-xl font-medium;
+    }
+    p {
+      @apply pb-3;
+    }
+  }
 }

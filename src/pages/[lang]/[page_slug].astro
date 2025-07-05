@@ -1,0 +1,28 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { getPages, getPageById } from "../../services/collections";
+import { languages } from '../../i18n/ui';
+
+// Fonction pour générer les chemins statiques pour chaque artiste et langue
+export async function getStaticPaths() {
+  const pages = await getPages();  // Récupère tous les artistes
+  // Créer un tableau de chemins pour chaque artiste et chaque langue
+  return pages.flatMap(page => 
+    Object.keys(languages).map(lang => ({
+      params: { lang, page_slug: page.slug },
+      props: { page_id: page._id, lang }, 
+    }))
+  );
+}
+
+const { page_slug, lang } = Astro.params;
+const { page_id } = Astro.props;
+const page = await getPageById(page_id, lang);
+
+---
+<Layout title={page.title}>
+  <main class="main-container mt-38 lg:grid grid-cols-4">
+    <h1 class="text-4xl my-8 col-start-2 col-span-2">{page.title}</h1>
+    <div class="col-start-2 col-span-2 page-content" set:html={page.description}></div>
+  </main>
+</Layout>

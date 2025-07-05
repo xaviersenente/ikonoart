@@ -20,7 +20,7 @@ const { artwork_slug, lang } = Astro.params;
 const { artwork_id } = Astro.props;
 const artwork = await getArtworkById(artwork_id, lang);
 const artist = artwork.artist?._id ? await getArtistById(artwork.artist._id, lang) : null;
-const formattedDescription = artwork?.description?.replace(/\n/g, '<br>');
+// const formattedDescription = artwork?.description?.replace(/\n/g, '<br>');
 ---
 
 <Layout title={ artwork?.title } currentLocale={lang}>
