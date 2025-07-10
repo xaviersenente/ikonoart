@@ -46,30 +46,44 @@ const artist = artwork.artist?._id ? await getArtistById(artwork.artist._id, lan
           <span class="italic">{ artwork?.title }</span>{ artwork?.year && ( <span> – { artwork?.year }</span> )}
         </h2>
         <div set:html={ artwork?.description }></div> 
-        <p>{ artwork?.size }</p>
+        {artwork?.size && (
+          <p class="mt-4">{ artwork?.size }</p>
+        )}
+        {artwork?.price && (
+          <p class="mt-4">{ artwork?.price }</p>
+        )}
         
         <!-- Bouton pour ouvrir le formulaire d'enquête -->
         <div class="mt-6">
           <button 
             id="enquiry-btn"
-            class="bg-black text-white px-6 py-3 hover:bg-gray-800 transition-colors duration-200 inline-flex items-center gap-2"
+            class="bg-black text-white px-6 py-3 hover:bg-gray-800 transition-colors duration-200 inline-flex items-center gap-2 cursor-pointer"
           >
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
               <polyline points="22,6 12,13 2,6"/>
             </svg>
-            Enquire about available work
+            Enquire
           </button>
         </div>
       </div>
-      <ImageCockpit image={artwork?.image} width={1600} height={1600} resize="bestFit" classesContainer="col-span-2" classes="max-h-[75dvh] w-auto" />
+      <div class="col-span-2">
+        <ImageCockpit image={artwork?.image} width={1600} height={1600} resize="bestFit" classes="max-h-[75dvh] w-auto" />
+        {artwork?.images_add && artwork?.images_add.length > 0 && (
+          <div class="grid grid-cols-2 gap-8 mt-8">
+            {artwork.images_add.map((image) => (
+              <ImageCockpit image={image} width={600} height={600} />
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   </main>
 
   <!-- Pop-up formulaire d'enquête -->
   <div id="enquiry-popup" class="fixed inset-0 z-50 hidden">
     <!-- Overlay -->
-    <div class="absolute inset-0 bg-black/50"></div>
+    <div class="absolute inset-0 bg-black/50 transition duration-500"></div>
     
     <!-- Panel coulissant -->
     <div class="absolute top-0 right-0 h-full w-full max-w-md bg-white shadow-xl transform translate-x-full transition-transform duration-300 ease-in-out">
@@ -88,20 +102,20 @@ const artist = artwork.artist?._id ? await getArtistById(artwork.artist._id, lan
       <div class="p-6 overflow-y-auto h-full pb-24">
         <!-- Informations sur l'œuvre -->
         <div class="mb-6 p-4 bg-gray-50 rounded-lg">
-          <h4 class="font-semibold mb-2">Artwork details:</h4>
+          <h4 class="font-semibold mb-2">Artwork details</h4>
           <p class="text-sm text-gray-600">
-            <strong>Artist:</strong> {artist?.name || "Unknown artist"}
+            <strong>Artist&nbsp;:</strong> {artist?.name || "Unknown artist"}
           </p>
           <p class="text-sm text-gray-600">
-            <strong>Title:</strong> {artwork?.title}
+            <strong>Title&nbsp;:</strong> {artwork?.title}
           </p>
           {artwork?.year && (
             <p class="text-sm text-gray-600">
-              <strong>Year:</strong> {artwork.year}
+              <strong>Year&nbsp;:</strong> {artwork.year}
             </p>
           )}
           <p class="text-sm text-gray-600">
-            <strong>ID:</strong> {artwork_id}
+            <strong>ID&nbsp;:</strong> {artwork_id}
           </p>
         </div>
         
@@ -128,29 +142,17 @@ const artist = artwork.artist?._id ? await getArtistById(artwork.artist._id, lan
           <!-- Nom -->
           <div>
             <label for="name" class="block text-sm font-medium text-gray-700 mb-2">
-              Full Name *
+              Full Name <span class="text-red-600">*</span>
             </label>
-            <input 
-              type="text" 
-              id="name" 
-              name="name" 
-              required 
-              class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent"
-            />
+            <input type="text" id="name" name="name" required/>
           </div>
           
           <!-- Email -->
           <div>
             <label for="email" class="block text-sm font-medium text-gray-700 mb-2">
-              Email Address *
+              Email Address <span class="text-red-600">*</span>
             </label>
-            <input 
-              type="email" 
-              id="email" 
-              name="email" 
-              required 
-              class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent"
-            />
+            <input type="email" id="email" name="email" required />
           </div>
           
           <!-- Téléphone -->
@@ -158,25 +160,15 @@ const artist = artwork.artist?._id ? await getArtistById(artwork.artist._id, lan
             <label for="phone" class="block text-sm font-medium text-gray-700 mb-2">
               Phone Number
             </label>
-            <input 
-              type="tel" 
-              id="phone" 
-              name="phone" 
-              class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent"
-            />
+            <input type="tel" id="phone" name="phone"/>
           </div>
           
           <!-- Type d'enquête -->
           <div>
             <label for="enquiry-type" class="block text-sm font-medium text-gray-700 mb-2">
-              Enquiry Type *
+              Enquiry Type <span class="text-red-600">*</span>
             </label>
-            <select 
-              id="enquiry-type" 
-              name="enquiry-type" 
-              required 
-              class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent"
-            >
+            <select id="enquiry-type" name="enquiry-type" required>
               <option value="">Select an option</option>
               <option value="purchase">Purchase enquiry</option>
               <option value="rental">Rental enquiry</option>
@@ -189,7 +181,7 @@ const artist = artwork.artist?._id ? await getArtistById(artwork.artist._id, lan
           <!-- Message -->
           <div>
             <label for="message" class="block text-sm font-medium text-gray-700 mb-2">
-              Message *
+              Message <span class="text-red-600">*</span>
             </label>
             <textarea 
               id="message" 
@@ -197,7 +189,7 @@ const artist = artwork.artist?._id ? await getArtistById(artwork.artist._id, lan
               rows="4" 
               required 
               placeholder="Please provide details about your enquiry..."
-              class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent resize-none"
+              class="resize-none"
             ></textarea>
           </div>
           
@@ -205,7 +197,7 @@ const artist = artwork.artist?._id ? await getArtistById(artwork.artist._id, lan
           <div class="pt-4">
             <button 
               type="submit" 
-              class="w-full bg-black text-white px-6 py-3 hover:bg-gray-800 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+              class="w-full bg-black text-white px-6 py-3 hover:bg-gray-800 transition-colors duration-200 cursor-pointer"
               id="submit-btn"
             >
               Send Enquiry
@@ -310,84 +302,7 @@ const artist = artwork.artist?._id ? await getArtistById(artwork.artist._id, lan
           submitBtn.textContent = 'Sending...';
         }
         
-        // Option 2: Envoi vers votre propre endpoint
-        // Décommentez cette section si vous voulez gérer l'envoi vous-même
-        /*
-        e.preventDefault();
-        sendToCustomEndpoint(new FormData(form));
-        */
-        
-        // Option 3: Envoi vers un service tiers (EmailJS, Formspree, etc.)
-        // Décommentez cette section si vous utilisez un service tiers
-        /*
-        e.preventDefault();
-        sendToThirdPartyService(new FormData(form));
-        */
       });
-    }
-    
-    // Fonction pour envoyer vers votre propre endpoint
-    async function sendToCustomEndpoint(formData) {
-      try {
-        const response = await fetch('/.netlify/functions/send-enquiry', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(Object.fromEntries(formData)),
-        });
-        
-        if (response.ok) {
-          window.location.href = '/thank-you';
-        } else {
-          throw new Error('Failed to send enquiry');
-        }
-      } catch (error) {
-        console.error('Error:', error);
-        alert('Sorry, there was an error sending your enquiry. Please try again.');
-        if (submitBtn) {
-          submitBtn.disabled = false;
-          submitBtn.textContent = 'Send Enquiry';
-        }
-      }
-    }
-    
-    // Fonction pour envoyer vers un service tiers (exemple avec EmailJS)
-    async function sendToThirdPartyService(formData) {
-      try {
-        // Exemple avec EmailJS
-        const templateParams = {
-          artwork_id: formData.get('artwork-id'),
-          artwork_title: formData.get('artwork-title'),
-          artist_name: formData.get('artist-name'),
-          artwork_year: formData.get('artwork-year'),
-          page_url: formData.get('page-url'),
-          name: formData.get('name'),
-          email: formData.get('email'),
-          phone: formData.get('phone'),
-          enquiry_type: formData.get('enquiry-type'),
-          message: formData.get('message'),
-        };
-        
-        // Remplacez ces valeurs par vos propres clés EmailJS
-        /*
-        const response = await emailjs.send(
-          'YOUR_SERVICE_ID',
-          'YOUR_TEMPLATE_ID',
-          templateParams,
-          'YOUR_PUBLIC_KEY'
-        );
-        */
-        
-        window.location.href = '/thank-you';
-      } catch (error) {
-        console.error('Error:', error);
-        alert('Sorry, there was an error sending your enquiry. Please try again.');
-        if (submitBtn) {
-          submitBtn.disabled = false;
-          submitBtn.textContent = 'Send Enquiry';
-        }
-      }
     }
     
     // Gestion des erreurs Netlify

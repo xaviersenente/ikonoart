@@ -39,7 +39,7 @@ const exhibition = await getExhibitionById(exhibition_id, lang);
             <a href={`/${lang}/exhibitions/${exhibition.slug}`} class="hover:underline">
               {exhibition.title}
             </a>
-          ) : "Artiste inconnu"}
+          ) : ""}
         </h1>
         <!-- <h2 class="text-xl mb-4">
           <span class="italic">{ exhibition?.title }</span>{ exhibition?.year && ( <span> – { exhibition?.year }</span> )}

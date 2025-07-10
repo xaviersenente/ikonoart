@@ -12,6 +12,11 @@
   body {
     @apply font-sans font-light text-base/7;
   }
+  input,
+  textarea,
+  select {
+    @apply w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent;
+  }
   /* [lang="ja"] body {
     @apply font-ja;
   } */

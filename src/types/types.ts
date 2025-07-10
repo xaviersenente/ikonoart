@@ -39,6 +39,7 @@ export interface Artwork {
   slug: string;
   image: Image;
   image_hover: Image;
+  images_add?: [];
   artist: Reference;
   year?: number;
   size?: string;
