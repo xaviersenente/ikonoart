@@ -75,11 +75,27 @@ const artist = artwork.artist?._id ? await getArtistById(artwork.artist._id, cur
         </div>
       </div>
       <div class="col-span-2">
-        <ImageCockpit image={artwork?.image} width={1600} height={1600} resize="bestFit" classes="max-h-[75dvh] w-auto" />
+        <ImageCockpit 
+          image={artwork?.image} 
+          width={1600} 
+          height={1600} 
+          resize="bestFit" 
+          classes="max-h-[75dvh] w-auto"
+          priority={true}
+          quality={80}
+          sizes="(max-width: 1024px) 100vw, 66vw"
+        />
         {artwork?.images_add && artwork?.images_add.length > 0 && (
           <div class="grid grid-cols-2 gap-8 mt-8">
-            {artwork.images_add.map((image) => (
-              <ImageCockpit image={image} width={600} height={600} />
+            {artwork.images_add.map((image, index) => (
+              <ImageCockpit 
+                image={image} 
+                width={600} 
+                height={600}
+                quality={70}
+                lazy={true}
+                sizes="(max-width: 768px) 50vw, 33vw"
+              />
             ))}
           </div>
         )}

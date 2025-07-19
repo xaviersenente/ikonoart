@@ -7,10 +7,11 @@ import type { Artwork } from '../types/types';
 interface Props {
   artwork: Artwork;
   currentLocale: string;
-  classes: string;
+  classes?: string;
+  priority?: boolean;
 }
 
-const { artwork, currentLocale, classes = "" } = Astro.props as Props;
+const { artwork, currentLocale, classes = "", priority = false } = Astro.props as Props;
 
 
 const cardLink = getRelativeLocaleUrl(currentLocale, `/artworks/${artwork.slug}`);
@@ -23,17 +24,30 @@ const artist = artwork.artist?._id ? await getArtistById(artwork.artist._id, cur
       <ImageCockpit 
         image={artwork.image} 
         hoverImage={artwork.image_hover || null} 
+        width={700}
+        height={700}
         resize="bestFit" 
+        quality={65}
+        priority={priority}
+        lazy={!priority}
+        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
         classes="aspect-square object-contain" 
       />
     </div>
     <div class="border-t border-t-gray-300 pt-4 mt-4">
       <p class="font-medium">{artist ? artist.name : "Artiste inconnu"}</p>
       <h3 class="pb-2">
-        <span class="italic">{artwork.title}</span>{artwork.year ? ` – ${artwork.year}` : ""}
+        <span class="italic text-gray-800">{artwork.title}</span>
+        {artwork.year && (
+          <span class="text-gray-600 font-normal"> – {artwork.year}</span>
+        )}
       </h3>
-      <p class="text-gray-500">{artwork.size}</p>
-      <p class="text-gray-500">{artwork.medium}</p>
+      {artwork.size && (
+        <p class="text-gray-500">{artwork.size}</p>
+      )}
+      {artwork.medium && (
+        <p class="text-gray-500">{artwork.medium}</p>
+      )}
     </div>
   </a>
 </article>

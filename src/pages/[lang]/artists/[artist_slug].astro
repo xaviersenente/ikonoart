@@ -4,7 +4,7 @@ import ArtworkCard from '../../../components/ArtworkCard.astro';
 import ImageCockpit from '../../../components/ImageCockpit.astro';
 import Carousel from '../../../components/Carousel.astro';
 import { languages } from '../../../i18n/ui';
-import { useTranslations } from '../../../i18n/utils';
+import { useTranslations, getCurrentLocale } from '../../../i18n/utils';
 import { getArtists, getArtistById, getArtworksByArtist, groupAchievementsByCategoryAndYear } from "../../../services/collections";
 
 import type { Artist } from '../../../types/types';
@@ -26,18 +26,19 @@ export async function getStaticPaths() {
 const { artist_slug, lang } = Astro.params as { artist_slug: string; lang: string };
 const { artist_id } = Astro.props as { artist_id: string };
 
-const currentLocale = lang as Locale;
+const currentLocale: Locale = getCurrentLocale(lang as Locale);
 const t = useTranslations(currentLocale);
 
 // Récupération des données
 const artist: Artist | null = await getArtistById(artist_id, currentLocale);
-const { standard: standardArtworks, limitedEdition: limitedEditionArtworks } = await getArtworksByArtist(artist_id, currentLocale);
+const { standard: standardArtworks, limitedEdition: limitedEditionArtworks } 
+  = await getArtworksByArtist(artist_id, currentLocale);
 // Regroupement des achievements
 const groupedAchievements = groupAchievementsByCategoryAndYear(artist);
 
 ---
 
-<Layout title={ artist?.name } currentLocale={lang}>
+<Layout title={ artist?.name } currentLocale={currentLocale}>
   <main class="main-container mt-38">
     <div class="py-6 my-6 lg:flex z-10 lg:justify-between lg:items-center border-b border-gray-300 bg-white transition duration-300" id="menu-artist">
       <div>
@@ -90,8 +91,12 @@ const groupedAchievements = groupAchievementsByCategoryAndYear(artist);
       <section class="scroll-mt-40" id="works">
         <h2 class="text-2xl mb-10 mt-20 border-t border-gray-300 pt-4">Works</h2>
         <div class="card-grid">
-          {standardArtworks.map((artwork) => (
-            <ArtworkCard artwork={artwork} currentLocale={lang}/>
+          {standardArtworks.map((artwork, index) => (
+            <ArtworkCard 
+              artwork={artwork} 
+              currentLocale={currentLocale}
+              priority={false}
+            />
           ))}
         </div>
       </section>
@@ -101,8 +106,12 @@ const groupedAchievements = groupAchievementsByCategoryAndYear(artist);
       <section class="scroll-mt-40" id="limited-edition">
         <h2 class="text-2xl mb-10 mt-20 border-t border-gray-300 pt-4">Limited Edition</h2>
         <div class="card-grid">
-          {limitedEditionArtworks.map((artwork) => (
-            <ArtworkCard artwork={artwork} currentLocale={lang}/>
+          {limitedEditionArtworks.map((artwork, index) => (
+            <ArtworkCard 
+              artwork={artwork} 
+              currentLocale={currentLocale}
+              priority={false}
+            />
           ))}
         </div>
       </section>

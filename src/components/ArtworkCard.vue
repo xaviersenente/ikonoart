@@ -8,9 +8,14 @@
   interface Props {
     artwork: Artwork;
     currentLocale: string;
+    classes?: string;
+    priority?: boolean;
   }
 
-  const props = defineProps<Props>();
+  const props = withDefaults(defineProps<Props>(), {
+    classes: "",
+    priority: false,
+  });
 
   const cardLink = computed(() =>
     getRelativeLocaleUrl(props.currentLocale, `/artworks/${props.artwork.slug}`)
@@ -20,16 +25,23 @@
 
   onMounted(async () => {
     if (props.artwork.artist?._id) {
-      artist.value = await getArtistById(
-        props.artwork.artist._id,
-        props.currentLocale
-      );
+      try {
+        artist.value = await getArtistById(
+          props.artwork.artist._id,
+          props.currentLocale
+        );
+      } catch (error) {
+        console.warn(
+          `Erreur lors de la récupération de l'artiste ${props.artwork.artist._id}:`,
+          error
+        );
+      }
     }
   });
 </script>
 
 <template>
-  <article class="flex rounded-md" :data-key="artwork._id">
+  <article :class="`${classes} flex rounded-md`" :data-key="artwork._id">
     <a class="grid grid-rows-[2fr_auto]" :href="cardLink">
       <div class="grid place-content-center">
         <ImageCockpit
@@ -38,6 +50,10 @@
           :width="700"
           :height="700"
           resize="bestFit"
+          :quality="65"
+          :priority="priority"
+          :lazy="!priority"
+          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
           classes="aspect-square object-contain"
         />
       </div>
@@ -45,12 +61,18 @@
         <p class="font-medium">
           {{ artist ? artist.name : "Artiste inconnu" }}
         </p>
-        <h2 class="pb-2">
-          <span class="italic">{{ artwork.title }}</span
-          >{{ artwork.year ? ` – ${artwork.year}` : "" }}
-        </h2>
-        <p class="text-gray-500">{{ artwork.size }}</p>
-        <p class="text-gray-500">{{ artwork.medium }}</p>
+        <h3 class="pb-2">
+          <span class="italic text-gray-800">{{ artwork.title }}</span>
+          <span v-if="artwork.year" class="text-gray-600 font-normal">
+            – {{ artwork.year }}
+          </span>
+        </h3>
+        <p v-if="artwork.size" class="text-gray-500">
+          {{ artwork.size }}
+        </p>
+        <p v-if="artwork.medium" class="text-gray-500">
+          {{ artwork.medium }}
+        </p>
       </div>
     </a>
   </article>

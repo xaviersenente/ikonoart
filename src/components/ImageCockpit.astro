@@ -3,10 +3,11 @@ import { Image } from "astro:assets";
 import { getOptimizedImage } from "../services/cockpit";
 
 interface ImageData {
-    _id: string;
-    altText?: string;
-    title?: string;
-  }
+  _id: string;
+  altText?: string;
+  title?: string;
+}
+
 interface Props {
   image: ImageData;
   hoverImage?: ImageData | null;
@@ -18,6 +19,10 @@ interface Props {
   classes?: string;
   classesContainer?: string;
   legend?: boolean;
+  // ✅ Props pour l'optimisation (simplifiées)
+  priority?: boolean;
+  lazy?: boolean;
+  sizes?: string;
 }
 
 const { 
@@ -30,53 +35,121 @@ const {
   format = "webp",
   classes = "", 
   classesContainer = "", 
-  legend = false 
+  legend = false,
+  priority = false,
+  lazy = true,
+  sizes = "(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
 } = Astro.props;
 
 if (!image?._id) {
   return null;
 }
 
-// Utilisation de la nouvelle fonction avec l'objet options
+// ✅ Optimisation contextuelle de la qualité
+const contextualQuality = width > 1200 ? Math.max(quality, 80) : quality;
+
+// ✅ URL principale optimisée
 const optimizedUrl = await getOptimizedImage(image._id, {
   width,
   height,
   resize,
-  quality,
+  quality: contextualQuality,
   format
 });
 
+// ✅ URL hover (uniquement si nécessaire)
 const optimizedHoverUrl = hoverImage?._id 
   ? await getOptimizedImage(hoverImage._id, {
       width,
       height,
       resize,
-      quality,
+      quality: contextualQuality,
       format
     })
   : null;
 
+// ✅ Génération simplifiée du srcset (uniquement pour les grandes images)
+const shouldGenerateSrcset = width > 600;
+let srcSet = '';
+
+if (shouldGenerateSrcset) {
+  try {
+    const breakpoints = [Math.round(width * 0.5), Math.round(width * 0.75), width];
+    const srcsetPromises = breakpoints.map(async (bp) => {
+      const scaledHeight = Math.round((height * bp) / width);
+      const url = await getOptimizedImage(image._id, {
+        width: bp,
+        height: scaledHeight,
+        resize,
+        quality: bp <= width * 0.5 ? 60 : contextualQuality,
+        format
+      });
+      return `${url} ${bp}w`;
+    });
+    
+    const srcsetResults = await Promise.all(srcsetPromises);
+    srcSet = srcsetResults.join(', ');
+  } catch (error) {
+    console.warn('Erreur génération srcset:', error);
+    srcSet = '';
+  }
+}
+
+// ✅ Loading strategy
+const loadingStrategy = priority ? "eager" : (lazy ? "lazy" : "eager");
 ---
 
 <figure class={`${classesContainer} relative group`}>
-  <Image 
+  <!-- ✅ Image principale avec srcset conditionnel -->
+  <img 
     class={`${classes} transition-opacity duration-300 ${optimizedHoverUrl ? 'group-hover:opacity-0' : ''}`} 
     src={optimizedUrl} 
     alt={image.altText ?? "image"} 
     width={width} 
-    height={height} 
+    height={height}
+    loading={loadingStrategy}
+    decoding={priority ? "sync" : "async"}
+    sizes={shouldGenerateSrcset ? sizes : undefined}
+    srcset={srcSet || undefined}
   />
   
+  <!-- ✅ Image hover optimisée -->
   {optimizedHoverUrl && (
-    <Image 
-      class={`${classes} absolute top-0 left-0 transition-opacity duration-300 opacity-0 group-hover:opacity-100`} 
-      src={optimizedHoverUrl} 
-      alt={hoverImage?.altText ?? "image au survol"} 
-      width={width} 
-      height={height} 
-    />
+    <>
+      <img 
+        class={`${classes} absolute top-0 left-0 transition-opacity duration-300 opacity-0 group-hover:opacity-100`} 
+        src={optimizedHoverUrl} 
+        alt={hoverImage?.altText ?? "image au survol"} 
+        width={width} 
+        height={height}
+        loading="lazy"
+        decoding="async"
+      />
+      
+      <!-- ✅ Preload de l'image hover -->
+      <link 
+        rel="prefetch" 
+        href={optimizedHoverUrl}
+        as="image"
+        style="display: none;"
+      />
+    </>
   )}
-  {legend && (
-    <figcaption>{image.title}</figcaption>
+  
+  <!-- ✅ Légende -->
+  {legend && image.title && (
+    <figcaption class="text-sm text-gray-600 mt-2">
+      {image.title}
+    </figcaption>
   )}
 </figure>
+
+<!-- ✅ Preload pour les images critiques -->
+{priority && (
+  <link 
+    rel="preload" 
+    href={optimizedUrl}
+    as="image"
+    style="display: none;"
+  />
+)}

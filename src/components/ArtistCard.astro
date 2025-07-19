@@ -1,32 +1,38 @@
 ---
-// Importation de la fonction pour générer une URL relative en fonction de la langue courante
 import { getRelativeLocaleUrl } from 'astro:i18n';
-// Importation du composant pour afficher les images depuis Cockpit CMS
 import ImageCockpit from '../components/ImageCockpit.astro';
 import type { Artist } from '../types/types';
 
 interface Props {
   artist: Artist;
   currentLocale: string;
-  classes: string;
+  classes?: string;
+  priority?: boolean;
 }
 
-const { artist, currentLocale, classes = "" } = Astro.props as Props;
-// Génération du lien vers la page de l'artiste avec la bonne langue
+const { artist, currentLocale, classes = "", priority = false } = Astro.props as Props;
 const cardLink = getRelativeLocaleUrl(currentLocale, `/artists/${artist.slug}`);
 ---
+
 <article class={`${classes}`} data-key={artist._id}>
   <a href={cardLink}>
     <ImageCockpit 
       image={artist.image} 
       hoverImage={artist.image_hover || null} 
       width={700} 
-      height={700} 
+      height={700}
+      quality={65}
+      priority={priority}
+      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+      lazy={!priority}
+      classes="aspect-square object-cover"
     />
     <h2 class="mt-2 text-lg font-medium">{artist.name}</h2>
     {artist?.categorySet && artist.categorySet.length > 0 && (
-      <p>{artist.categorySet.map((item, index) => item.category).join(", ")}</p>
+      <p class="text-sm text-gray-600">
+        {artist.categorySet.map((item) => item.category).join(", ")}
+      </p>
     )}
-    <p>{artist.level}</p>
+    <p class="text-sm font-medium">{artist.level}</p>
   </a>
 </article>

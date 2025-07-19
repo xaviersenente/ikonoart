@@ -1,7 +1,5 @@
 ---
-// Importation de la fonction pour générer une URL relative en fonction de la langue courante
 import { getRelativeLocaleUrl } from 'astro:i18n';
-// Importation du composant pour afficher les images depuis Cockpit CMS
 import ImageCockpit from '../components/ImageCockpit.astro';
 import { formatDateRange } from '../js/dateFormatter.js';
 import type { Exhibition } from '../types/types';
@@ -9,18 +7,30 @@ import type { Exhibition } from '../types/types';
 interface Props {
   exhibition: Exhibition;
   currentLocale: string;
+  priority?: boolean;
 }
 
-const { exhibition, currentLocale } = Astro.props as Props;
-// Génération du lien vers la page de l'artiste avec la bonne langue
+const { exhibition, currentLocale, priority = false } = Astro.props as Props;
 const cardLink = getRelativeLocaleUrl(currentLocale, `/exhibitions/${exhibition.slug}`);
-// Formatage des dates de début et de fin
-const dateRange = formatDateRange(exhibition.start_date, exhibition.end_date);
+const dateRange = formatDateRange(exhibition.start_date, exhibition.end_date, currentLocale);
 ---
+
 <article data-key={exhibition._id}>
   <a href={cardLink}>
-    <ImageCockpit image={exhibition.image} width={700} height={700} resize="thumbnail" />
-    <h2 class="mt-2 text-lg font-medium">{exhibition.title}</h2>
-    <p>{dateRange}</p>
+    <ImageCockpit 
+      image={exhibition.image} 
+      width={700} 
+      height={500}
+      resize="thumbnail"
+      quality={65}
+      priority={priority}
+      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+      lazy={!priority}
+      classes="aspect-[7/5] object-cover"
+    />
+    <div class="mt-3">
+      <h2 class="text-lg font-medium line-clamp-2">{exhibition.title}</h2>
+      <p class="text-sm text-gray-600 mt-1">{dateRange}</p>
+    </div>
   </a>
 </article>

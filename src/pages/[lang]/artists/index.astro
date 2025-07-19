@@ -24,8 +24,12 @@ const artists = await getArtists(currentLocale);
   <main class="main-container mt-38">
     <h1 class="text-4xl my-8">{title}</h1>
   	<div class="grid gap-10 sm:grid-cols-2 lg:grid-cols-4 ">
-      {artists.map(artist => (
-        <ArtistCard artist={artist} currentLocale={currentLocale} />
+      {artists.map((artist, index) => (
+        <ArtistCard 
+          artist={artist} 
+          currentLocale={currentLocale}
+          priority={index < 4}
+        />
       ))}
     </div>
   </main>
