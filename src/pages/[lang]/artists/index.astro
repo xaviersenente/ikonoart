@@ -1,24 +1,26 @@
 ---
 import Layout from '../../../layouts/Layout.astro';
-
 import ArtistCard from '../../../components/ArtistCard.astro';
 import { getArtists } from "../../../services/collections";
-import { languages, ui, defaultLang } from '../../../i18n/ui';
+import { generateI18nPaths, getCurrentLocale, usePageMeta } from '../../../i18n/utils';
+import type { Locale } from '../../../i18n/ui';
 
 // Génération des chemins statiques pour chaque langue
 export const getStaticPaths = async () => {
-  // Utilisation de l'objet languages pour récupérer les clés de langue dynamiquement
-  return Object.keys(languages).map(lang => ({ params: { lang } }));
+  return generateI18nPaths();
 }
 
-const currentLocale = Astro.currentLocale;
+// Récupération de la locale courante avec fallback
+const currentLocale: Locale = getCurrentLocale(Astro.currentLocale);
+
+// Récupération des métadonnées de page traduites
+const { title, description } = usePageMeta(currentLocale, 'pageArtists');
+
 // Récupération des articles au moment du rendu côté serveur
 const artists = await getArtists(currentLocale);
-
-const title = ui[currentLocale]?.pageArtists.title ?? ui[defaultLang].pageArtists.title;
 ---
 
-<Layout title={title}>
+<Layout title={title} description={description}>
   <main class="main-container mt-38">
     <h1 class="text-4xl my-8">{title}</h1>
   	<div class="grid gap-10 sm:grid-cols-2 lg:grid-cols-4 ">

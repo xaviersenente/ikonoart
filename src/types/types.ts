@@ -10,27 +10,37 @@ export interface Reference {
   _id: string;
 }
 
+export interface Achievement {
+  category: string;
+  year: number;
+  title: string;
+}
+
+export interface CategorySet {
+  category: string;
+}
+
+export interface HeroCarouselItem {
+  heroCarouselImg: Image;
+  heroCarouselTitle: string;
+  heroCarouselText: string;
+}
+
 export interface Artist {
   _id: string;
   name: string;
   slug: string;
   image: Image;
-  image_hover: Image;
-  carousel?: [];
+  image_hover?: Image; // Optionnel car pas toujours présent
+  carousel?: Image[]; // Plus typé qu'un tableau vide
   birthyear?: number;
   deathyear?: number;
-  categorySet?: {
-    category: string;
-  }[];
+  categorySet?: CategorySet[];
   type: string;
   level: string;
   statement: string;
   biography?: string;
-  achievements?: {
-    category: string;
-    year: number;
-    title: string;
-  }[];
+  achievements?: Achievement[];
 }
 
 export interface Artwork {
@@ -38,8 +48,8 @@ export interface Artwork {
   title: string;
   slug: string;
   image: Image;
-  image_hover: Image;
-  images_add?: [];
+  image_hover?: Image; // Optionnel
+  images_add?: Image[]; // Plus typé
   artist: Reference;
   year?: number;
   size?: string;
@@ -57,25 +67,36 @@ export interface Exhibition {
   slug: string;
   image: Image;
   location?: string;
-  start_date: Date;
-  end_date: Date;
+  start_date: string; // Changé de Date à string car souvent reçu comme string depuis l'API
+  end_date: string;
   artist?: Reference;
+  artworks?: Reference[]; // Plus cohérent avec le type Reference
   description?: string;
 }
 
 export interface HomePage {
   _id: string;
-  heroCarousel?: {
-    heroCarouselImg: Image;
-    heroCarouselTitle: string;
-    heroCarouselText: string;
-  }[];
+  heroCarousel?: HeroCarouselItem[];
   introTitle: string;
   introText: string;
   exclusiveTitle: string;
   exclusiveText: string;
-  carouselArtists?: [];
-  carouselArtworks?: [];
-  carouselClassicCollection?: [];
-  carouselJapaneseCollection?: [];
+  carouselArtists?: Reference[];
+  carouselArtworks?: Reference[];
+  carouselClassicCollection?: Reference[];
+  carouselJapaneseCollection?: Reference[];
+}
+
+// Types utilitaires pour les réponses API
+export interface ApiResponse<T> {
+  data: T;
+  success: boolean;
+  message?: string;
+}
+
+export interface PaginatedResponse<T> {
+  data: T[];
+  total: number;
+  page: number;
+  limit: number;
 }

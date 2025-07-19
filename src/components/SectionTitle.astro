@@ -1,0 +1,14 @@
+---
+import { getRelativeLocaleUrl } from 'astro:i18n';
+
+interface Props {
+  currentLocale: string;
+  text: string;
+}
+
+const { currentLocale, text } = Astro.props as Props;
+
+const buttonLink = getRelativeLocaleUrl(currentLocale, text);
+---
+
+<h2 class="py-24 text-3xl font-medium uppercase relative flex items-center gap-8 after:flex-auto after:bg-black after:h-[1px] after:block">{text}</h2>

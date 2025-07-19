@@ -1,4 +1,10 @@
 {
+  "site": {
+    "name": "イコノアート"
+  },
+  "meta": {
+    "defaultDescription": "イコノアート - 革新的なアーティストと展覧会を紹介する現代美術ギャラリー"
+  },
   "header": {
     "home": "イコノアート",
     "artists": "アーティスト",
@@ -23,6 +29,7 @@
   },
   "pageArtists": {
     "title": "アーティスト",
+    "description": "Ikono Artが紹介する現代アーティストたちをご覧ください。彼らのストーリーや制作背景を知り、レンタル・販売可能な作品をお楽しみいただけます。",
     "itemMenu1": "ステートメント",
     "itemMenu2": "バイオグラフィー",
     "itemMenu3": "作品",
@@ -31,10 +38,12 @@
     "itemMenu6": "展示"
   },
   "pageArtworks": {
-    "title": "ページアートワーク"
+    "title": "ページアートワーク",
+    "description": "Ikono Artが厳選したユニークなアート作品をご覧ください。絵画、写真、イラストなど、購入またはレンタルで空間を彩ります。"
   },
   "pageExhibitions": {
-    "title": "展示会"
+    "title": "展示会",
+    "description": "Ikono Artの最新展示会やイベントをご紹介。現代アーティストと特別なコレクションによる展示で、あなたのアート体験を豊かにします。"
   },
   "filters": {
     "artist": "アーティスト",

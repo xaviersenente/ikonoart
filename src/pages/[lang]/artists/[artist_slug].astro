@@ -1,42 +1,37 @@
 ---
-import { ui, defaultLang } from '../../../i18n/ui';
 import Layout from "../../../layouts/Layout.astro";
 import ArtworkCard from '../../../components/ArtworkCard.astro';
 import ImageCockpit from '../../../components/ImageCockpit.astro';
 import Carousel from '../../../components/Carousel.astro';
+import { languages } from '../../../i18n/ui';
+import { useTranslations } from '../../../i18n/utils';
 import { getArtists, getArtistById, getArtworksByArtist, groupAchievementsByCategoryAndYear } from "../../../services/collections";
 
-import type { Artist } from '../../../types/types'; 
-
-// Définition du type des chemins statiques
-interface StaticPath {
-  params: { lang: string; artist_slug: string };
-  props: { artist_id: string; lang: string };
-}
+import type { Artist } from '../../../types/types';
+import type { Locale } from '../../../i18n/ui';
 
 // Fonction pour générer les chemins statiques pour chaque artiste et langue
-export async function getStaticPaths(): Promise<StaticPath[]> {
-  const languages = ["en", "ja"];  // Liste des langues supportées
-  const artists: Artist[] = await getArtists();  // Récupère tous les artistes
-
+export async function getStaticPaths() {
+  const artists: Artist[] = await getArtists();
+  
   return artists.flatMap((artist) =>
-    languages.map((lang) => ({
+    Object.keys(languages).map((lang) => ({
       params: { lang, artist_slug: artist.slug },
-      props: { artist_id: artist._id, lang },
+      props: { artist_id: artist._id },
     }))
   );
 }
-
 
 // Définition des types pour Astro.params et Astro.props
 const { artist_slug, lang } = Astro.params as { artist_slug: string; lang: string };
 const { artist_id } = Astro.props as { artist_id: string };
 
-const locale = ui[lang]?.pageArtists ?? ui[defaultLang].pageArtists;
+const currentLocale = lang as Locale;
+const t = useTranslations(currentLocale);
 
 // Récupération des données
-const artist: Artist | null = await getArtistById(artist_id, lang);
-const { standard: standardArtworks, limitedEdition: limitedEditionArtworks } = await getArtworksByArtist(artist_id, lang);
+const artist: Artist | null = await getArtistById(artist_id, currentLocale);
+const { standard: standardArtworks, limitedEdition: limitedEditionArtworks } = await getArtworksByArtist(artist_id, currentLocale);
 // Regroupement des achievements
 const groupedAchievements = groupAchievementsByCategoryAndYear(artist);
 
@@ -56,12 +51,12 @@ const groupedAchievements = groupAchievementsByCategoryAndYear(artist);
       </div>
       <nav class=" self-end">
         <ul class="flex gap-4 uppercase text-gray-500 overflow-x-auto *:flex-none" >
-          { artist?.statement && (<li><a class="block transition duration-300" href="#statement">{locale.itemMenu1}</a></li>) }
-          { artist?.biography && (<li><a class="block transition duration-300" href="#biography">{locale.itemMenu2}</a></li>) }
-          { standardArtworks.length > 0 && (<li><a class="block transition duration-300" href="#works">{locale.itemMenu3}</a></li>) }
-          { limitedEditionArtworks.length > 0 && (<li><a class="block transition duration-300" href="#limited-edition">{locale.itemMenu4}</a></li>) }
-          { groupedAchievements && Object.entries(groupedAchievements).length > 0 && (<li><a class="block transition duration-300" href="#achievements">{locale.itemMenu5}</a></li>) }
-          <li><a class="block transition duration-300" href="#exhibition">{locale.itemMenu6}</a></li>
+          { artist?.statement && (<li><a class="block transition duration-300" href="#statement">{t('pageArtists.itemMenu1')}</a></li>) }
+          { artist?.biography && (<li><a class="block transition duration-300" href="#biography">{t('pageArtists.itemMenu2')}</a></li>) }
+          { standardArtworks.length > 0 && (<li><a class="block transition duration-300" href="#works">{t('pageArtists.itemMenu3')}</a></li>) }
+          { limitedEditionArtworks.length > 0 && (<li><a class="block transition duration-300" href="#limited-edition">{t('pageArtists.itemMenu4')}</a></li>) }
+          { groupedAchievements && Object.entries(groupedAchievements).length > 0 && (<li><a class="block transition duration-300" href="#achievements">{t('pageArtists.itemMenu5')}</a></li>) }
+          <li><a class="block transition duration-300" href="#exhibition">{t('pageArtists.itemMenu6')}</a></li>
         </ul>
       </nav>
     </div>
@@ -94,7 +89,7 @@ const groupedAchievements = groupAchievementsByCategoryAndYear(artist);
     {standardArtworks.length > 0 && ( 
       <section class="scroll-mt-40" id="works">
         <h2 class="text-2xl mb-10 mt-20 border-t border-gray-300 pt-4">Works</h2>
-        <div class="grid gap-10 md:grid-cols-2 lg:grid-cols-4">
+        <div class="card-grid">
           {standardArtworks.map((artwork) => (
             <ArtworkCard artwork={artwork} currentLocale={lang}/>
           ))}
@@ -105,7 +100,7 @@ const groupedAchievements = groupAchievementsByCategoryAndYear(artist);
     {limitedEditionArtworks.length > 0 && ( 
       <section class="scroll-mt-40" id="limited-edition">
         <h2 class="text-2xl mb-10 mt-20 border-t border-gray-300 pt-4">Limited Edition</h2>
-        <div class="grid gap-10 md:grid-cols-2 lg:grid-cols-4">
+        <div class="card-grid">
           {limitedEditionArtworks.map((artwork) => (
             <ArtworkCard artwork={artwork} currentLocale={lang}/>
           ))}

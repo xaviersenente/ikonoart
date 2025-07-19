@@ -12,14 +12,18 @@
     hoverImage?: ImageData | null;
     width?: number;
     height?: number;
-    resize?: string;
+    resize?: "thumbnail" | "bestFit" | "resize" | "fitToWidth" | "fitToHeight";
+    quality?: number;
+    format?: "webp" | "jpeg" | "png";
     classes?: string;
   }
 
   const props = withDefaults(defineProps<Props>(), {
     width: 400,
     height: 600,
-    resize: "thumbnail",
+    resize: "bestFit",
+    quality: 70,
+    format: "webp",
     classes: "",
     hoverImage: null,
   });
@@ -30,20 +34,22 @@
 
   onMounted(async () => {
     if (props.image?._id) {
-      optimizedUrl.value = await getOptimizedImage(
-        props.image._id,
-        props.width,
-        props.height,
-        props.resize
-      );
+      optimizedUrl.value = await getOptimizedImage(props.image._id, {
+        width: props.width,
+        height: props.height,
+        resize: props.resize,
+        quality: props.quality,
+        format: props.format,
+      });
     }
     if (props.hoverImage?._id) {
-      optimizedHoverUrl.value = await getOptimizedImage(
-        props.hoverImage._id,
-        props.width,
-        props.height,
-        props.resize
-      );
+      optimizedHoverUrl.value = await getOptimizedImage(props.hoverImage._id, {
+        width: props.width,
+        height: props.height,
+        resize: props.resize,
+        quality: props.quality,
+        format: props.format,
+      });
     }
   });
 

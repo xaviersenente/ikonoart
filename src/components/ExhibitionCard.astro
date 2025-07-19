@@ -3,6 +3,7 @@
 import { getRelativeLocaleUrl } from 'astro:i18n';
 // Importation du composant pour afficher les images depuis Cockpit CMS
 import ImageCockpit from '../components/ImageCockpit.astro';
+import { formatDateRange } from '../js/dateFormatter.js';
 import type { Exhibition } from '../types/types';
 
 interface Props {
@@ -13,12 +14,13 @@ interface Props {
 const { exhibition, currentLocale } = Astro.props as Props;
 // Génération du lien vers la page de l'artiste avec la bonne langue
 const cardLink = getRelativeLocaleUrl(currentLocale, `/exhibitions/${exhibition.slug}`);
+// Formatage des dates de début et de fin
+const dateRange = formatDateRange(exhibition.start_date, exhibition.end_date);
 ---
 <article data-key={exhibition._id}>
   <a href={cardLink}>
-    <ImageCockpit image={exhibition.image} width={700} height={700} />
+    <ImageCockpit image={exhibition.image} width={700} height={700} resize="thumbnail" />
     <h2 class="mt-2 text-lg font-medium">{exhibition.title}</h2>
-    <p>{exhibition.start_date}</p>
-    <p>{exhibition.end_date}</p>
+    <p>{dateRange}</p>
   </a>
 </article>

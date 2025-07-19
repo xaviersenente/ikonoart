@@ -15,7 +15,7 @@ import ArtworkCard from '../../components/ArtworkCard.astro';
 import ArtistCard from '../../components/ArtistCard.astro';
 import Button from '../../components/Button.astro';
 
-import type { Artwork, Artist, HomePage } from '../../types/types';
+import type { Reference, HomePage } from '../../types/types';
 
 // Génération des chemins statiques pour chaque langue
 export const getStaticPaths = async () => {
@@ -24,26 +24,25 @@ export const getStaticPaths = async () => {
 }
 const currentLocale = Astro.currentLocale;
 // Récupération des articles au moment du rendu côté serveur
-const homePage = await getSingleton("homepage", currentLocale, { populate: 1 }) as HomePage;
+const homePage = await getSingleton("homepage", { locale: currentLocale, populate: 1 }) as HomePage;
 
 // Récupération des artistes sélectionnés depuis la homepage
-const selectedArtists = (homePage.carouselArtists || []) as Artist[];
-const selectedArtworks = (homePage.carouselArtworks || []) as Artwork[];
-const classicCollection = (homePage.carouselClassicCollection || []) as Artwork[];
-const japaneseCollection = (homePage.carouselJapaneseCollection || []) as Artwork[];
+const selectedArtists = (homePage.carouselArtists || []) as Reference[];
+const selectedArtworks = (homePage.carouselArtworks || []) as Reference[];
+const classicCollection = (homePage.carouselClassicCollection || []) as Reference[];
+const japaneseCollection = (homePage.carouselJapaneseCollection || []) as Reference[];
 const heroCarousel = homePage.heroCarousel;
 
-const title = "Artists";
 ---
 
-<Layout title={title}>
+<Layout title="">
   {heroCarousel && Object.entries(heroCarousel).length > 0 && (
     <div class="splide fade-carousel mt-28" role="group" aria-label="Next exhibitions" data-splide='{"perPage":1, "type":"fade"}'>
       <div class="splide__track">
         <ul class="splide__list">
         {heroCarousel.map(carousel => (
           <li class="splide__slide relative">
-            <ImageCockpit image={carousel.heroCarouselImg} width={1920} height={900} classes="w-full"/>
+            <ImageCockpit image={carousel.heroCarouselImg} width={1920} height={900} resize="thumbnail" classes="w-full"/>
             <div class="absolute px-24 py-12 min-w-3xl left-0 bottom-0 z-10 text-white bg-linear-to-r from-[rgba(43,36,51,1)] to-[rgba(43,36,51,0)]">
               <h3 class="text-3xl font-medium uppercase">{carousel.heroCarouselTitle}</h3>
               <p>{carousel.heroCarouselText}</p>
@@ -119,7 +118,7 @@ const title = "Artists";
     <div class="main-container">
       <h2 class="py-23 text-3xl font-medium uppercase relative flex items-center gap-8 after:flex-auto after:bg-white after:h-[1px] after:block">Ikono art Services
       </h2>
-      <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8 text-center">
+      <div class="card-grid text-center">
         <div>
           <h3 class="font-medium uppercase">Curation</h3>
           <ul>

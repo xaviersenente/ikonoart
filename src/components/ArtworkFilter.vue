@@ -259,7 +259,7 @@
       </p>
 
       <!-- Grille d'œuvres -->
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
+      <div class="card-grid">
         <ArtworkCard
           v-for="artwork in visibleArtworks"
           :key="artwork._id"

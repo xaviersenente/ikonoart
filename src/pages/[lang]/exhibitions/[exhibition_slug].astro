@@ -1,8 +1,13 @@
 ---
 import Layout from "../../../layouts/Layout.astro";
 import ImageCockpit from '../../../components/ImageCockpit.astro';
+import ArtworkCard from '../../../components/ArtworkCard.astro';
 import { languages } from '../../../i18n/ui';
-import { getExhibitions, getExhibitionById } from "../../../services/collections";
+import { formatDateRange } from '../../../js/dateFormatter.js';
+import { getExhibitions, getExhibitionById, getArtworksByExhibition } from "../../../services/collections";
+
+
+import type { Artwork, Exhibition } from '../../../types/types';
 
 // Fonction pour générer les chemins statiques pour chaque artiste et langue
 export async function getStaticPaths() {
@@ -15,11 +20,17 @@ export async function getStaticPaths() {
     }))
   );
 }
-
+const currentLocale = Astro.currentLocale;
 const { exhibition_slug, lang } = Astro.params;
 const { exhibition_id } = Astro.props;
-const exhibition = await getExhibitionById(exhibition_id, lang);
+const exhibition: Exhibition | null = await getExhibitionById(exhibition_id, lang);
+
+// Récupération des œuvres complètes de l'exposition
+const exhibitionArtworks: Artwork[] = await getArtworksByExhibition(exhibition_id, lang);
+// Formatage des dates de début et de fin
+const dateRange = formatDateRange(exhibition?.start_date, exhibition?.end_date);
 // const artist = artwork.artist?._id ? await getArtistById(artwork.artist._id, lang) : null;
+console.log(exhibitionArtworks);
 ---
 
 <Layout title={ exhibition?.title } currentLocale={lang}>
@@ -32,23 +43,25 @@ const exhibition = await getExhibitionById(exhibition_id, lang);
         Retour
       </a>
     </div>
-    <div class="grid gap-10 lg:grid-cols-3">
-      <div>
-        <h1 class="text-3xl mb-4">
-          {exhibition ? (
-            <a href={`/${lang}/exhibitions/${exhibition.slug}`} class="hover:underline">
-              {exhibition.title}
-            </a>
-          ) : ""}
-        </h1>
-        <!-- <h2 class="text-xl mb-4">
-          <span class="italic">{ exhibition?.title }</span>{ exhibition?.year && ( <span> – { exhibition?.year }</span> )}
-        </h2>
-        <p>{ exhibition?.description }</p> 
-        <p>{ exhibition?.size }</p> -->
-      </div>
-      <!-- <ImageCockpit image={exhibition?.image} width={1600} height={1600} resize="bestFit" classes="col-span-2 max-h-[70dvh] w-auto" /> -->
+    <div>
+      <h1 class="text-3xl mb-4">{exhibition?.title}</h1>
+      <h3>{dateRange}</h3>
+
+      <ImageCockpit 
+        image={exhibition?.image} 
+        width={1800} 
+        height={750} 
+        resize="thumbnail"
+        classes="w-full h-auto object-cover"  />
     </div>
+    <div set:html={exhibition?.description}></div>
+    {exhibitionArtworks && exhibitionArtworks.length > 0 && (
+      <div class="card-grid">
+        {exhibitionArtworks.map(artwork => (
+          <ArtworkCard artwork={artwork} currentLocale={currentLocale} />
+        ))}
+      </div>
+    )}
   </main>
 
 </Layout>

@@ -2,19 +2,19 @@
 import { Image } from "astro:assets";
 import { getOptimizedImage } from "../services/cockpit";
 
-interface Props {
-  image: {
+interface ImageData {
     _id: string;
     altText?: string;
     title?: string;
-  };
-  hoverImage?: {
-    _id: string;
-    altText?: string;
-  } | null;
+  }
+interface Props {
+  image: ImageData;
+  hoverImage?: ImageData | null;
   width?: number;
   height?: number;
-  resize?: string;
+  resize?: 'thumbnail' | 'bestFit' | 'resize' | 'fitToWidth' | 'fitToHeight';
+  quality?: number;
+  format?: 'webp' | 'jpeg' | 'png';
   classes?: string;
   classesContainer?: string;
   legend?: boolean;
@@ -23,9 +23,11 @@ interface Props {
 const { 
   image, 
   hoverImage = null, 
-  width=400, 
-  height=600, 
-  resize="thumbnail", 
+  width = 400, 
+  height = 600, 
+  resize = "bestFit", 
+  quality = 70,
+  format = "webp",
   classes = "", 
   classesContainer = "", 
   legend = false 
@@ -35,8 +37,24 @@ if (!image?._id) {
   return null;
 }
 
-const optimizedUrl = await getOptimizedImage(image._id, width, height, resize);
-const optimizedHoverUrl = hoverImage?._id ? await getOptimizedImage(hoverImage._id, width, height, resize) : null;
+// Utilisation de la nouvelle fonction avec l'objet options
+const optimizedUrl = await getOptimizedImage(image._id, {
+  width,
+  height,
+  resize,
+  quality,
+  format
+});
+
+const optimizedHoverUrl = hoverImage?._id 
+  ? await getOptimizedImage(hoverImage._id, {
+      width,
+      height,
+      resize,
+      quality,
+      format
+    })
+  : null;
 
 ---
 

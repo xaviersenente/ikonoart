@@ -2,28 +2,35 @@
 import Layout from "../../../layouts/Layout.astro";
 import ImageCockpit from '../../../components/ImageCockpit.astro';
 import { languages } from '../../../i18n/ui';
+import { useTranslations } from '../../../i18n/utils';
 import { getArtworks, getArtworkById, getArtistById } from "../../../services/collections";
+
+import type { Artwork } from '../../../types/types';
+import type { Locale } from '../../../i18n/ui';
 
 // Fonction pour générer les chemins statiques pour chaque artiste et langue
 export async function getStaticPaths() {
-  const artworks = await getArtworks();  // Récupère tous les artistes
+  const artworks: Artwork[] = await getArtworks();  // Récupère tous les artistes
   // Créer un tableau de chemins pour chaque artiste et chaque langue
   return artworks.flatMap(artwork => 
     Object.keys(languages).map(lang => ({
       params: { lang, artwork_slug: artwork.slug },
-      props: { artwork_id: artwork._id, lang }, 
+      props: { artwork_id: artwork._id }, 
     }))
   );
 }
 
 const { artwork_slug, lang } = Astro.params;
 const { artwork_id } = Astro.props;
-const artwork = await getArtworkById(artwork_id, lang);
-const artist = artwork.artist?._id ? await getArtistById(artwork.artist._id, lang) : null;
-// const formattedDescription = artwork?.description?.replace(/\n/g, '<br>');
+
+const currentLocale = lang as Locale;
+const t = useTranslations(currentLocale);
+
+const artwork = await getArtworkById(artwork_id, currentLocale);
+const artist = artwork.artist?._id ? await getArtistById(artwork.artist._id, currentLocale) : null;
 ---
 
-<Layout title={ artwork?.title } currentLocale={lang}>
+<Layout title={ artwork?.title } currentLocale={currentLocale}>
   <main class="main-container mt-38">
     <div class="mb-6">
       <a href="javascript:history.back()" class="inline-flex items-center text-gray-600 hover:text-black">

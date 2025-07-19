@@ -1,6 +1,8 @@
 ---
 import { ClientRouter } from "astro:transitions";
 import PasswordProtection from '../components/PasswordProtection.astro';
+import { getCurrentLocale, useTranslations } from '../i18n/utils';
+import type { Locale } from '../i18n/ui';
 
 // import '@fontsource-variable/noto-sans';
 // import '@fontsource-variable/noto-sans-jp';
@@ -16,29 +18,71 @@ import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
 
 // Définition stricte des props attendues
-type Props = {
+interface Props {
   title: string;
   description?: string;
+  currentLocale?: Locale;
+}
+
+// Récupération de la langue actuelle avec fallback
+const { title, description, currentLocale: propLocale } = Astro.props;
+const currentLocale = propLocale || getCurrentLocale(Astro.currentLocale);
+const t = useTranslations(currentLocale);
+
+// Configuration des langues 
+const localeConfig: Record<Locale, {
+  siteName: string;
+  separator: string;
+}> = {
+  'en': {
+    siteName: t('site.name') || "Ikono Art",
+    separator: " — "
+  },
+  'ja': {
+    siteName: t('site.name') || "イコノアート",
+    separator: " — "
+  }
 };
 
-// Récupération et typage des props
-const { title, description = "Players Club Concept" } = Astro.props as Props;
+// Fonction pour nettoyer le pathname et extraire la partie après la langue
+function getCleanPathname(pathname: string, locale: string): string {
+  const cleanPath = pathname.replace(/\/$/, '');
+  
+  // Gestion des URLs avec préfixe de langue (/en/, /ja/)
+  const localePrefix = `/${locale}`;
+  if (cleanPath.startsWith(localePrefix)) {
+    return cleanPath.substring(localePrefix.length) || '/';
+  }
+  
+  return cleanPath || '/';
+}
 
-const lang = Astro.currentLocale;
-const siteName = "Ikono Art";
-// Récupération du nom de la page actuelle en s'assurant qu'il ne soit jamais `undefined`
-const currentPage: string =
-  Astro.url.pathname.replace(/\/$/, "").split("/").pop() ?? "home";
+// Récupération du pathname nettoyé
+const cleanPathname = getCleanPathname(Astro.url.pathname, currentLocale);
 
-const titleHead: string = Astro.url.pathname === "/" ? siteName : `${title} — ${siteName}`;
+// Construction du titre de la page
+const currentSiteName = localeConfig[currentLocale]?.siteName;
+const separator = localeConfig[currentLocale]?.separator ?? " — ";
 
+const titleHead: string = cleanPathname === '/' 
+  ? currentSiteName 
+  : `${title}${separator}${currentSiteName}`;
+
+// Optionnel : récupération du nom de la page actuelle pour d'autres usages
+const currentPage: string = cleanPathname === '/' 
+  ? 'home'
+  : cleanPathname.split('/').pop() ?? 'home';
+
+// Meta description avec traductions
+const metaDescription = description || t('meta.defaultDescription') || '';
 ---
+
 <!doctype html>
-<html class="scroll-smooth" lang={lang} data-page={currentPage}>
+<html class="scroll-smooth" lang={currentLocale} data-page={currentPage}>
 	<head>
 		<SEO
       title={titleHead}
-      description={description}
+      description={metaDescription}
       charset="UTF-8"
       openGraph={{
         basic: {
@@ -77,7 +121,7 @@ const titleHead: string = Astro.url.pathname === "/" ? siteName : `${title} — 
         meta: [
           { name: "twitter:image", content: "/playersclub-og.jpg" },
           { name: "twitter:title", content: titleHead },
-          { name: "twitter:description", content: description },
+          { name: "twitter:description", content: metaDescription },
           { name: "viewport", content: "width=device-width" },
           { name: "msapplication-TileColor", content: "#000000" },
           { name: "theme-color", content: "#ffffff" },
@@ -95,4 +139,3 @@ const titleHead: string = Astro.url.pathname === "/" ? siteName : `${title} — 
 		<Footer/>
 	</body>
 </html>
-

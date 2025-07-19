@@ -1,4 +1,10 @@
 {
+  "site": {
+    "name": "Ikono Art"
+  },
+  "meta": {
+    "defaultDescription": "Ikono Art - Contemporary art gallery showcasing innovative artists and exhibitions"
+  },
   "header": {
     "home": "Ikono Art",
     "artists": "Artists",
@@ -23,6 +29,7 @@
   },
   "pageArtists": {
     "title": "Artists",
+    "description": "Discover contemporary artists presented by Ikono Art. Learn about their stories, creative journeys, and explore artworks available for sale or rental.",
     "itemMenu1": "Statement",
     "itemMenu2": "Biography",
     "itemMenu3": "Works",
@@ -31,10 +38,12 @@
     "itemMenu6": "Exhibition"
   },
   "pageArtworks": {
-    "title": "Artworks"
+    "title": "Artworks",
+    "description": "Explore unique artworks curated by Ikono Art. Paintings, photographs, and illustrations available for purchase or rental to enrich your space."
   },
   "pageExhibitions": {
-    "title": "Exhibitions"
+    "title": "Exhibitions",
+    "description": "Discover Ikono Art’s latest exhibitions showcasing contemporary artists and exclusive collections. Events and exhibitions to inspire your artistic journey."
   },
   "filters": {
     "artist": "Artist",
