@@ -4,14 +4,12 @@ import ja from "./locales/ja.json";
 export const languages = {
   en: "English",
   ja: "日本語",
-} as const; // `as const` empêche toute modification des valeurs
+} as const;
 
-export type Locale = keyof typeof languages; // "en" | "ja"
+export type Locale = keyof typeof languages;
+export const defaultLang: Locale = "en";
 
-export const defaultLang: Locale = "en"; // Typé pour éviter des erreurs
-
-// On utilise une importation dynamique des traductions
-export const ui: Record<Locale, Record<string, Record<string, string>>> = {
+export const ui: Record<Locale, any> = {
   en: en,
   ja: ja,
-} as const; // Assure l'immuabilité de l'objet
+} as const;

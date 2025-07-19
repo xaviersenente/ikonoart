@@ -19,7 +19,6 @@ interface Props {
   classes?: string;
   classesContainer?: string;
   legend?: boolean;
-  // ✅ Props pour l'optimisation (simplifiées)
   priority?: boolean;
   lazy?: boolean;
   sizes?: string;
@@ -45,10 +44,10 @@ if (!image?._id) {
   return null;
 }
 
-// ✅ Optimisation contextuelle de la qualité
+// Optimisation contextuelle de la qualité
 const contextualQuality = width > 1200 ? Math.max(quality, 80) : quality;
 
-// ✅ URL principale optimisée
+// URL principale optimisée
 const optimizedUrl = await getOptimizedImage(image._id, {
   width,
   height,
@@ -57,7 +56,7 @@ const optimizedUrl = await getOptimizedImage(image._id, {
   format
 });
 
-// ✅ URL hover (uniquement si nécessaire)
+// URL hover (uniquement si nécessaire)
 const optimizedHoverUrl = hoverImage?._id 
   ? await getOptimizedImage(hoverImage._id, {
       width,
@@ -68,7 +67,7 @@ const optimizedHoverUrl = hoverImage?._id
     })
   : null;
 
-// ✅ Génération simplifiée du srcset (uniquement pour les grandes images)
+// Génération simplifiée du srcset (uniquement pour les grandes images)
 const shouldGenerateSrcset = width > 600;
 let srcSet = '';
 
@@ -95,12 +94,12 @@ if (shouldGenerateSrcset) {
   }
 }
 
-// ✅ Loading strategy
+// Loading strategy
 const loadingStrategy = priority ? "eager" : (lazy ? "lazy" : "eager");
 ---
 
 <figure class={`${classesContainer} relative group`}>
-  <!-- ✅ Image principale avec srcset conditionnel -->
+  <!-- Image principale avec srcset conditionnel -->
   <img 
     class={`${classes} transition-opacity duration-300 ${optimizedHoverUrl ? 'group-hover:opacity-0' : ''}`} 
     src={optimizedUrl} 
@@ -113,7 +112,7 @@ const loadingStrategy = priority ? "eager" : (lazy ? "lazy" : "eager");
     srcset={srcSet || undefined}
   />
   
-  <!-- ✅ Image hover optimisée -->
+  <!-- Image hover optimisée -->
   {optimizedHoverUrl && (
     <>
       <img 
@@ -126,7 +125,7 @@ const loadingStrategy = priority ? "eager" : (lazy ? "lazy" : "eager");
         decoding="async"
       />
       
-      <!-- ✅ Preload de l'image hover -->
+      <!-- Preload de l'image hover -->
       <link 
         rel="prefetch" 
         href={optimizedHoverUrl}
@@ -136,7 +135,7 @@ const loadingStrategy = priority ? "eager" : (lazy ? "lazy" : "eager");
     </>
   )}
   
-  <!-- ✅ Légende -->
+  <!-- Légende -->
   {legend && image.title && (
     <figcaption class="text-sm text-gray-600 mt-2">
       {image.title}
@@ -144,7 +143,7 @@ const loadingStrategy = priority ? "eager" : (lazy ? "lazy" : "eager");
   )}
 </figure>
 
-<!-- ✅ Preload pour les images critiques -->
+<!-- Preload pour les images critiques -->
 {priority && (
   <link 
     rel="preload" 

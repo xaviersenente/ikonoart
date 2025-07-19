@@ -12,6 +12,7 @@ interface Props {
 
 const { artist, currentLocale, classes = "", priority = false } = Astro.props as Props;
 const cardLink = getRelativeLocaleUrl(currentLocale, `/artists/${artist.slug}`);
+
 ---
 
 <article class={`${classes}`} data-key={artist._id}>

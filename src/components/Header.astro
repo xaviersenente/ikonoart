@@ -1,18 +1,19 @@
 ---
 import LanguagePicker from "../components/LanguagePicker.astro";
-import { ui, defaultLang } from '../i18n/ui'; // Importation des traductions
+import { getCurrentLocale, useTranslations } from '../i18n/utils';
+import type { Locale } from '../i18n/ui';
 import Logo from '../assets/icons/logo-ikonoart.svg';
 
-const lang = Astro.currentLocale;
-const currentPath = Astro.url.pathname;
+// Récupération de la locale courante avec fallback
+const currentLocale: Locale = getCurrentLocale(Astro.currentLocale);
+const t = useTranslations(currentLocale);
 
-// Accéder aux traductions du menu de navigation
-const header = ui[lang]?.header ?? ui[defaultLang].header;
+const currentPath = Astro.url.pathname;
 ---
 
 <header class="fixed top-0 z-10 flex justify-center w-full p-4 gap-4 bg-white transition-all duration-300" id="site-header">
   <div class="max-w-8xl flex-1 flex justify-between items-center">
-    <a class="basis-20 lg:basis-40 " href={`/${lang}/`} aria-label="Accueil">
+    <a class="basis-20 lg:basis-40 " href={`/${currentLocale}/`} aria-label="Accueil">
       <Logo class="logo-image transition-all duration-300"/>
     </a>
     <nav 
@@ -21,10 +22,10 @@ const header = ui[lang]?.header ?? ui[defaultLang].header;
       data-state="closed">
       <ul class="flex gap-8 uppercase">
         {[
-          { href: `/${lang}/artists/`, label: header.artists },
-          { href: `/${lang}/artworks/`, label: header.artworks },
-          { href: `/${lang}/exhibitions/`, label: header.exhibitions },
-          { href: `/${lang}/contact/`, label: header.contact }
+          { href: `/${currentLocale}/artists/`, label: t('header.artists') },
+          { href: `/${currentLocale}/artworks/`, label: t('header.artworks') },
+          { href: `/${currentLocale}/exhibitions/`, label: t('header.exhibitions') },
+          { href: `/${currentLocale}/contact/`, label: t('header.contact') }
         ].map(({ href, label }) => (
           <li>
             <a 

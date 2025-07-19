@@ -1,6 +1,5 @@
 <script setup lang="ts">
   import { ref, computed, onMounted } from "vue";
-  import { getRelativeLocaleUrl } from "astro:i18n";
   import { getArtistById } from "../services/collections";
   import type { Artwork, Artist } from "../types/types";
   import ImageCockpit from "../components/ImageCockpit.vue";
@@ -17,8 +16,8 @@
     priority: false,
   });
 
-  const cardLink = computed(() =>
-    getRelativeLocaleUrl(props.currentLocale, `/artworks/${props.artwork.slug}`)
+  const cardLink = computed(
+    () => `/${props.currentLocale}/artworks/${props.artwork.slug}`
   );
 
   const artist = ref<Artist | null>(null);

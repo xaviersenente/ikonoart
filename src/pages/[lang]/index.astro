@@ -1,7 +1,7 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import { getSingleton } from "../../services/cockpit";
-import { languages, ui, defaultLang } from '../../i18n/ui';
+import { generateI18nPaths, getCurrentLocale, usePageMeta, useTranslations } from '../../i18n/utils';
 
 import { Image } from 'astro:assets';
 import Logo from '../../assets/icons/logo-ikonoart-white2.svg';
@@ -14,15 +14,17 @@ import ImageCockpit from '../../components/ImageCockpit.astro';
 import ArtworkCard from '../../components/ArtworkCard.astro';
 import ArtistCard from '../../components/ArtistCard.astro';
 import Button from '../../components/Button.astro';
+import SectionTitle from '../../components/SectionTitle.astro';
 
 import type { Reference, HomePage } from '../../types/types';
+import type { Locale } from '../../i18n/ui';
 
 // Génération des chemins statiques pour chaque langue
 export const getStaticPaths = async () => {
-  // Utilisation de l'objet languages pour récupérer les clés de langue dynamiquement
-  return Object.keys(languages).map(lang => ({ params: { lang } }));
+  return generateI18nPaths();
 }
-const currentLocale = Astro.currentLocale;
+// Récupération de la locale courante avec fallback
+const currentLocale: Locale = getCurrentLocale(Astro.currentLocale);
 // Récupération des articles au moment du rendu côté serveur
 const homePage = await getSingleton("homepage", { locale: currentLocale, populate: 1 }) as HomePage;
 
@@ -42,7 +44,17 @@ const heroCarousel = homePage.heroCarousel;
         <ul class="splide__list">
         {heroCarousel.map(carousel => (
           <li class="splide__slide relative">
-            <ImageCockpit image={carousel.heroCarouselImg} width={1920} height={900} resize="thumbnail" classes="w-full"/>
+            <ImageCockpit 
+              image={carousel.heroCarouselImg} 
+              width={1920} 
+              height={900}
+              quality={65}
+              resize="thumbnail"
+              priority={true}
+              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+              lazy={false}
+              classes="w-full"
+            />
             <div class="absolute px-24 py-12 min-w-3xl left-0 bottom-0 z-10 text-white bg-linear-to-r from-[rgba(43,36,51,1)] to-[rgba(43,36,51,0)]">
               <h3 class="text-3xl font-medium uppercase">{carousel.heroCarouselTitle}</h3>
               <p>{carousel.heroCarouselText}</p>
@@ -67,7 +79,7 @@ const heroCarousel = homePage.heroCarousel;
   
   {selectedArtists && selectedArtists.length > 0 && (
     <section class="main-container">
-      <h2 class="py-24 text-3xl font-medium uppercase relative flex items-center gap-8 after:flex-auto after:bg-black after:h-[1px] after:block">Artists highlights</h2>
+      <SectionTitle currentLocale={currentLocale} text="pageHome.sections.artistsHighlights"/>
       <div class="splide home-carousel px-12 lg:px-16" role="group" aria-label="Artists carousel">
         <div class="splide__track">
           <ul class="splide__list">
@@ -78,7 +90,7 @@ const heroCarousel = homePage.heroCarousel;
         </div>
       </div>
       <div class="flex justify-center mt-16">
-        <Button currentLocale={currentLocale} text="all artists" url="/artists"/>
+        <Button currentLocale={currentLocale} textKey="buttons.allArtists" url="/artists"/>
       </div>
     </section>
   )}
@@ -86,6 +98,7 @@ const heroCarousel = homePage.heroCarousel;
   <section class="main-container">
     <h2 class="py-24 text-3xl font-medium uppercase relative flex items-center gap-8 after:flex-auto after:bg-black after:h-[1px] after:block">Ikonoart Exclusive representative
     </h2>
+    <SectionTitle currentLocale={currentLocale} text="pageHome.sections.artistsHighlights"/>
     <div class="lg:grid lg:grid-cols-2 lg:gap-8">
       <div></div>
       <div>
@@ -97,8 +110,7 @@ const heroCarousel = homePage.heroCarousel;
 
   {selectedArtworks && selectedArtworks.length > 0 && (
     <section class="main-container">
-      <h2 class="py-24 text-3xl font-medium uppercase relative flex items-center gap-8 after:flex-auto after:bg-black after:h-[1px] after:block">Artworks highlights
-      </h2>
+      <SectionTitle currentLocale={currentLocale} text="pageHome.sections.artworksHighlights"/>
       <div class="splide home-carousel px-12 lg:px-16" role="group" aria-label="Artwork's carousel">
         <div class="splide__track">
           <div class="splide__list">
@@ -109,15 +121,14 @@ const heroCarousel = homePage.heroCarousel;
         </div>
       </div>
       <div class="flex justify-center mt-16">
-        <Button currentLocale={currentLocale} text="all artworks" url="/artworks"/>
+        <Button currentLocale={currentLocale} textKey="buttons.allArtworks" url="/artworks"/>
       </div>
     </section>
   )}
 
   <section class="text-white bg-linear-to-bl from-(--darkikonoart) to-(--verydarkikonoart) p-12 mt-24">
     <div class="main-container">
-      <h2 class="py-23 text-3xl font-medium uppercase relative flex items-center gap-8 after:flex-auto after:bg-white after:h-[1px] after:block">Ikono art Services
-      </h2>
+      <SectionTitle currentLocale={currentLocale} text="pageHome.sections.ikonoartServices"/>
       <div class="card-grid text-center">
         <div>
           <h3 class="font-medium uppercase">Curation</h3>
@@ -161,8 +172,7 @@ const heroCarousel = homePage.heroCarousel;
 
   {classicCollection && classicCollection.length > 0 && (
     <section class="main-container">
-      <h2 class="py-24 text-3xl font-medium uppercase relative flex items-center gap-8 after:flex-auto after:bg-black after:h-[1px] after:block">The classic Collection
-      </h2>
+      <SectionTitle currentLocale={currentLocale} text="pageHome.sections.classicCollection"/>
       <div class="splide home-carousel px-12 lg:px-16" role="group" aria-label="Artwork's carousel">
         <div class="splide__track">
           <div class="splide__list">
@@ -177,8 +187,7 @@ const heroCarousel = homePage.heroCarousel;
 
   {japaneseCollection && japaneseCollection.length > 0 && (
     <section class="main-container">
-      <h2 class="py-24 text-3xl font-medium uppercase relative flex items-center gap-8 after:flex-auto after:bg-black after:h-[1px] after:block">Japanese Collection
-      </h2>
+      <SectionTitle currentLocale={currentLocale} text="pageHome.sections.japeneseCollection"/>
       <div class="splide home-carousel px-12 lg:px-16" role="group" aria-label="Artwork's carousel">
         <div class="splide__track">
           <div class="splide__list">

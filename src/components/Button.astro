@@ -1,16 +1,22 @@
 ---
 import { getRelativeLocaleUrl } from 'astro:i18n';
+import { useTranslations } from '../i18n/utils';
+import type { Locale } from '../i18n/ui';
 
 interface Props {
-  currentLocale: string;
+  currentLocale: Locale;
   url: string;
-  text: string;
+  textKey: string; // Clé de traduction au lieu du texte direct
 }
 
-const { currentLocale, url, text } = Astro.props as Props;
+const { currentLocale, url, textKey } = Astro.props as Props;
+
+// Utilisation du système de traduction
+const t = useTranslations(currentLocale);
+const buttonText = t(textKey);
 
 const buttonLink = getRelativeLocaleUrl(currentLocale, url);
 ---
 <a class="uppercase px-5 py-3 border transition duration-300 ease-in-out hover:bg-black hover:text-white" href={buttonLink}>
-  {text}
+  {buttonText}
 </a>

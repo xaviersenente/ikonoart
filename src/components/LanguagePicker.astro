@@ -1,15 +1,31 @@
 ---
-import { languages } from '../i18n/ui';
+import { languages, defaultLang } from '../i18n/ui';
+import { getCurrentLocale } from '../i18n/utils';
+import type { Locale } from '../i18n/ui';
 
-const currentLang = Astro.url.pathname.split('/')[1]; // Langue actuelle
-const currentPath = Astro.url.pathname.split('/').slice(2).join('/'); // Retirer la langue du chemin
+// Utilisation des utilitaires existants pour une meilleure cohérence
+const currentLang: Locale = getCurrentLocale(Astro.currentLocale);
+const currentPath: string = Astro.url.pathname.split('/').slice(2).join('/');
 
-// Déterminer l'autre langue
-const availableLanguages = Object.keys(languages);
-const otherLang = availableLanguages.find(lang => lang !== currentLang);
+// Récupération des langues disponibles directement depuis ui.ts
+const availableLanguages: Locale[] = Object.keys(languages) as Locale[];
+const otherLang: Locale = availableLanguages.find((lang: Locale) => lang !== currentLang) || defaultLang;
 
-// Construire l'URL pour la langue alternative
-const langUrl = `/${otherLang}/${currentPath || ''}`;
+// Construction de l'URL alternative avec nettoyage
+const langUrl: string = `/${otherLang}/${currentPath || ''}`
+  .replace(/\/+/g, '/')
+  .replace(/\/$/, '') || `/${otherLang}`;
+
+// Utilisation directe des noms depuis ui.ts
+const otherLangDisplayName: string = languages[otherLang];
 ---
 
-<a href={langUrl} lang={otherLang}>{languages[otherLang]}</a>
+<a 
+  href={langUrl} 
+  lang={otherLang}
+  class="relative inline-block transition-colors duration-300 hover:text-gray-600"
+  aria-label={`Switch to ${otherLangDisplayName} version`}
+  title={`View page in ${otherLangDisplayName}`}
+>
+  {otherLangDisplayName}
+</a>

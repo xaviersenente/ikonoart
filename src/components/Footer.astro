@@ -1,49 +1,48 @@
 ---
-import { ui, defaultLang } from '../i18n/ui'; // Importation des traductions
+import { getCurrentLocale, useTranslations } from '../i18n/utils';
+import type { Locale } from '../i18n/ui';
 import LogoFooter from '../assets/icons/logo-ikonoart-white.svg';
-import { Image } from 'astro:assets';
 
-const lang = Astro.currentLocale;
-
-// Accéder aux traductions du menu de navigation
-const footer = ui[lang]?.footer ?? ui[defaultLang].footer;
+// Récupération de la locale courante avec fallback
+const currentLocale: Locale = getCurrentLocale(Astro.currentLocale);
+const t = useTranslations(currentLocale);
 ---
 
 <footer class="bg-(--verydarkikonoart) text-white mt-20">
   <div class="max-w-8xl mx-auto py-20 px-4 grid grid-cols-2 gap-4 gap-y-12 lg:grid-cols-5">
-    <a class="max-lg:col-span-2" href=`/${lang}/` aria-label="Accueil">
+    <a class="max-lg:col-span-2" href={`/${currentLocale}/`} aria-label="Accueil">
       <LogoFooter width="120"/>
     </a>
     <nav class="">
-      <h3 class="uppercase mb-4 opacity-70">{footer.nav1_title}</h3>
+      <h3 class="uppercase mb-4 opacity-70">{t('footer.nav1_title')}</h3>
       <ul>
-        <li><a href={`/${lang}/artists/`}>{footer.nav1_item1}</a></li>
-        <li><a href={`/${lang}/artworks/`}>{footer.nav1_item2}</a></li>
+        <li><a href={`/${currentLocale}/artists/`}>{t('footer.nav1_item1')}</a></li>
+        <li><a href={`/${currentLocale}/artworks/`}>{t('footer.nav1_item2')}</a></li>
       </ul>
     </nav>
     <nav class="">
-      <h3 class="uppercase mb-4 opacity-70">{footer.nav2_title}</h3>
+      <h3 class="uppercase mb-4 opacity-70">{t('footer.nav2_title')}</h3>
       <ul>
-        <li><a href={`/${lang}/order-process`}>{footer.nav2_item1}</a></li>
-        <li><a href={`/${lang}/portfolio-reading`}>{footer.nav2_item2}</a></li>
-        <li><a href={`/${lang}/rental`}>{footer.nav2_item3}</a></li>
-        <!-- <li><a href={`/${lang}/`}>{footer.nav2_item4}</a></li> -->
+        <li><a href={`/${currentLocale}/order-process`}>{t('footer.nav2_item1')}</a></li>
+        <li><a href={`/${currentLocale}/portfolio-reading`}>{t('footer.nav2_item2')}</a></li>
+        <li><a href={`/${currentLocale}/rental`}>{t('footer.nav2_item3')}</a></li>
+        <!-- <li><a href={`/${currentLocale}/`}>{t('footer.nav2_item4')}</a></li> -->
       </ul>
     </nav>
     <div class="">
-      <h3 class="uppercase mb-4 opacity-70">{footer.nav3_title}</h3>
+      <h3 class="uppercase mb-4 opacity-70">{t('footer.nav3_title')}</h3>
       <ul>
-        <li><a href="https://ikono.photo/">{footer.nav3_item1}</a></li>
-        <li><a href="https://ikono.photo/ikono-lifeshot/">{footer.nav3_item2}</a></li>
-        <!-- <li><a href="">{footer.nav3_item3}</a></li> -->
-        <!-- <li><a href="">{footer.nav3_item4}</a></li> -->
+        <li><a href="https://ikono.photo/">{t('footer.nav3_item1')}</a></li>
+        <li><a href="https://ikono.photo/ikono-lifeshot/">{t('footer.nav3_item2')}</a></li>
+        <!-- <li><a href="">{t('footer.nav3_item3')}</a></li> -->
+        <!-- <li><a href="">{t('footer.nav3_item4')}</a></li> -->
       </ul>
     </div>
     <nav class="">
-      <h3 class="uppercase mb-4 opacity-70">{footer.nav4_title}</h3>
+      <h3 class="uppercase mb-4 opacity-70">{t('footer.nav4_title')}</h3>
       <ul>
-        <li><a href={`/${lang}/contact`}>{footer.nav4_item1}</a></li>
-        <li><a href={`/${lang}/social-media`}>{footer.nav4_item2}</a></li>
+        <li><a href={`/${currentLocale}/contact`}>{t('footer.nav4_item1')}</a></li>
+        <li><a href={`/${currentLocale}/social-media`}>{t('footer.nav4_item2')}</a></li>
       </ul>
     </nav>
   </div>

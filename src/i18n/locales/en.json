@@ -1,9 +1,12 @@
 {
   "site": {
-    "name": "Ikono Art"
+    "name": "Ikono Art",
+    "tagline": "Contemporary Art Gallery",
+    "url": "https://ikonoart.com"
   },
   "meta": {
-    "defaultDescription": "Ikono Art - Contemporary art gallery showcasing innovative artists and exhibitions"
+    "defaultDescription": "Ikono Art - Contemporary art gallery showcasing innovative artists and exhibitions",
+    "keywords": "contemporary art, gallery, artists, exhibitions, artworks"
   },
   "header": {
     "home": "Ikono Art",
@@ -16,41 +19,227 @@
     "nav1_title": "Ikono Art",
     "nav1_item1": "Artists",
     "nav1_item2": "Artworks",
-    "nav2_title": "Infos",
-    "nav2_item1": "Order process",
-    "nav2_item2": "Portfolio reading",
-    "nav2_item3": "Rental space/artworks",
+    "nav2_title": "Information",
+    "nav2_item1": "Order Process",
+    "nav2_item2": "Portfolio Viewing",
+    "nav2_item3": "Rental Space/Artworks",
     "nav3_title": "About Ikono",
     "nav3_item1": "Ikono Photography",
     "nav3_item2": "Ikono Lifeshot",
     "nav4_title": "About Ikono Art",
     "nav4_item1": "Contact",
-    "nav4_item2": "Social media"
+    "nav4_item2": "Social Media",
+    "copyright": "© 2025 Ikono Art. All rights reserved.",
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Service"
+  },
+  "common": {
+    "back": "Back",
+    "loading": "Loading...",
+    "error": "An error occurred",
+    "noResults": "No results found",
+    "readMore": "Read more",
+    "viewAll": "View all",
+    "close": "Close",
+    "open": "Open",
+    "yes": "Yes",
+    "no": "No",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "search": "Search",
+    "filter": "Filter",
+    "sort": "Sort",
+    "price": "Price",
+    "availability": "Availability",
+    "available": "Available",
+    "soldOut": "Sold out",
+    "limitedEdition": "Limited Edition",
+    "newWork": "New Work",
+    "featured": "Featured"
+  },
+  "buttons": {
+    "viewMore": "View More",
+    "enquire": "Enquire",
+    "sendEnquiry": "Send Enquiry",
+    "close": "Close",
+    "reset": "Reset",
+    "apply": "Apply",
+    "previous": "Previous",
+    "next": "Next",
+    "allArtists": "All artists",
+    "allArtworks": "All artworks"
+  },
+  "pageHome": {
+    "title": "Ikono Art",
+    "description": "Discover contemporary art through our curated selection of innovative artists and exceptional artworks",
+    "hero": {
+      "title": "Contemporary Art Gallery",
+      "subtitle": "Discover exceptional artworks by emerging and established artists",
+      "cta": "Explore Collection"
+    },
+    "sections": {
+      "artistsHighlights": "Artists highlights",
+      "artworksHighlights": "Artworks highlights",
+      "ikonoartServices": "Ikono art Services",
+      "classicCollection": "The classic Collection",
+      "japeneseCollection": "Japanese Collection"
+    }
   },
   "pageArtists": {
     "title": "Artists",
-    "description": "Discover contemporary artists presented by Ikono Art. Learn about their stories, creative journeys, and explore artworks available for sale or rental.",
+    "description": "Discover the contemporary artists showcased by Ikono Art. Learn about their stories, creative backgrounds, and explore their available works for rent or purchase.",
     "itemMenu1": "Statement",
     "itemMenu2": "Biography",
     "itemMenu3": "Works",
-    "itemMenu4": "Limited edition",
+    "itemMenu4": "Limited Editions",
     "itemMenu5": "Achievements",
-    "itemMenu6": "Exhibition"
+    "itemMenu6": "Exhibitions",
+    "biography": "Biography",
+    "works": "Works",
+    "limitedEditions": "Limited Edition",
+    "achievements": "Achievements",
+    "noWorks": "No works available for this artist",
+    "artistTypes": {
+      "represented": "Represented Artist",
+      "exhibited": "Exhibited Artist",
+      "exclusive": "Exclusive Artist",
+      "collection": "Collection Artist"
+    }
   },
   "pageArtworks": {
     "title": "Artworks",
-    "description": "Explore unique artworks curated by Ikono Art. Paintings, photographs, and illustrations available for purchase or rental to enrich your space."
+    "description": "Browse unique art pieces carefully selected by Ikono Art. Paintings, photographs, illustrations and more to enhance your space through purchase or rental.",
+    "noArtworks": "No artworks available"
   },
   "pageExhibitions": {
     "title": "Exhibitions",
-    "description": "Discover Ikono Art’s latest exhibitions showcasing contemporary artists and exclusive collections. Events and exhibitions to inspire your artistic journey."
+    "description": "Discover Ikono Art's latest exhibitions and events. Curated shows featuring contemporary artists and special collections to enrich your art experience.",
+    "noArtworks": "No artworks available for this exhibition",
+    "current": "Current Exhibitions",
+    "past": "Past Exhibitions",
+    "upcoming": "Upcoming Exhibitions",
+    "status": {
+      "current": "Currently showing",
+      "upcoming": "Opening soon",
+      "past": "Past exhibition"
+    }
+  },
+  "pageContact": {
+    "title": "Contact",
+    "description": "Get in touch with Ikono Art for inquiries about artworks, exhibitions, or collaborations",
+    "form": {
+      "name": "Name",
+      "email": "Email",
+      "subject": "Subject",
+      "message": "Message",
+      "send": "Send Message",
+      "success": "Message sent successfully",
+      "error": "Error sending message"
+    }
   },
   "filters": {
+    "title": "Filter Artworks",
     "artist": "Artist",
     "medium": "Medium",
     "subject": "Subject",
-    "lm": "Limited Edition",
-    "reset": "Reset",
-    "apply": "Apply"
+    "technique": "Technique",
+    "priceRange": "Price Range",
+    "limitedEdition": "Limited Edition",
+    "availability": "Availability",
+    "year": "Year",
+    "size": "Size",
+    "all": "All",
+    "apply": "Apply Filters",
+    "reset": "Reset Filters",
+    "clear": "Clear All"
+  },
+  "results": {
+    "found": "results found",
+    "showing": "Showing",
+    "of": "of",
+    "noResults": "No artworks match your criteria",
+    "tryDifferent": "Try adjusting your filters"
+  },
+  "artwork": {
+    "details": "Artwork Details",
+    "dimensions": "Dimensions",
+    "year": "Year",
+    "medium": "Medium",
+    "technique": "Technique",
+    "edition": "Edition",
+    "availability": "Availability",
+    "price": "Price",
+    "priceOnRequest": "Price on request",
+    "inquire": "Inquire",
+    "rent": "Rent",
+    "buy": "Buy",
+    "addToWishlist": "Add to wishlist",
+    "shareWork": "Share this work",
+    "relatedWorks": "Related Works",
+    "byArtist": "by",
+    "unknownArtist": "Unknown Artist"
+  },
+  "exhibitions": {
+    "artworks": "Artworks in this exhibition",
+    "location": "Location",
+    "dates": "Dates",
+    "curator": "Curator",
+    "description": "About this exhibition",
+    "relatedExhibitions": "Related Exhibitions"
+  },
+  "navigation": {
+    "previousPage": "Previous",
+    "nextPage": "Next",
+    "firstPage": "First",
+    "lastPage": "Last",
+    "page": "Page"
+  },
+  "dates": {
+    "formats": {
+      "short": "MM/DD/YYYY",
+      "long": "MMMM DD, YYYY",
+      "monthYear": "MMMM YYYY"
+    },
+    "months": {
+      "january": "January",
+      "february": "February",
+      "march": "March",
+      "april": "April",
+      "may": "May",
+      "june": "June",
+      "july": "July",
+      "august": "August",
+      "september": "September",
+      "october": "October",
+      "november": "November",
+      "december": "December"
+    },
+    "relative": {
+      "today": "Today",
+      "yesterday": "Yesterday",
+      "tomorrow": "Tomorrow",
+      "thisWeek": "This week",
+      "lastWeek": "Last week",
+      "nextWeek": "Next week"
+    }
+  },
+  "errors": {
+    "404": {
+      "title": "Page Not Found",
+      "message": "The page you're looking for doesn't exist.",
+      "backHome": "Back to Home"
+    },
+    "500": {
+      "title": "Server Error",
+      "message": "Something went wrong on our end.",
+      "tryAgain": "Try Again"
+    },
+    "network": {
+      "title": "Connection Error",
+      "message": "Please check your internet connection.",
+      "retry": "Retry"
+    }
   }
 }

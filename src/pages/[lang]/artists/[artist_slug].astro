@@ -82,14 +82,14 @@ const groupedAchievements = groupAchievementsByCategoryAndYear(artist);
   
     { artist?.biography && (
       <section class="scroll-mt-40" id="biography">
-        <h2 class="text-2xl mb-10 mt-20 border-t border-gray-300 pt-4">Biography</h2>
+        <h2 class="text-2xl mb-10 mt-20 border-t border-gray-300 pt-4">{t('pageArtists.biography')}</h2>
         <div class="lg:columns-2 lg:gap-8" set:html={ artist?.biography }></div>
       </section>
     )}
   
     {standardArtworks.length > 0 && ( 
       <section class="scroll-mt-40" id="works">
-        <h2 class="text-2xl mb-10 mt-20 border-t border-gray-300 pt-4">Works</h2>
+        <h2 class="text-2xl mb-10 mt-20 border-t border-gray-300 pt-4">{t('pageArtists.works')}</h2>
         <div class="card-grid">
           {standardArtworks.map((artwork, index) => (
             <ArtworkCard 
@@ -104,7 +104,7 @@ const groupedAchievements = groupAchievementsByCategoryAndYear(artist);
   
     {limitedEditionArtworks.length > 0 && ( 
       <section class="scroll-mt-40" id="limited-edition">
-        <h2 class="text-2xl mb-10 mt-20 border-t border-gray-300 pt-4">Limited Edition</h2>
+        <h2 class="text-2xl mb-10 mt-20 border-t border-gray-300 pt-4">{t('pageArtists.limitedEdition')}</h2>
         <div class="card-grid">
           {limitedEditionArtworks.map((artwork, index) => (
             <ArtworkCard 
@@ -119,7 +119,7 @@ const groupedAchievements = groupAchievementsByCategoryAndYear(artist);
   
     {groupedAchievements && Object.entries(groupedAchievements).length > 0 && (
       <section class="scroll-mt-40" id="achievements">
-        <h2 class="text-2xl my-10 border-t border-gray-300 pt-4">Achievements</h2>
+        <h2 class="text-2xl my-10 border-t border-gray-300 pt-4">{t('pageArtists.achievements')}</h2>
         <div class="grid md:grid-cols-2 gap-10">
           {Object.entries(groupedAchievements).map(([category, years]) => (
             <div>

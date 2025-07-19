@@ -1,15 +1,18 @@
 {
   "site": {
-    "name": "イコノアート"
+    "name": "イコノアート",
+    "tagline": "現代美術ギャラリー",
+    "url": "https://ikonoart.com"
   },
   "meta": {
-    "defaultDescription": "イコノアート - 革新的なアーティストと展覧会を紹介する現代美術ギャラリー"
+    "defaultDescription": "イコノアート - 革新的なアーティストと展覧会を紹介する現代美術ギャラリー",
+    "keywords": "現代美術, ギャラリー, アーティスト, 展覧会, アートワーク"
   },
   "header": {
     "home": "イコノアート",
     "artists": "アーティスト",
     "artworks": "アートワーク",
-    "exhibitions": "展示会",
+    "exhibitions": "展覧会",
     "contact": "お問い合わせ"
   },
   "footer": {
@@ -18,39 +21,225 @@
     "nav1_item2": "アートワーク",
     "nav2_title": "情報",
     "nav2_item1": "注文プロセス",
-    "nav2_item2": "ポートフォリオの閲覧",
-    "nav2_item3": "レンタルスペース/アート作品",
+    "nav2_item2": "ポートフォリオ閲覧",
+    "nav2_item3": "レンタルスペース・作品",
     "nav3_title": "イコノについて",
     "nav3_item1": "イコノ写真",
     "nav3_item2": "イコノライフショット",
     "nav4_title": "イコノアートについて",
-    "nav4_item1": "接触",
-    "nav4_item2": "ソーシャルメディア"
+    "nav4_item1": "お問い合わせ",
+    "nav4_item2": "ソーシャルメディア",
+    "copyright": "© 2025 イコノアート. 全著作権所有.",
+    "privacy": "プライバシーポリシー",
+    "terms": "利用規約"
+  },
+  "common": {
+    "back": "戻る",
+    "loading": "読み込み中...",
+    "error": "エラーが発生しました",
+    "noResults": "結果が見つかりません",
+    "readMore": "続きを読む",
+    "viewAll": "すべて表示",
+    "close": "閉じる",
+    "open": "開く",
+    "yes": "はい",
+    "no": "いいえ",
+    "save": "保存",
+    "cancel": "キャンセル",
+    "delete": "削除",
+    "edit": "編集",
+    "search": "検索",
+    "filter": "フィルター",
+    "sort": "並び替え",
+    "price": "価格",
+    "availability": "在庫状況",
+    "available": "在庫あり",
+    "soldOut": "売り切れ",
+    "limitedEdition": "限定版",
+    "newWork": "新作",
+    "featured": "おすすめ"
+  },
+  "buttons": {
+    "viewMore": "もっと見る",
+    "enquire": "お問い合わせ",
+    "sendEnquiry": "お問い合わせを送信",
+    "close": "閉じる",
+    "reset": "リセット",
+    "apply": "適用",
+    "previous": "前へ",
+    "next": "次へ",
+    "allArtists": "すべてのアーティスト",
+    "allArtworks": "すべての作品"
+  },
+  "pageHome": {
+    "title": "イコノアート",
+    "description": "厳選された革新的なアーティストと卓越したアートワークを通じて現代美術を発見してください",
+    "hero": {
+      "title": "現代美術ギャラリー",
+      "subtitle": "新進気鋭から確立されたアーティストまで、卓越したアートワークを発見",
+      "cta": "コレクションを探す"
+    },
+    "sections": {
+      "artistsHighlights": "アーティストのハイライト",
+      "artworksHighlights": "アートワークのハイライト",
+      "ikonoartServices": "イコノアートサービス",
+      "classicCollection": "クラシックなコレクション",
+      "japeneseCollection": "日本のコレクション"
+    }
   },
   "pageArtists": {
     "title": "アーティスト",
-    "description": "Ikono Artが紹介する現代アーティストたちをご覧ください。彼らのストーリーや制作背景を知り、レンタル・販売可能な作品をお楽しみいただけます。",
+    "description": "イコノアートが紹介する現代アーティストたちをご覧ください。彼らのストーリーや制作背景を知り、レンタル・販売可能な作品をお楽しみいただけます。",
     "itemMenu1": "ステートメント",
     "itemMenu2": "バイオグラフィー",
     "itemMenu3": "作品",
     "itemMenu4": "限定版",
-    "itemMenu5": "実績",
-    "itemMenu6": "展示"
+    "itemMenu5": "受賞歴",
+    "itemMenu6": "展覧会",
+    "biography": "バイオグラフィー",
+    "works": "作品",
+    "limitedEditions": "限定版",
+    "achievements": "実績",
+    "noWorks": "このアーティストの作品はありません",
+    "artistTypes": {
+      "represented": "専属アーティスト",
+      "exhibited": "展示アーティスト",
+      "exclusive": "独占アーティスト",
+      "collection": "コレクションアーティスト"
+    }
   },
   "pageArtworks": {
-    "title": "ページアートワーク",
-    "description": "Ikono Artが厳選したユニークなアート作品をご覧ください。絵画、写真、イラストなど、購入またはレンタルで空間を彩ります。"
+    "title": "アートワーク",
+    "description": "イコノアートが厳選したユニークなアート作品をご覧ください。絵画、写真、イラストなど、購入またはレンタルで空間を彩ります。",
+    "noArtworks": "アートワークがありません"
   },
   "pageExhibitions": {
-    "title": "展示会",
-    "description": "Ikono Artの最新展示会やイベントをご紹介。現代アーティストと特別なコレクションによる展示で、あなたのアート体験を豊かにします。"
+    "title": "展覧会",
+    "description": "イコノアートの最新展覧会やイベントをご紹介。現代アーティストと特別なコレクションによる展示で、あなたのアート体験を豊かにします。",
+    "noArtworks": "この展覧会にはアートワークがありません",
+    "current": "開催中の展覧会",
+    "past": "過去の展覧会",
+    "upcoming": "今後の展覧会",
+    "status": {
+      "current": "開催中",
+      "upcoming": "開催予定",
+      "past": "終了"
+    }
+  },
+  "pageContact": {
+    "title": "お問い合わせ",
+    "description": "アートワーク、展覧会、コラボレーションについてのお問い合わせはイコノアートまで",
+    "form": {
+      "name": "お名前",
+      "email": "メールアドレス",
+      "subject": "件名",
+      "message": "メッセージ",
+      "send": "メッセージを送信",
+      "success": "メッセージが正常に送信されました",
+      "error": "メッセージの送信でエラーが発生しました"
+    }
   },
   "filters": {
+    "title": "アートワークを絞り込む",
     "artist": "アーティスト",
-    "medium": "中くらい",
+    "medium": "媒体",
     "subject": "主題",
-    "lm": "限定版",
-    "reset": "リセット",
-    "apply": "適用する"
+    "technique": "技法",
+    "priceRange": "価格帯",
+    "limitedEdition": "限定版",
+    "availability": "在庫状況",
+    "year": "年",
+    "size": "サイズ",
+    "all": "すべて",
+    "apply": "フィルターを適用",
+    "reset": "フィルターをリセット",
+    "clear": "すべてクリア"
+  },
+  "results": {
+    "found": "件見つかりました",
+    "showing": "表示中",
+    "of": "/",
+    "noResults": "条件に一致するアートワークがありません",
+    "tryDifferent": "フィルターを調整してみてください"
+  },
+  "artwork": {
+    "details": "作品詳細",
+    "dimensions": "寸法",
+    "year": "制作年",
+    "medium": "媒体",
+    "technique": "技法",
+    "edition": "版",
+    "availability": "在庫状況",
+    "price": "価格",
+    "priceOnRequest": "価格応相談",
+    "inquire": "お問い合わせ",
+    "rent": "レンタル",
+    "buy": "購入",
+    "addToWishlist": "ウィッシュリストに追加",
+    "shareWork": "この作品をシェア",
+    "relatedWorks": "関連作品",
+    "byArtist": "作者:",
+    "unknownArtist": "作者不明"
+  },
+  "exhibitions": {
+    "artworks": "この展覧会の作品",
+    "location": "会場",
+    "dates": "会期",
+    "curator": "キュレーター",
+    "description": "展覧会について",
+    "relatedExhibitions": "関連展覧会"
+  },
+  "navigation": {
+    "previousPage": "前へ",
+    "nextPage": "次へ",
+    "firstPage": "最初",
+    "lastPage": "最後",
+    "page": "ページ"
+  },
+  "dates": {
+    "formats": {
+      "short": "YYYY/MM/DD",
+      "long": "YYYY年MM月DD日",
+      "monthYear": "YYYY年MM月"
+    },
+    "months": {
+      "january": "1月",
+      "february": "2月",
+      "march": "3月",
+      "april": "4月",
+      "may": "5月",
+      "june": "6月",
+      "july": "7月",
+      "august": "8月",
+      "september": "9月",
+      "october": "10月",
+      "november": "11月",
+      "december": "12月"
+    },
+    "relative": {
+      "today": "今日",
+      "yesterday": "昨日",
+      "tomorrow": "明日",
+      "thisWeek": "今週",
+      "lastWeek": "先週",
+      "nextWeek": "来週"
+    }
+  },
+  "errors": {
+    "404": {
+      "title": "ページが見つかりません",
+      "message": "お探しのページは存在しません。",
+      "backHome": "ホームに戻る"
+    },
+    "500": {
+      "title": "サーバーエラー",
+      "message": "サーバー側で問題が発生しました。",
+      "tryAgain": "再試行"
+    },
+    "network": {
+      "title": "接続エラー",
+      "message": "インターネット接続を確認してください。",
+      "retry": "再試行"
+    }
   }
 }
