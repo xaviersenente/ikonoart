@@ -13,6 +13,7 @@ import IkonoDesign from '../../assets/img/ikono-design-logo-600.webp';
 import ImageCockpit from '../../components/ImageCockpit.astro';
 import ArtworkCard from '../../components/ArtworkCard.astro';
 import ArtistCard from '../../components/ArtistCard.astro';
+import Carousel from '../../components/Carousel.astro';
 import Button from '../../components/Button.astro';
 import SectionTitle from '../../components/SectionTitle.astro';
 
@@ -25,6 +26,11 @@ export const getStaticPaths = async () => {
 }
 // Récupération de la locale courante avec fallback
 const currentLocale: Locale = getCurrentLocale(Astro.currentLocale);
+const t = useTranslations(currentLocale);
+
+// Récupération des métadonnées de page traduites
+const { title, description } = usePageMeta(currentLocale, 'pageHome');
+
 // Récupération des articles au moment du rendu côté serveur
 const homePage = await getSingleton("homepage", { locale: currentLocale, populate: 1 }) as HomePage;
 
@@ -37,7 +43,7 @@ const heroCarousel = homePage.heroCarousel;
 
 ---
 
-<Layout title="">
+<Layout title={title} description={description}>
   {heroCarousel && Object.entries(heroCarousel).length > 0 && (
     <div class="splide fade-carousel mt-28" role="group" aria-label="Next exhibitions" data-splide='{"perPage":1, "type":"fade"}'>
       <div class="splide__track">
@@ -80,7 +86,25 @@ const heroCarousel = homePage.heroCarousel;
   {selectedArtists && selectedArtists.length > 0 && (
     <section class="main-container">
       <SectionTitle currentLocale={currentLocale} text="pageHome.sections.artistsHighlights"/>
-      <div class="splide home-carousel px-12 lg:px-16" role="group" aria-label="Artists carousel">
+
+      <Carousel 
+        type="home"
+        customContent={true}
+        ariaLabel="Carousel of selected artists"
+        class="lg:px-16"
+      >
+        {selectedArtists.map((artist, index) => (
+          <li class="splide__slide">
+            <ArtistCard 
+              artist={artist} 
+              currentLocale={currentLocale} 
+              priority={index < 2}
+            />
+          </li>
+        ))}
+      </Carousel>
+
+      {/* <div class="splide home-carousel px-12 lg:px-16" role="group" aria-label="Artists carousel">
         <div class="splide__track">
           <ul class="splide__list">
             {selectedArtists.map(artist => (
@@ -88,7 +112,7 @@ const heroCarousel = homePage.heroCarousel;
             ))}
           </ul>
         </div>
-      </div>
+      </div> */}
       <div class="flex justify-center mt-16">
         <Button currentLocale={currentLocale} textKey="buttons.allArtists" url="/artists"/>
       </div>
@@ -111,7 +135,25 @@ const heroCarousel = homePage.heroCarousel;
   {selectedArtworks && selectedArtworks.length > 0 && (
     <section class="main-container">
       <SectionTitle currentLocale={currentLocale} text="pageHome.sections.artworksHighlights"/>
-      <div class="splide home-carousel px-12 lg:px-16" role="group" aria-label="Artwork's carousel">
+
+      <Carousel 
+        type="home"
+        customContent={true}
+        ariaLabel="Carousel of selected artworks"
+        class="px-12 lg:px-16"
+      >
+        {selectedArtworks.map((artwork, index) => (
+          <li class="splide__slide">
+            <ArtworkCard 
+              artwork={artwork} 
+              currentLocale={currentLocale} 
+              priority={false}
+            />
+          </li>
+        ))}
+      </Carousel>
+
+      {/* <div class="splide home-carousel px-12 lg:px-16" role="group" aria-label="Artwork's carousel">
         <div class="splide__track">
           <div class="splide__list">
             {selectedArtworks.map(artwork => (
@@ -119,7 +161,8 @@ const heroCarousel = homePage.heroCarousel;
             ))}
           </div>
         </div>
-      </div>
+      </div> */}
+
       <div class="flex justify-center mt-16">
         <Button currentLocale={currentLocale} textKey="buttons.allArtworks" url="/artworks"/>
       </div>
@@ -173,7 +216,25 @@ const heroCarousel = homePage.heroCarousel;
   {classicCollection && classicCollection.length > 0 && (
     <section class="main-container">
       <SectionTitle currentLocale={currentLocale} text="pageHome.sections.classicCollection"/>
-      <div class="splide home-carousel px-12 lg:px-16" role="group" aria-label="Artwork's carousel">
+
+      <Carousel 
+        type="home"
+        customContent={true}
+        ariaLabel="Carousel of selected artworks"
+        class="px-12 lg:px-16"
+      >
+        {classicCollection.map((artwork, index) => (
+          <li class="splide__slide">
+            <ArtworkCard 
+              artwork={artwork} 
+              currentLocale={currentLocale} 
+              priority={false}
+            />
+          </li>
+        ))}
+      </Carousel>
+
+      {/* <div class="splide home-carousel px-12 lg:px-16" role="group" aria-label="Artwork's carousel">
         <div class="splide__track">
           <div class="splide__list">
             {classicCollection.map(artwork => (
@@ -181,14 +242,33 @@ const heroCarousel = homePage.heroCarousel;
             ))}
           </div>
         </div>
-      </div>
+      </div> */}
+
     </section>
   )}
 
   {japaneseCollection && japaneseCollection.length > 0 && (
     <section class="main-container">
-      <SectionTitle currentLocale={currentLocale} text="pageHome.sections.japeneseCollection"/>
-      <div class="splide home-carousel px-12 lg:px-16" role="group" aria-label="Artwork's carousel">
+      <SectionTitle currentLocale={currentLocale} text="pageHome.sections.classicCollection"/>
+
+      <Carousel 
+        type="home"
+        customContent={true}
+        ariaLabel="Carousel of selected artworks"
+        class="px-12 lg:px-16"
+      >
+        {japaneseCollection.map((artwork, index) => (
+          <li class="splide__slide">
+            <ArtworkCard 
+              artwork={artwork} 
+              currentLocale={currentLocale} 
+              priority={false}
+            />
+          </li>
+        ))}
+      </Carousel>
+
+      {/* <div class="splide home-carousel px-12 lg:px-16" role="group" aria-label="Artwork's carousel">
         <div class="splide__track">
           <div class="splide__list">
             {japaneseCollection.map(artwork => (
@@ -196,7 +276,8 @@ const heroCarousel = homePage.heroCarousel;
             ))}
           </div>
         </div>
-      </div>
+      </div> */}
+
     </section>
   )}
 
