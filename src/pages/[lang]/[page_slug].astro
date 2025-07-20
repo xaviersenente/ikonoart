@@ -21,7 +21,7 @@ const page = await getPageById(page_id, lang);
 
 ---
 <Layout title={page.title}>
-  <main class="main-container mt-34 lg:grid grid-cols-4">
+  <main class="main-container mt-16 lg:mt-34 lg:grid grid-cols-4">
     <h1 class="text-4xl my-8 col-start-2 col-span-2">{page.title}</h1>
     <div class="col-start-2 col-span-2 wysiwyg" set:html={page.description}></div>
   </main>

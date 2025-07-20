@@ -45,7 +45,7 @@ const heroCarousel = homePage.heroCarousel;
 
 <Layout title={title} description={description}>
   {heroCarousel && Object.entries(heroCarousel).length > 0 && (
-    <div class="splide fade-carousel mt-28" role="group" aria-label="Next exhibitions" data-splide='{"perPage":1, "type":"fade"}'>
+    <div class="splide fade-carousel mt-22 lg:mt-28" role="group" aria-label="Next exhibitions" data-splide='{"perPage":1, "type":"fade"}'>
       <div class="splide__track">
         <ul class="splide__list">
         {heroCarousel.map(carousel => (

@@ -21,6 +21,7 @@ document.addEventListener("astro:page-load", () => {
     if (!isMobile) {
       menu.removeAttribute("inert");
       menu.setAttribute("data-state", "open");
+      page.classList.remove("noscroll");
     } else if (isMenuClosed) {
       menu.setAttribute("inert", "");
       menu.setAttribute("data-state", "closed");
@@ -37,9 +38,11 @@ document.addEventListener("astro:page-load", () => {
 
     menuBtn.setAttribute("aria-expanded", String(newState));
     menu.setAttribute("data-state", newState ? "open" : "closed");
-    page.classList.toggle("noscroll", !newState);
 
+    // Empêcher le scroll uniquement sur mobile quand le menu est ouvert
     if (window.innerWidth < lgBreakpoint) {
+      page.classList.toggle("noscroll", newState);
+
       if (newState) {
         menu.removeAttribute("inert");
       } else {
@@ -48,9 +51,27 @@ document.addEventListener("astro:page-load", () => {
     }
   };
 
+  // Fermer le menu au clic sur un lien (mobile seulement)
+  const closeMenuOnLinkClick = (): void => {
+    if (!menuBtn || !menu) return;
+
+    if (window.innerWidth < lgBreakpoint) {
+      menuBtn.setAttribute("aria-expanded", "false");
+      menu.setAttribute("data-state", "closed");
+      menu.setAttribute("inert", "");
+      page.classList.remove("noscroll");
+    }
+  };
+
   // Ajouter les event listeners si les éléments existent
   if (menuBtn && menu) {
     menuBtn.addEventListener("click", toggleMenu);
+
+    // Fermer le menu au clic sur les liens de navigation
+    const navLinks = menu.querySelectorAll("a");
+    navLinks.forEach((link) => {
+      link.addEventListener("click", closeMenuOnLinkClick);
+    });
 
     // Utiliser un debounce pour la gestion du resize
     window.addEventListener("resize", () => {
@@ -58,30 +79,48 @@ document.addEventListener("astro:page-load", () => {
       resizeTimer = window.setTimeout(handleMenuState, 100);
     });
 
+    // Fermer le menu avec la touche Escape
+    document.addEventListener("keydown", (event) => {
+      if (
+        event.key === "Escape" &&
+        menuBtn.getAttribute("aria-expanded") === "true"
+      ) {
+        toggleMenu();
+      }
+    });
+
     // Initialisation
     handleMenuState();
   }
 
-  // Gestion du logo
+  // Gestion du logo - préserver le comportement original avec adaptation mobile
   const logoImage = document.querySelector(".logo-image") as HTMLElement | null;
   const siteHeader = document.getElementById(
     "site-header"
   ) as HTMLElement | null;
 
-  // Fonction pour gérer le scroll
+  // Fonction pour gérer le scroll - comportement original préservé
   const handleScroll = (): void => {
     if (!logoImage || !siteHeader) return;
 
+    const isMobile: boolean = window.innerWidth < lgBreakpoint;
     const originalWidth: number = 150;
-    const smallerWidth: number = 75; // Taille réduite du logo
+    const smallerWidth: number = 75;
+    const mobileWidth: number = 80; // Taille fixe pour mobile
     const isScrolled: boolean = window.scrollY > 10;
 
-    logoImage.setAttribute(
-      "width",
-      isScrolled ? smallerWidth.toString() : originalWidth.toString()
-    );
+    if (isMobile) {
+      // Sur mobile : taille fixe, pas de changement au scroll
+      logoImage.setAttribute("width", mobileWidth.toString());
+    } else {
+      // Sur desktop : comportement original avec transitions fluides
+      logoImage.setAttribute(
+        "width",
+        isScrolled ? smallerWidth.toString() : originalWidth.toString()
+      );
+    }
 
-    // Approche plus efficace pour les classes
+    // Gérer le padding du header (pour tous les écrans)
     if (isScrolled) {
       siteHeader.classList.add("py-2");
       siteHeader.classList.remove("py-4");
@@ -91,9 +130,19 @@ document.addEventListener("astro:page-load", () => {
     }
   };
 
+  // Fonction pour gérer le redimensionnement
+  const handleResize = (): void => {
+    // Réappliquer l'état de scroll après redimensionnement
+    handleScroll();
+  };
+
   if (logoImage && siteHeader) {
-    // Ajouter l'event listener
+    // Ajouter les event listeners
     window.addEventListener("scroll", handleScroll);
+    window.addEventListener("resize", () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = window.setTimeout(handleResize, 100);
+    });
 
     // Exécuter une fois au chargement pour définir l'état initial
     handleScroll();
@@ -101,8 +150,17 @@ document.addEventListener("astro:page-load", () => {
 
   // Fonction de nettoyage pour Astro
   return () => {
-    if (menuBtn) menuBtn.removeEventListener("click", toggleMenu);
+    if (menuBtn) {
+      menuBtn.removeEventListener("click", toggleMenu);
+      const navLinks = menu?.querySelectorAll("a");
+      navLinks?.forEach((link) => {
+        link.removeEventListener("click", closeMenuOnLinkClick);
+      });
+    }
     window.removeEventListener("resize", () => clearTimeout(resizeTimer));
     window.removeEventListener("scroll", handleScroll);
+    document.removeEventListener("keydown", (event) => {
+      if (event.key === "Escape") toggleMenu();
+    });
   };
 });

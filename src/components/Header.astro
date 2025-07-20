@@ -16,11 +16,15 @@ const currentPath = Astro.url.pathname;
     <a class="basis-20 lg:basis-40 " href={`/${currentLocale}/`} aria-label="Accueil">
       <Logo class="logo-image transition-all duration-300"/>
     </a>
+
     <nav 
-      class="visible fixed z-10 inset-0 opacity-100 transition-all duration-300 ease-in-out max-lg:bg-white max-lg:data-[state=closed]:invisible max-lg:data-[state=closed]:opacity-0 lg:relative lg:flex lg:items-center lg:opacity-100"
+      class="fixed z-10 inset-0 opacity-100 transition-all duration-300 ease-in-out
+             max-lg:bg-white max-lg:data-[state=closed]:invisible max-lg:data-[state=closed]:opacity-0 
+             max-lg:flex max-lg:flex-col max-lg:justify-center max-lg:items-center
+             lg:visible lg:relative lg:flex lg:items-center lg:opacity-100 lg:inset-auto lg:bg-transparent"
       id="menu"
       data-state="closed">
-      <ul class="flex gap-8 uppercase">
+      <ul class="flex gap-8 uppercase max-lg:flex-col max-lg:text-center max-lg:gap-6 max-lg:text-xl">
         {[
           { href: `/${currentLocale}/artists/`, label: t('header.artists') },
           { href: `/${currentLocale}/artworks/`, label: t('header.artworks') },
@@ -38,18 +42,22 @@ const currentPath = Astro.url.pathname;
         ))}
       </ul>
     </nav>
-    <button 
-      class="group relative z-20 flex h-6 w-8 flex-col justify-between *:h-[2px] *:w-full *:bg-black *:transition-all *:duration-300 *:ease lg:hidden"
-      id="menu-btn"
-      aria-label="Menu"
-      aria-controls="menu"
-      aria-expanded="false"
-    >
-      <span class="group-aria-expanded:translate-y-[10.5px] group-aria-expanded:rotate-45"></span>
-      <span class="group-aria-expanded:opacity-0"></span>
-      <span class="group-aria-expanded:-translate-y-[10.5px] group-aria-expanded:-rotate-45"></span>
-    </button>
-    <LanguagePicker/>
+    
+    <div class="flex items-center gap-4">
+      <LanguagePicker/>
+      
+      <button 
+        class="group relative z-20 flex h-6 w-8 flex-col justify-between *:h-[2px] *:w-full *:bg-black *:transition-all *:duration-300 *:ease lg:hidden"
+        id="menu-btn"
+        aria-label="Menu"
+        aria-controls="menu"
+        aria-expanded="false"
+      >
+        <span class="group-aria-expanded:translate-y-[10.5px] group-aria-expanded:rotate-45"></span>
+        <span class="group-aria-expanded:opacity-0"></span>
+        <span class="group-aria-expanded:-translate-y-[10.5px] group-aria-expanded:-rotate-45"></span>
+      </button>
+    </div>
   </div>
 </header>
 

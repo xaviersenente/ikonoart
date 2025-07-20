@@ -81,29 +81,6 @@ const splideConfig = Object.keys(customConfig).length > 0
   : undefined;
 ---
 
-<!-- <div 
-  class={`splide ${carouselClass} ${additionalClasses}`} 
-  role="group" 
-  aria-label="Carrousel d'images"
->
-  <div class="splide__track">
-    <ul class="splide__list">
-      {images.map((image) => (
-        <li class="splide__slide">
-          <ImageCockpit 
-            image={{ _id: image._id, altText: image.altText }} 
-            width={1800} 
-            height={750} 
-            resize={image.resize || "thumbnail"} 
-            classes="w-full h-auto object-cover" 
-          />
-        </li>
-      ))}
-    </ul>
-  </div>
-</div> -->
-
-
 <div 
   id={carouselId}
   class={`splide ${carouselClass} ${additionalClasses}`} 
