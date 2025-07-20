@@ -7,17 +7,59 @@ class SplideManager {
     this.instances = [];
     this.intersectionObserver = null;
     this.lazyCarousels = new Set();
+    this.isTransitioning = false;
+    this.transitionDelay = 300; // Délai en ms pour la transition
     this.init();
   }
 
   init() {
     document.addEventListener("astro:page-load", () => this.initCarousels());
+
+    // Gérer les transitions avec délai
     document.addEventListener("astro:before-preparation", () =>
-      this.destroyAll()
+      this.handleBeforeTransition()
+    );
+    document.addEventListener("astro:after-preparation", () =>
+      this.handleAfterTransition()
     );
 
-    // Initialiser l'Intersection Observer pour le lazy loading
+    // Écouter les événements de navigation pour détecter les transitions
+    document.addEventListener("astro:before-swap", () =>
+      this.prepareForTransition()
+    );
+
     this.setupIntersectionObserver();
+  }
+
+  // Nouvelle méthode pour préparer la transition
+  prepareForTransition() {
+    this.isTransitioning = true;
+
+    // Masquer visuellement les carousels pendant la transition
+    this.instances.forEach((instance) => {
+      if (instance && instance.root) {
+        instance.root.style.opacity = "0";
+        instance.root.style.pointerEvents = "none";
+
+        // Pause l'autoplay si actif
+        if (instance.Components.Autoplay) {
+          instance.Components.Autoplay.pause();
+        }
+      }
+    });
+  }
+
+  handleBeforeTransition() {
+    // Ne pas détruire immédiatement, attendre la fin de la transition
+    setTimeout(() => {
+      if (this.isTransitioning) {
+        this.destroyAll();
+      }
+    }, this.transitionDelay);
+  }
+
+  handleAfterTransition() {
+    this.isTransitioning = false;
   }
 
   setupIntersectionObserver() {
@@ -41,11 +83,35 @@ class SplideManager {
   }
 
   destroyAll() {
+    // Vérifier si on est en train de faire une transition
+    if (this.isTransitioning) {
+      return; // Ne pas détruire pendant la transition
+    }
+
     this.instances.forEach((instance) => {
       if (instance && typeof instance.destroy === "function") {
-        instance.destroy();
+        try {
+          // Arrêter l'autoplay en premier
+          if (instance.Components.Autoplay) {
+            instance.Components.Autoplay.pause();
+          }
+
+          // Masquer visuellement avant destruction
+          if (instance.root) {
+            instance.root.style.transition = "opacity 0.2s ease-out";
+            instance.root.style.opacity = "0";
+          }
+
+          // Détruire après un court délai
+          setTimeout(() => {
+            instance.destroy();
+          }, 200);
+        } catch (error) {
+          console.warn("Erreur lors de la destruction du carousel:", error);
+        }
       }
     });
+
     this.instances = [];
     this.lazyCarousels.clear();
   }
@@ -159,7 +225,7 @@ class SplideManager {
 
       // Pagination personnalisée pour les fade carousels
       pagination: true,
-      arrows: false,
+      // arrows: false,
 
       // Animation CSS custom pour le fade
       classes: {
@@ -169,42 +235,42 @@ class SplideManager {
     };
   }
 
-  // Configuration pour carousel produit/artwork
-  getProductCarouselConfig() {
-    return {
-      ...this.getBaseConfig(),
-      type: "slide",
-      perPage: 3,
-      perMove: 1,
-      pagination: false,
-      arrows: true,
-      rewind: true,
-      speed: 600,
-      gap: "1.5rem",
-      autoplay: false,
+  // // Configuration pour carousel produit/artwork
+  // getProductCarouselConfig() {
+  //   return {
+  //     ...this.getBaseConfig(),
+  //     type: "slide",
+  //     perPage: 3,
+  //     perMove: 1,
+  //     pagination: false,
+  //     arrows: true,
+  //     rewind: true,
+  //     speed: 600,
+  //     gap: "1.5rem",
+  //     autoplay: false,
 
-      // Optimisations pour les images de produits
-      lazyLoad: "sequential", // Charge séquentiellement pour les images haute qualité
-      preloadPages: 2,
+  //     // Optimisations pour les images de produits
+  //     lazyLoad: "sequential", // Charge séquentiellement pour les images haute qualité
+  //     preloadPages: 2,
 
-      breakpoints: {
-        1024: {
-          perPage: 2,
-          arrows: false,
-          pagination: true,
-        },
-        768: {
-          perPage: 1,
-          pagination: true,
-          padding: { left: "2rem", right: "2rem" },
-        },
-      },
+  //     breakpoints: {
+  //       1024: {
+  //         perPage: 2,
+  //         arrows: false,
+  //         pagination: true,
+  //       },
+  //       768: {
+  //         perPage: 1,
+  //         pagination: true,
+  //         padding: { left: "2rem", right: "2rem" },
+  //       },
+  //     },
 
-      // Focus pour l'accessibilité des produits
-      focus: "center",
-      trimSpace: false,
-    };
-  }
+  //     // Focus pour l'accessibilité des produits
+  //     focus: "center",
+  //     trimSpace: false,
+  //   };
+  // }
 
   initSingleCarousel(element) {
     let config;
@@ -215,8 +281,6 @@ class SplideManager {
       config = this.getHomeCarouselConfig();
     } else if (element.classList.contains("fade-carousel")) {
       config = this.getFadeCarouselConfig();
-    } else if (element.classList.contains("product-carousel")) {
-      config = this.getProductCarouselConfig();
     } else {
       // Configuration par défaut
       config = this.getBaseConfig();

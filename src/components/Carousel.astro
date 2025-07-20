@@ -12,7 +12,7 @@ interface CarouselImage {
 
 interface Props {
   images?: CarouselImage[];
-  type?: 'fade' | 'home' | 'product' | 'testimonial';
+  type?: 'fade' | 'home';
   class?: string;
   lazy?: boolean;
   priority?: boolean;
@@ -50,8 +50,8 @@ const getCarouselConfig = (type: string) => {
       class: 'fade-carousel',
       defaultAriaLabel: 'Carrousel d\'images en fondu',
       showPagination: showPagination ?? true,
-      showArrows: showArrows ?? false,
-      imageConfig: { width: 1800, height: 750, quality: 75 }
+      showArrows: showArrows ?? true,
+      imageConfig: { width: 1800, height: 750, quality: 70 }
     },
     'home': {
       class: 'home-carousel',
@@ -59,20 +59,6 @@ const getCarouselConfig = (type: string) => {
       showPagination: showPagination ?? false,
       showArrows: showArrows ?? true,
       imageConfig: { width: 600, height: 600, quality: 70 }
-    },
-    'product': {
-      class: 'product-carousel',
-      defaultAriaLabel: 'Carrousel de produits',
-      showPagination: showPagination ?? false,
-      showArrows: showArrows ?? true,
-      imageConfig: { width: 500, height: 500, quality: 80 }
-    },
-    'testimonial': {
-      class: 'testimonial-carousel',
-      defaultAriaLabel: 'Carrousel de témoignages',
-      showPagination: showPagination ?? true,
-      showArrows: showArrows ?? false,
-      imageConfig: { width: 400, height: 400, quality: 65 }
     }
   };
   
@@ -87,7 +73,7 @@ const finalAriaLabel = ariaLabel || config.defaultAriaLabel;
 const imageConfig = config.imageConfig;
 
 // Générer un ID unique pour le carousel
-const carouselId = `carousel-${Math.random().toString(36).substr(2, 9)}`;
+const carouselId = `carousel-${Math.random().toString(36).slice(2, 11)}`;
 
 // Configuration JSON pour le data-splide
 const splideConfig = Object.keys(customConfig).length > 0 
@@ -152,17 +138,17 @@ const splideConfig = Object.keys(customConfig).length > 0
                 width={imageConfig.width} 
                 height={imageConfig.height} 
                 quality={imageConfig.quality}
-                resize={image.resize || "bestFit"} 
+                resize={image.resize || "thumbnail"} 
                 priority={shouldPrioritize}
                 lazy={shouldLazy}
                 sizes={type === 'fade' 
                   ? "(max-width: 640px) 100vw, (max-width: 1024px) 100vw, 100vw"
                   : "(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                 }
-                classes={`w-full h-auto object-cover ${type === 'fade' ? 'aspect-[16/9]' : 'aspect-square'}`}
+                classes={`w-full h-auto object-cover`}
               />
               
-              {type === 'fade' && image.title && (
+              {/* {type === 'fade' && image.title && (
                 <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent flex items-end">
                   <div class="p-6 text-white">
                     <h3 class="text-xl font-semibold mb-2">{image.title}</h3>
@@ -171,7 +157,7 @@ const splideConfig = Object.keys(customConfig).length > 0
                     )}
                   </div>
                 </div>
-              )}
+              )} */}
             </li>
           );
         })
