@@ -71,6 +71,46 @@
     "allArtists": "すべてのアーティスト",
     "allArtworks": "すべての作品"
   },
+  "forms": {
+    "fullName": "氏名",
+    "email": "メールアドレス",
+    "phoneNumber": "電話番号",
+    "enquiryType": "お問い合わせの種類",
+    "selectOption": "オプションを選択",
+    "purchaseEnquiry": "購入に関するお問い合わせ",
+    "rentalEnquiry": "レンタルに関するお問い合わせ",
+    "exhibitionEnquiry": "展覧会に関するお問い合わせ",
+    "valuationEnquiry": "査定に関するお問い合わせ",
+    "other": "他の",
+    "message": "メッセージ",
+    "details": "お問い合わせの詳細をご記入ください..."
+  },
+  "fieldValues": {
+    "medium": {
+      "oil_painting": "油彩画",
+      "acrylic": "アクリル画",
+      "photography": "写真",
+      "drawing": "ドローイング",
+      "sculpture": "彫刻",
+      "installation": "インスタレーション",
+      "mix_media": "ミクストメディア",
+      "art_and_craft": "アート＆クラフト",
+      "digital": "デジタルアート",
+      "video": "ビデオアート",
+      "collage": "コラージュ"
+    },
+    "subject": {
+      "abstract": "抽象画",
+      "geometric": "幾何学的",
+      "human_figure": "人物画",
+      "portrait": "肖像画",
+      "landscape": "風景画",
+      "nature": "自然",
+      "urban": "都市",
+      "society": "社会",
+      "still_life": "静物画"
+    }
+  },
   "pageHome": {
     "title": "イコノアート",
     "description": "厳選された革新的なアーティストと卓越したアートワークを通じて現代美術を発見してください",
@@ -167,12 +207,14 @@
     "dimensions": "寸法",
     "year": "制作年",
     "medium": "媒体",
+    "subject": "主題",
     "technique": "技法",
     "edition": "版",
     "availability": "在庫状況",
     "price": "価格",
     "priceOnRequest": "価格応相談",
     "inquire": "お問い合わせ",
+    "enquiryArtwork": "アートワークに関するお問い合わせ",
     "rent": "レンタル",
     "buy": "購入",
     "addToWishlist": "ウィッシュリストに追加",

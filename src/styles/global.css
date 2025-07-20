@@ -41,7 +41,7 @@
     transform: scale(1) !important;
   }
   /* Styles pour les pages courantes */
-  .page-content {
+  .wysiwyg {
     h1,
     h2,
     h3,

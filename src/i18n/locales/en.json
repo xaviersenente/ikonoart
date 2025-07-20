@@ -71,6 +71,46 @@
     "allArtists": "All artists",
     "allArtworks": "All artworks"
   },
+  "forms": {
+    "fullName": "Full Name",
+    "email": "Email Address",
+    "phoneNumber": "Phone Number",
+    "enquiryType": "Enquiry Type",
+    "selectOption": "Select an option",
+    "purchaseEnquiry": "Purchase enquiry",
+    "rentalEnquiry": "Rental enquiry",
+    "exhibitionEnquiry": "Exhibition enquiry",
+    "valuationEnquiry": "Valuation enquiry",
+    "other": "Other",
+    "message": "Message",
+    "details": "Please provide details about your enquiry..."
+  },
+  "fieldValues": {
+    "medium": {
+      "oil_painting": "Oil painting",
+      "acrylic": "Acrylic",
+      "photography": "Photography",
+      "drawing": "Drawing",
+      "sculpture": "Sculpture",
+      "installation": "Installation",
+      "mix_media": "Mix Media",
+      "art_and_craft": "Art & Craft",
+      "digital": "Digital Art",
+      "video": "Video Art",
+      "collage": "Collage"
+    },
+    "subject": {
+      "abstract": "Abstract",
+      "geometric": "Geometric",
+      "human_figure": "Human Figure",
+      "portrait": "Portrait",
+      "landscape": "Landscape",
+      "nature": "Nature",
+      "urban": "Urban",
+      "society": "Society",
+      "still_life": "Still Life"
+    }
+  },
   "pageHome": {
     "title": "Ikono Art",
     "description": "Discover contemporary art through our curated selection of innovative artists and exceptional artworks",
@@ -167,12 +207,14 @@
     "dimensions": "Dimensions",
     "year": "Year",
     "medium": "Medium",
+    "subject": "Subject",
     "technique": "Technique",
     "edition": "Edition",
     "availability": "Availability",
     "price": "Price",
     "priceOnRequest": "Price on request",
     "inquire": "Inquire",
+    "enquiryArtwork": "Enquiry about artwork",
     "rent": "Rent",
     "buy": "Buy",
     "addToWishlist": "Add to wishlist",
