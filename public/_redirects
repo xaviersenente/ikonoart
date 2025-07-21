@@ -1,0 +1,9 @@
+# Redirections par géolocalisation - créer ce fichier dans /public/\_redirects
+
+# Redirection pour le Japon vers la version japonaise
+
+/ /ja 302 Country=JP
+
+# Redirection par défaut vers la version anglaise pour tous les autres pays
+
+/ /en 302

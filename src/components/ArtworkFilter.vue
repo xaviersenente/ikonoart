@@ -156,12 +156,14 @@
       @submit.prevent="applyFilters"
       class="filter-form border-b border-gray-300 py-8 mb-8"
     >
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
+      <div
+        class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4 lg:gap-10"
+      >
         <!-- Filtre par artiste -->
         <div class="form-group flex items-center gap-4">
           <label
             for="artist"
-            class="block text-sm font-medium text-gray-500 mb-1"
+            class="block text-sm font-medium text-gray-500 mb-1 max-md:w-32 max-md:flex-auto"
           >
             {{ translations.filters.artist }}
           </label>
@@ -185,7 +187,7 @@
         <div class="form-group flex items-center gap-4">
           <label
             for="medium"
-            class="block text-sm font-medium text-gray-500 mb-1"
+            class="block text-sm font-medium text-gray-500 mb-1 max-md:w-32 max-md:flex-auto"
           >
             {{ translations.filters.medium }}
           </label>
@@ -205,7 +207,7 @@
         <div class="form-group flex items-center gap-4">
           <label
             for="subject"
-            class="block text-sm font-medium text-gray-500 mb-1"
+            class="block text-sm font-medium text-gray-500 mb-1 max-md:w-32 max-md:flex-auto"
           >
             {{ translations.filters.subject }}
           </label>
@@ -222,7 +224,7 @@
         </div>
 
         <!-- Filtre par édition limitée -->
-        <div class="form-group flex items-center">
+        <div class="form-group flex items-center py-2 max-md:justify-self-end">
           <input
             type="checkbox"
             id="limitedEdition"
