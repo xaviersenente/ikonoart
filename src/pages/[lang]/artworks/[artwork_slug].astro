@@ -94,7 +94,7 @@ const enquiryOptions = [
           </div>
         )}
         <div class="wysiwyg border-t border-t-gray-300 mt-4 pt-4 text-sm" set:html={ artwork?.description }></div> 
-        {(artwork?.price || artwork?.sold !== undefined) && (
+        {artwork?.price && (
           <div class="mt-4">
             {!artwork.sold ? (
               <div class="border-l-4 border-green-600 pl-4 py-2">

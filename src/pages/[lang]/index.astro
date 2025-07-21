@@ -104,15 +104,6 @@ const heroCarousel = homePage.heroCarousel;
         ))}
       </Carousel>
 
-      {/* <div class="splide home-carousel px-12 lg:px-16" role="group" aria-label="Artists carousel">
-        <div class="splide__track">
-          <ul class="splide__list">
-            {selectedArtists.map(artist => (
-              <ArtistCard artist={artist} currentLocale={currentLocale} classes="splide__slide" />
-            ))}
-          </ul>
-        </div>
-      </div> */}
       <div class="flex justify-center mt-16">
         <Button currentLocale={currentLocale} textKey="buttons.allArtists" url="/artists"/>
       </div>
@@ -120,14 +111,27 @@ const heroCarousel = homePage.heroCarousel;
   )}
 
   <section class="main-container">
-    <h2 class="py-24 text-3xl font-medium uppercase relative flex items-center gap-8 after:flex-auto after:bg-black after:h-[1px] after:block">Ikonoart Exclusive representative
-    </h2>
-    <SectionTitle currentLocale={currentLocale} text="pageHome.sections.artistsHighlights"/>
-    <div class="lg:grid lg:grid-cols-2 lg:gap-8">
-      <div></div>
-      <div>
-        <h2 class="text-4xl font-medium mb-12">{homePage.exclusiveTitle}</h2>
+    <SectionTitle currentLocale={currentLocale} text="pageHome.sections.ikonoartExclusive"/>
+    <div class="lg:grid lg:grid-cols-12 lg:gap-8">
+      <ImageCockpit 
+        image={homePage.exclusiveImage} 
+        width={900} 
+        height={900}
+        quality={70}
+        resize="thumbnail"
+        classesContainer="col-start-1 col-span-5"
+      />
+      <div class="col-start-7 col-span-6 flex flex-col gap-8">
+        <h2 class="text-4xl font-medium">{homePage.exclusiveTitle}</h2>
         <div set:html={homePage.exclusiveText}></div>
+        <ImageCockpit 
+          image={homePage.exclusiveLogo} 
+          width={500} 
+          height={500}
+          quality={70}
+          resize="thumbnail"
+          classesContainer="w-44 h-44 self-end"
+        />
       </div>
     </div>
   </section>
@@ -152,16 +156,6 @@ const heroCarousel = homePage.heroCarousel;
           </li>
         ))}
       </Carousel>
-
-      {/* <div class="splide home-carousel px-12 lg:px-16" role="group" aria-label="Artwork's carousel">
-        <div class="splide__track">
-          <div class="splide__list">
-            {selectedArtworks.map(artwork => (
-              <ArtworkCard artwork={artwork} currentLocale={currentLocale} classes="splide__slide"/>
-            ))}
-          </div>
-        </div>
-      </div> */}
 
       <div class="flex justify-center mt-16">
         <Button currentLocale={currentLocale} textKey="buttons.allArtworks" url="/artworks"/>
@@ -234,16 +228,6 @@ const heroCarousel = homePage.heroCarousel;
         ))}
       </Carousel>
 
-      {/* <div class="splide home-carousel px-12 lg:px-16" role="group" aria-label="Artwork's carousel">
-        <div class="splide__track">
-          <div class="splide__list">
-            {classicCollection.map(artwork => (
-              <ArtworkCard artwork={artwork} currentLocale={currentLocale} classes="splide__slide"/>
-            ))}
-          </div>
-        </div>
-      </div> */}
-
     </section>
   )}
 
@@ -267,16 +251,6 @@ const heroCarousel = homePage.heroCarousel;
           </li>
         ))}
       </Carousel>
-
-      {/* <div class="splide home-carousel px-12 lg:px-16" role="group" aria-label="Artwork's carousel">
-        <div class="splide__track">
-          <div class="splide__list">
-            {japaneseCollection.map(artwork => (
-              <ArtworkCard artwork={artwork} currentLocale={currentLocale} classes="splide__slide"/>
-            ))}
-          </div>
-        </div>
-      </div> */}
 
     </section>
   )}

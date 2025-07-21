@@ -82,6 +82,8 @@ export interface HomePage {
   introText: string;
   exclusiveTitle: string;
   exclusiveText: string;
+  exclusiveImage: Image;
+  exclusiveLogo: Image;
   carouselArtists?: Reference[];
   carouselArtworks?: Reference[];
   carouselClassicCollection?: Reference[];

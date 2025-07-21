@@ -34,7 +34,7 @@ const artist = artwork.artist?._id ? await getArtistById(artwork.artist._id, cur
         classes="aspect-square object-contain" 
       />
     </div>
-    <div class="border-t border-t-gray-300 pt-4 mt-4">
+    <div class="border-t border-t-gray-300 pt-4 mt-4 text-center">
       <p class="font-medium">{artist ? artist.name : "Artiste inconnu"}</p>
       <h3 class="pb-2">
         <span class="italic text-gray-800">{artwork.title}</span>
