@@ -42,6 +42,23 @@
     @apply !bg-black;
     transform: scale(1) !important;
   }
+  /* Effet de survol amélioré pour le bouton de soumission */
+  .submit-button {
+    @apply relative overflow-hidden;
+  }
+
+  .submit-button::before {
+    content: "";
+    @apply absolute inset-0 bg-gradient-to-r from-gray-800 to-black transform -translate-x-full transition-transform duration-300 ease-in-out;
+  }
+
+  .submit-button:hover::before {
+    @apply translate-x-0;
+  }
+
+  .submit-button span {
+    @apply relative z-10;
+  }
   /* Styles pour les pages courantes */
   .wysiwyg {
     h1,
@@ -64,6 +81,139 @@
     }
     p {
       @apply pb-3;
+    }
+  }
+  /* Styles spécifiques pour la popup d'enquête */
+  #enquiry-popup {
+    /* Assurer que la popup soit au-dessus de tout */
+    z-index: 9999;
+  }
+
+  #enquiry-popup .absolute.inset-0 {
+    /* Améliorer la transition de l'overlay */
+    transition:
+      background-color 0.5s ease-in-out,
+      backdrop-filter 0.5s ease-in-out;
+  }
+
+  #enquiry-popup .absolute.top-0.right-0 {
+    /* Améliorer l'animation du panel */
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    will-change: transform;
+  }
+
+  /* Styles pour l'état de chargement du formulaire */
+  .form-loading {
+    pointer-events: none;
+  }
+
+  .form-loading input:not([type="hidden"]),
+  .form-loading textarea,
+  .form-loading select {
+    @apply opacity-60 cursor-not-allowed;
+  }
+
+  .loading-spinner {
+    @apply inline-block w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin;
+    animation: spin 1s linear infinite;
+  }
+
+  @keyframes spin {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  /* Animation du bouton de soumission */
+  #submit-btn {
+    @apply transition-all duration-200 ease-in-out;
+  }
+
+  #submit-btn:disabled {
+    @apply cursor-not-allowed;
+  }
+
+  #submit-btn:not(:disabled):hover {
+    @apply bg-gray-800 transform scale-[1.02];
+  }
+
+  /* Amélioration de l'accessibilité */
+  .popup-focus-trap {
+    /* S'assurer que le focus reste dans la popup */
+    outline: none;
+  }
+
+  /* Styles pour les messages d'état améliorés */
+  .status-message {
+    @apply fixed top-4 right-4 z-50 max-w-md p-4 rounded-lg shadow-xl transform transition-all duration-300 ease-in-out translate-x-full opacity-0;
+  }
+
+  .status-message.success {
+    @apply bg-green-500 text-white;
+  }
+
+  .status-message.error {
+    @apply bg-red-500 text-white;
+  }
+
+  .status-message.info {
+    @apply bg-blue-500 text-white;
+  }
+
+  .status-message.warning {
+    @apply bg-yellow-500 text-black;
+  }
+
+  .status-message.success-slide {
+    @apply translate-x-0 opacity-100;
+  }
+
+  .status-message.success-slide-out {
+    @apply translate-x-full opacity-0;
+  }
+
+  /* Responsive design pour mobile */
+  @media (max-width: 640px) {
+    #enquiry-popup .absolute.top-0.right-0 {
+      @apply w-full max-w-none;
+    }
+
+    .status-message {
+      @apply top-2 right-2 left-2 max-w-none;
+    }
+  }
+
+  /* Support pour les écrans haute densité */
+  @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    .backdrop-blur-sm {
+      backdrop-filter: blur(3px);
+      -webkit-backdrop-filter: blur(3px);
+    }
+  }
+
+  /* Styles pour le mode sombre (si vous l'implémentez plus tard) */
+  @media (prefers-color-scheme: dark) {
+    #enquiry-popup .bg-white {
+      @apply bg-gray-900 text-white;
+    }
+
+    #enquiry-popup .border-gray-200 {
+      @apply border-gray-700;
+    }
+
+    #enquiry-popup .bg-gray-50 {
+      @apply bg-gray-800;
+    }
+
+    #enquiry-popup .text-gray-600 {
+      @apply text-gray-300;
+    }
+
+    #enquiry-popup .text-gray-700 {
+      @apply text-gray-200;
     }
   }
 }
