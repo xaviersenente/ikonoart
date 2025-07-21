@@ -176,7 +176,10 @@ class EnquiryPopup {
 
       // Animation de l'overlay et du panel
       setTimeout(() => {
-        this.elements.overlay?.classList.add("backdrop-blur-sm");
+        this.elements.overlay?.classList.add(
+          "backdrop-blur-(--my-backdrop-blur)"
+        );
+        this.elements.overlay?.classList.add("bg-black/30");
         this.elements.panel?.classList.remove("translate-x-full");
 
         // Empêcher le scroll du body
@@ -198,7 +201,10 @@ class EnquiryPopup {
 
     if (this.elements.popup && this.elements.panel && this.elements.overlay) {
       // Animation de fermeture
-      this.elements.overlay.classList.remove("backdrop-blur-sm");
+      this.elements.overlay.classList.remove(
+        "backdrop-blur-(--my-backdrop-blur)"
+      );
+      this.elements.overlay.classList.remove("bg-black/30");
       this.elements.panel.classList.add("translate-x-full");
 
       // Supprimer le flou de l'arrière-plan

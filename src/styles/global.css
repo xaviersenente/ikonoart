@@ -6,6 +6,7 @@
   --darkikonoart: rgb(80, 63, 90);
   --verydarkikonoart: rgb(43, 36, 51);
   --container-8xl: 96rem;
+  --my-backdrop-blur: 1px;
 }
 
 @layer base {
@@ -191,29 +192,6 @@
     .backdrop-blur-sm {
       backdrop-filter: blur(3px);
       -webkit-backdrop-filter: blur(3px);
-    }
-  }
-
-  /* Styles pour le mode sombre (si vous l'implémentez plus tard) */
-  @media (prefers-color-scheme: dark) {
-    #enquiry-popup .bg-white {
-      @apply bg-gray-900 text-white;
-    }
-
-    #enquiry-popup .border-gray-200 {
-      @apply border-gray-700;
-    }
-
-    #enquiry-popup .bg-gray-50 {
-      @apply bg-gray-800;
-    }
-
-    #enquiry-popup .text-gray-600 {
-      @apply text-gray-300;
-    }
-
-    #enquiry-popup .text-gray-700 {
-      @apply text-gray-200;
     }
   }
 }
