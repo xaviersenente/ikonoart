@@ -79,8 +79,35 @@
     const uniqueSubjects = new Set();
 
     props.allArtworks.forEach((artwork) => {
-      if (artwork.medium) uniqueMediums.add(artwork.medium);
-      if (artwork.subject) uniqueSubjects.add(artwork.subject);
+      // Traiter medium comme un tableau
+      if (artwork.medium) {
+        if (Array.isArray(artwork.medium)) {
+          // Si c'est un tableau, ajouter chaque valeur
+          artwork.medium.forEach((medium) => {
+            if (medium && medium.trim()) {
+              uniqueMediums.add(medium.trim());
+            }
+          });
+        } else {
+          // Si c'est encore une chaîne (rétrocompatibilité)
+          uniqueMediums.add(artwork.medium);
+        }
+      }
+
+      // Traiter subject comme un tableau
+      if (artwork.subject) {
+        if (Array.isArray(artwork.subject)) {
+          // Si c'est un tableau, ajouter chaque valeur
+          artwork.subject.forEach((subject) => {
+            if (subject && subject.trim()) {
+              uniqueSubjects.add(subject.trim());
+            }
+          });
+        } else {
+          // Si c'est encore une chaîne (rétrocompatibilité)
+          uniqueSubjects.add(artwork.subject);
+        }
+      }
     });
 
     mediums.value = Array.from(uniqueMediums).sort();
@@ -102,14 +129,34 @@
         return false;
       }
 
-      // Filtre par medium
-      if (filters.value.medium && artwork.medium !== filters.value.medium) {
-        return false;
+      // Filtre par medium - gérer les valeurs multiples
+      if (filters.value.medium) {
+        if (Array.isArray(artwork.medium)) {
+          // Si artwork.medium est un tableau, vérifier si la valeur sélectionnée est dedans
+          if (!artwork.medium.includes(filters.value.medium)) {
+            return false;
+          }
+        } else {
+          // Rétrocompatibilité pour les chaînes simples
+          if (artwork.medium !== filters.value.medium) {
+            return false;
+          }
+        }
       }
 
-      // Filtre par sujet
-      if (filters.value.subject && artwork.subject !== filters.value.subject) {
-        return false;
+      // Filtre par sujet - gérer les valeurs multiples
+      if (filters.value.subject) {
+        if (Array.isArray(artwork.subject)) {
+          // Si artwork.subject est un tableau, vérifier si la valeur sélectionnée est dedans
+          if (!artwork.subject.includes(filters.value.subject)) {
+            return false;
+          }
+        } else {
+          // Rétrocompatibilité pour les chaînes simples
+          if (artwork.subject !== filters.value.subject) {
+            return false;
+          }
+        }
       }
 
       // Filtre par édition limitée

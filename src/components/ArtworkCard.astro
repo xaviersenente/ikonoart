@@ -39,14 +39,19 @@ const artist = artwork.artist?._id ? await getArtistById(artwork.artist._id, cur
       <h3 class="pb-2">
         <span class="italic text-gray-800">{artwork.title}</span>
         {artwork.year && (
-          <span class="text-gray-600 font-normal"> – {artwork.year}</span>
+          <span class="text-gray-600 font-normal">&nbsp;–&nbsp;{artwork.year}</span>
         )}
       </h3>
-      {artwork.size && (
-        <p class="text-gray-500">{artwork.size}</p>
-      )}
       {artwork.medium && (
-        <p class="text-gray-500">{artwork.medium}</p>
+        <p class="text-gray-500">
+          {Array.isArray(artwork.medium) ? artwork.medium.join(', ') : artwork.medium}
+        </p>
+      )}
+      
+      {artwork.subject && (
+        <p class="text-gray-500">
+          {Array.isArray(artwork.subject) ? artwork.subject.join(', ') : artwork.subject}
+        </p>
       )}
     </div>
   </a>

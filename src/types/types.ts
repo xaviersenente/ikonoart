@@ -54,9 +54,10 @@ export interface Artwork {
   year?: number;
   size?: string;
   price?: string;
+  sold?: boolean;
   description?: string;
-  medium?: string;
-  subject?: string;
+  medium?: string[];
+  subject?: string[];
   limited_edition?: boolean;
   highlight?: boolean;
 }

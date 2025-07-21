@@ -209,6 +209,7 @@
     "year": "Year",
     "medium": "Medium",
     "subject": "Subject",
+    "size": "Size",
     "technique": "Technique",
     "edition": "Edition",
     "availability": "Availability",
@@ -222,7 +223,9 @@
     "shareWork": "Share this work",
     "relatedWorks": "Related Works",
     "byArtist": "by",
-    "unknownArtist": "Unknown Artist"
+    "unknownArtist": "Unknown Artist",
+    "workSold": "Work Sold",
+    "available": "Available for purchase"
   },
   "exhibitions": {
     "artworks": "Artworks in this exhibition",

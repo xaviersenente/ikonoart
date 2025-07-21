@@ -209,6 +209,7 @@
     "year": "制作年",
     "medium": "媒体",
     "subject": "主題",
+    "size": "寸法",
     "technique": "技法",
     "edition": "版",
     "availability": "在庫状況",
@@ -222,7 +223,9 @@
     "shareWork": "この作品をシェア",
     "relatedWorks": "関連作品",
     "byArtist": "作者:",
-    "unknownArtist": "作者不明"
+    "unknownArtist": "作者不明",
+    "workSold": "売れた作品",
+    "available": "購入可能"
   },
   "exhibitions": {
     "artworks": "この展覧会の作品",

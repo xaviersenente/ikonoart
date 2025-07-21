@@ -1,6 +1,9 @@
 ---
 import Layout from "../../../layouts/Layout.astro";
 import ImageCockpit from '../../../components/ImageCockpit.astro';
+import FormInput from '../../../components/forms/FormInput.astro';
+import FormSelect from '../../../components/forms/FormSelect.astro';
+import FormTextarea from '../../../components/forms/FormTextarea.astro';
 import { languages } from '../../../i18n/ui';
 import { useTranslations } from '../../../i18n/utils';
 import { translateAndJoinFieldValues, translateFieldValue } from '../../../js/fieldTranslations';
@@ -29,6 +32,15 @@ const t = useTranslations(currentLocale);
 
 const artwork = await getArtworkById(artwork_id, currentLocale);
 const artist = artwork?.artist?._id ? await getArtistById(artwork.artist._id, currentLocale) : null;
+
+// Préparer les options pour le select
+const enquiryOptions = [
+  { value: 'purchase', label: t('forms.purchaseEnquiry') },
+  { value: 'rental', label: t('forms.rentalEnquiry') },
+  { value: 'exhibition', label: t('forms.exhibitionEnquiry') },
+  { value: 'valuation', label: t('forms.valuationEnquiry') },
+  { value: 'other', label: t('forms.other') }
+];
 
 ---
 
@@ -75,12 +87,29 @@ const artist = artwork?.artist?._id ? await getArtistById(artwork.artist._id, cu
             {translateAndJoinFieldValues(artwork.subject, 'subject', currentLocale)}
           </div>
         )}
-        <div class="wysiwyg border-t border-t-gray-300 mt-4 pt-4 text-sm" set:html={ artwork?.description }></div> 
         {artwork?.size && (
-          <p class="mt-4">{ artwork?.size }</p>
+          <div class="mb-1">
+            <strong>{t('artwork.size')} :</strong> 
+            { artwork?.size }
+          </div>
         )}
-        {artwork?.price && (
-          <p class="mt-4">{ artwork?.price }</p>
+        <div class="wysiwyg border-t border-t-gray-300 mt-4 pt-4 text-sm" set:html={ artwork?.description }></div> 
+        {(artwork?.price || artwork?.sold !== undefined) && (
+          <div class="mt-4">
+            {!artwork.sold ? (
+              <div class="border-l-4 border-green-600 pl-4 py-2">
+                <div class="text-2xl font-bold text-gray-900">${artwork.price}</div>
+                <div class="text-sm text-green-600 font-medium">Available for purchase</div>
+              </div>
+            ) : (
+              <div class="border-l-4 border-red-600 pl-4 py-2">
+                {artwork.price && (
+                  <div class="text-xl text-gray-500 line-through">${artwork.price}</div>
+                )}
+                <div class="text-sm text-red-600 font-medium">work sold</div>
+              </div>
+            )}
+          </div>
         )}
         
         <!-- Bouton pour ouvrir le formulaire d'enquête -->
@@ -177,7 +206,6 @@ const artist = artwork?.artist?._id ? await getArtistById(artwork.artist._id, cu
           method="POST" 
           data-netlify="true" 
           data-netlify-honeypot="bot-field"
-          action="/thank-you"
           class="space-y-4"
           id="enquiry-form"
         >
@@ -191,59 +219,45 @@ const artist = artwork?.artist?._id ? await getArtistById(artwork.artist._id, cu
           <input type="hidden" name="artwork-year" value={artwork?.year || ""} />
           <input type="hidden" name="page-url" value={Astro.url.href} />
           
-          <!-- Nom -->
-          <div>
-            <label for="name" class="block text-sm font-medium text-gray-700 mb-2">
-              {t('forms.fullName')} <span class="text-red-600">*</span>
-            </label>
-            <input type="text" id="name" name="name" required/>
-          </div>
+          <FormInput 
+            id="name"
+            name="name"
+            label={t('forms.fullName')}
+            required={true}
+          />
           
-          <!-- Email -->
-          <div>
-            <label for="email" class="block text-sm font-medium text-gray-700 mb-2">
-              {t('forms.email')} <span class="text-red-600">*</span>
-            </label>
-            <input type="email" id="email" name="email" required />
-          </div>
+          <FormInput 
+            type="email"
+            id="email"
+            name="email"
+            label={t('forms.email')}
+            required={true}
+          />
           
-          <!-- Téléphone -->
-          <div>
-            <label for="phone" class="block text-sm font-medium text-gray-700 mb-2">
-              {t('forms.phoneNumber')}
-            </label>
-            <input type="tel" id="phone" name="phone"/>
-          </div>
+          <FormInput 
+            type="tel"
+            id="phone"
+            name="phone"
+            label={t('forms.phoneNumber')}
+          />
           
-          <!-- Type d'enquête -->
-          <div>
-            <label for="enquiry-type" class="block text-sm font-medium text-gray-700 mb-2">
-              {t('forms.enquiryType')} <span class="text-red-600">*</span>
-            </label>
-            <select id="enquiry-type" name="enquiry-type" required>
-              <option value="">{t('forms.selectOption')}</option>
-              <option value="purchase">{t('forms.purchaseEnquiry')}</option>
-              <option value="rental">{t('forms.rentalEnquiry')}</option>
-              <option value="exhibition">{t('forms.exhibitionEnquiry')}</option>
-              <option value="valuation">{t('forms.valuationEnquiry')}</option>
-              <option value="other">{t('forms.other')}</option>
-            </select>
-          </div>
+          <FormSelect
+            id="enquiry-type"
+            name="enquiry-type"
+            label={t('forms.enquiryType')}
+            options={enquiryOptions}
+            placeholder={t('forms.selectOption')}
+            required={true}
+          />
           
-          <!-- Message -->
-          <div>
-            <label for="message" class="block text-sm font-medium text-gray-700 mb-2">
-              {t('forms.message')} <span class="text-red-600">*</span>
-            </label>
-            <textarea 
-              id="message" 
-              name="message" 
-              rows="4" 
-              required 
-              placeholder={t('forms.details')}
-              class="resize-none"
-            ></textarea>
-          </div>
+          <FormTextarea
+            id="message"
+            name="message"
+            label={t('forms.message')}
+            placeholder={t('forms.details')}
+            required={true}
+            rows={4}
+          />
           
           <!-- Bouton d'envoi -->
           <div class="pt-4">
@@ -266,15 +280,28 @@ const artist = artwork?.artist?._id ? await getArtistById(artwork.artist._id, cu
       transform: translateX(0);
     }
     
+    /* Classes pour les transitions de flou */
+    .blur-transition {
+      transition: filter 0.3s ease-in-out;
+    }
+    
     /* Responsive */
     @media (max-width: 768px) {
       #enquiry-popup .max-w-md {
         max-width: 90%;
       }
     }
+    
+    /* Améliorer l'accessibilité du bouton de fermeture */
+    #close-popup:focus {
+      outline: 2px solid #000;
+      outline-offset: 2px;
+    }
   </style>
+
+  <script src="../../../js/enquiryPopup.ts"></script>
   
-  <script>
+  <!-- <script>
     // Fonction principale d'initialisation
     function initializeEnquiryPopup() {
       const enquiryBtn = document.getElementById('enquiry-btn');
@@ -384,6 +411,6 @@ const artist = artwork?.artist?._id ? await getArtistById(artwork.artist._id, cu
       // Restaurer le scroll du body si une popup était ouverte
       document.body.style.overflow = 'auto';
     });
-  </script>
+  </script> -->
 </Layout>
 

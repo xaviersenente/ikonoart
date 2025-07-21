@@ -70,7 +70,18 @@
           {{ artwork.size }}
         </p>
         <p v-if="artwork.medium" class="text-gray-500">
-          {{ artwork.medium }}
+          {{
+            Array.isArray(artwork.medium)
+              ? artwork.medium.join(", ")
+              : artwork.medium
+          }}
+        </p>
+        <p v-if="artwork.subject" class="text-gray-500">
+          {{
+            Array.isArray(artwork.subject)
+              ? artwork.subject.join(", ")
+              : artwork.subject
+          }}
         </p>
       </div>
     </a>
