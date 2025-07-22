@@ -57,7 +57,8 @@
     "soldOut": "Sold out",
     "limitedEdition": "Limited Edition",
     "newWork": "New Work",
-    "featured": "Featured"
+    "featured": "Featured",
+    "home": "Home"
   },
   "buttons": {
     "viewMore": "View More",
@@ -131,16 +132,12 @@
   "pageArtists": {
     "title": "Artists",
     "description": "Discover the contemporary artists showcased by Ikono Art. Learn about their stories, creative backgrounds, and explore their available works for rent or purchase.",
-    "itemMenu1": "Statement",
-    "itemMenu2": "Biography",
-    "itemMenu3": "Works",
-    "itemMenu4": "Limited Editions",
-    "itemMenu5": "Achievements",
-    "itemMenu6": "Exhibitions",
+    "statement": "Statement",
     "biography": "Biography",
     "works": "Works",
     "limitedEditions": "Limited Edition",
     "achievements": "Achievements",
+    "exhibitions": "Exhibitions",
     "noWorks": "No works available for this artist",
     "artistTypes": {
       "represented": "Represented Artist",

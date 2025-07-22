@@ -94,6 +94,35 @@ export async function getArtworksByArtist(
 }
 
 /**
+ * Récupère toutes les expositions d'un artiste
+ * @param artistId - ID de l'artiste
+ * @param lang - Langue des résultats
+ * @returns Un tableau d'expositions
+ */
+export async function getExhibitionsByArtist(
+  artistId: string,
+  lang: string = "en"
+): Promise<Exhibition[]> {
+  // Récupérer toutes les expositions
+  const allExhibitions = await getCollection<Exhibition>("exhibition", {
+    locale: lang,
+  });
+
+  // Filtrer côté client pour les champs relationnels multiples
+  return allExhibitions.filter((exhibition) => {
+    // Vérifier si le champ artist existe et contient l'artiste recherché
+    if (exhibition.artist && Array.isArray(exhibition.artist)) {
+      return exhibition.artist.some((artist) => artist._id === artistId);
+    }
+    // Si artist n'est pas un tableau, vérifier directement
+    if (exhibition.artist && typeof exhibition.artist === "object") {
+      return exhibition.artist._id === artistId;
+    }
+    return false;
+  });
+}
+
+/**
  * Regroupe les achievements d'un artiste par catégorie et année
  * @param artist - L'artiste
  * @returns Un objet regroupant les achievements

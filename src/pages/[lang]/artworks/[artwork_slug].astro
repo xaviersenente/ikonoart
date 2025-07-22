@@ -46,28 +46,20 @@ const enquiryOptions = [
 
 <Layout title={ artwork?.title ?? "Artwork" } currentLocale={currentLocale}>
   <main class="main-container mt-16 lg:mt-34">
-    <!-- <div class="mb-6">
-      <a href="javascript:history.back()" class="inline-flex items-center text-gray-600 hover:text-black">
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
-          <path d="M19 12H5M12 19l-7-7 7-7"/>
-        </svg>
-        Retour
-      </a>
-    </div> -->
     <nav class="mb-6" aria-label="Breadcrumb">
       <ol class="flex items-center space-x-2 text-sm">
-        <li><a href={`/${currentLocale}`} class="text-gray-600 hover:text-black">Accueil</a></li>
+        <li><a href={`/${currentLocale}`} class="text-gray-600 hover:text-black">{t('common.home')}</a></li>
         <li class="text-gray-400">/</li>
-        <li><a href={`/${currentLocale}/artworks`} class="text-gray-600 hover:text-black">Artworks</a></li>
+        <li><a href={`/${currentLocale}/artworks`} class="text-gray-600 hover:text-black">{t('header.artworks')}</a></li>
         <li class="text-gray-400">/</li>
         <li class="text-gray-900">{artwork?.title}</li>
       </ol>
     </nav>
-    <div class="grid gap-10 lg:grid-cols-3">
-      <div class="row-span-2 max-lg:row-start-2">
+    <div class="grid gap-10 grid-cols-1 lg:grid-cols-3">
+      <div class="lg:row-span-2 max-lg:row-start-2">
         <h1 class="text-3xl mb-4">
           {artist ? (
-            <a href={`/${lang}/artists/${artist.slug}`} class="hover:underline">
+            <a href={`/${lang}/artists/${artist.slug}`} class="border-b border-b-transparent transition duration-300 hover:border-b-gray-500">
               {artist.name}
             </a>
           ) : "Artiste inconnu"}
@@ -75,6 +67,11 @@ const enquiryOptions = [
         <h2 class="text-xl mb-4">
           <span class="italic">{ artwork?.title }</span>{ artwork?.year && ( <span> – { artwork?.year }</span> )}
         </h2>
+        {artwork?.limited_edition && (
+          <div class="mb-4 border border-black px-3 py-2 text-sm inline-block">
+            <strong>{t('common.limitedEdition')}</strong> 
+          </div>
+        )}
         {artwork?.medium && Array.isArray(artwork.medium) && artwork.medium.length > 0 && (
           <div class="mb-1">
             <strong>{t('artwork.medium')} :</strong> 
@@ -93,6 +90,7 @@ const enquiryOptions = [
             { artwork?.size }
           </div>
         )}
+        
         <div class="wysiwyg border-t border-t-gray-300 mt-4 pt-4 text-sm" set:html={ artwork?.description }></div> 
         {artwork?.price && (
           <div class="mt-4">
@@ -128,7 +126,7 @@ const enquiryOptions = [
           </button>
         </div>
       </div>
-      <div class="col-span-2 max-lg:row-start-1">
+      <div class="lg:col-span-2 max-lg:row-start-1">
         <ImageCockpit 
           image={artwork?.image} 
           width={1600} 
@@ -142,7 +140,7 @@ const enquiryOptions = [
         />
       </div>
       {artwork?.images_add && artwork?.images_add.length > 0 && (
-        <div class="col-span-2 lg:col-start-2 columns-2 gap-8 max-lg:row-start-3">
+        <div class="columns-2 gap-8 lg:col-span-2 lg:col-start-2 max-lg:row-start-3">
           {artwork.images_add.map((image, index) => (
             <ImageCockpit 
               image={image} 

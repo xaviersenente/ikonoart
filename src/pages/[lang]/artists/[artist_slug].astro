@@ -1,12 +1,19 @@
 ---
 import Layout from "../../../layouts/Layout.astro";
 import ArtworkCard from '../../../components/ArtworkCard.astro';
+import ExhibitionCard from '../../../components/ExhibitionCard.astro';
 import ImageCockpit from '../../../components/ImageCockpit.astro';
 import Carousel from '../../../components/Carousel.astro';
 import SectionTitle from '../../../components/SectionTitle.astro';
 import { languages } from '../../../i18n/ui';
 import { useTranslations, getCurrentLocale } from '../../../i18n/utils';
-import { getArtists, getArtistById, getArtworksByArtist, groupAchievementsByCategoryAndYear } from "../../../services/collections";
+import { 
+  getArtists, 
+  getArtistById, 
+  getArtworksByArtist, 
+  getExhibitionsByArtist,
+  groupAchievementsByCategoryAndYear 
+} from "../../../services/collections";
 
 import type { Artist } from '../../../types/types';
 import type { Locale } from '../../../i18n/ui';
@@ -34,16 +41,19 @@ const t = useTranslations(currentLocale);
 const artist: Artist | null = await getArtistById(artist_id, currentLocale);
 const { standard: standardArtworks, limitedEdition: limitedEditionArtworks } 
   = await getArtworksByArtist(artist_id, currentLocale);
+const exhibitions = await getExhibitionsByArtist(artist_id, currentLocale);
 // Regroupement des achievements
 const groupedAchievements = groupAchievementsByCategoryAndYear(artist);
+
+console.log(exhibitions);
 
 ---
 
 <Layout title={ artist?.name?? "Artist" } currentLocale={currentLocale}>
   <main class="main-container mt-16 lg:mt-34">
-    <div class="py-6 my-6 lg:flex z-10 lg:justify-between lg:items-center border-b border-gray-300 bg-white transition duration-300" id="menu-artist">
+    <div class="py-4 my-6 flex flex-col gap-4 z-10 lg:flex-row lg:justify-between lg:items-center border-b border-gray-300 bg-white transition duration-300" id="menu-artist">
       <div>
-        <h1 class="text-4xl font-medium">{ artist?.name }</h1>
+        <h1 class="text-2xl font-medium lg:text-4xl">{ artist?.name }</h1>
         
           <p>{artist?.birthyear} - {(artist?.deathyear) && (artist?.deathyear)}</p>
         
@@ -51,24 +61,26 @@ const groupedAchievements = groupAchievementsByCategoryAndYear(artist);
           <p>{artist.categorySet.map((item, index) => item.category).join(", ")}</p>
         )} 
       </div>
-      <nav class=" self-end">
-        <ul class="flex gap-4 uppercase text-gray-500 overflow-x-auto *:flex-none" >
+      <nav class="text-sm uppercase text-gray-500 lg:self-end ">
+        <ul class="flex gap-4 overflow-x-auto *:flex-none" >
           { artist?.statement && (
-            <li><a class="block transition duration-300" href="#statement">{t('pageArtists.itemMenu1')}</a></li>
+            <li><a class="block transition duration-300" href="#statement">{t('pageArtists.statement')}</a></li>
           )}
           { standardArtworks.length > 0 && (
-            <li><a class="block transition duration-300" href="#works">{t('pageArtists.itemMenu3')}</a></li>
+            <li><a class="block transition duration-300" href="#works">{t('pageArtists.works')}</a></li>
           )}
           { limitedEditionArtworks.length > 0 && (
-            <li><a class="block transition duration-300" href="#limited-edition">{t('pageArtists.itemMenu4')}</a></li>
+            <li><a class="block transition duration-300" href="#limited-edition">{t('pageArtists.limitedEditions')}</a></li>
           )}
           { artist?.biography && (
-            <li><a class="block transition duration-300" href="#biography">{t('pageArtists.itemMenu2')}</a></li>
+            <li><a class="block transition duration-300" href="#biography">{t('pageArtists.biography')}</a></li>
           )}
           { groupedAchievements && Object.entries(groupedAchievements).length > 0 && (
-            <li><a class="block transition duration-300" href="#achievements">{t('pageArtists.itemMenu5')}</a></li>
+            <li><a class="block transition duration-300" href="#achievements">{t('pageArtists.achievements')}</a></li>
           )}
-          <li><a class="block transition duration-300" href="#exhibition">{t('pageArtists.itemMenu6')}</a></li>
+          { exhibitions.length > 0 && (
+            <li><a class="block transition duration-300" href="#exhibitions">{t('pageArtists.exhibitions')}</a></li>
+          )}
         </ul>
       </nav>
     </div>
@@ -83,7 +95,12 @@ const groupedAchievements = groupAchievementsByCategoryAndYear(artist);
     { (artist?.image || artist?.statement) && (
       <section class="grid gap-10 lg:grid-cols-3 mt-20 scroll-mt-40" id="statement">
         { artist?.image && (
-          <ImageCockpit image={artist.image} width={600} height={600} legend={true} />
+          <ImageCockpit 
+            image={artist.image} 
+            width={600} 
+            height={600} 
+            legend={true}
+          />
         )}
         { artist?.statement && (
           <div class="space-y-3 md:columns-2 md:gap-10 lg:col-span-2" set:html={artist.statement}></div>
@@ -150,6 +167,20 @@ const groupedAchievements = groupAchievementsByCategoryAndYear(artist);
                   </div>
                 ))}
             </div>
+          ))}
+        </div>
+      </section>
+    )}
+    {exhibitions.length > 0 && ( 
+      <section class="scroll-mt-40" id="exhibitions">
+        <SectionTitle currentLocale={currentLocale} text="pageArtists.exhibitions"/>
+        <div class="card-grid">
+          {exhibitions.map((exhibition, index) => (
+            <ExhibitionCard 
+              exhibition={exhibition} 
+              currentLocale={currentLocale}
+              priority={false}
+            />
           ))}
         </div>
       </section>

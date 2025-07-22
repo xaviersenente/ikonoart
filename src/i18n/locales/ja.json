@@ -57,7 +57,8 @@
     "soldOut": "売り切れ",
     "limitedEdition": "限定版",
     "newWork": "新作",
-    "featured": "おすすめ"
+    "featured": "おすすめ",
+    "home": "ホーム"
   },
   "buttons": {
     "viewMore": "もっと見る",
@@ -131,16 +132,12 @@
   "pageArtists": {
     "title": "アーティスト",
     "description": "イコノアートが紹介する現代アーティストたちをご覧ください。彼らのストーリーや制作背景を知り、レンタル・販売可能な作品をお楽しみいただけます。",
-    "itemMenu1": "ステートメント",
-    "itemMenu2": "バイオグラフィー",
-    "itemMenu3": "作品",
-    "itemMenu4": "限定版",
-    "itemMenu5": "受賞歴",
-    "itemMenu6": "展覧会",
+    "statement": "ステートメント",
     "biography": "バイオグラフィー",
     "works": "作品",
     "limitedEditions": "限定版",
-    "achievements": "実績",
+    "achievements": "受賞歴",
+    "exhibitions": "展覧会",
     "noWorks": "このアーティストの作品はありません",
     "artistTypes": {
       "represented": "専属アーティスト",
