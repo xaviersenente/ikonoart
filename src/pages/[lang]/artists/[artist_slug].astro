@@ -45,8 +45,6 @@ const exhibitions = await getExhibitionsByArtist(artist_id, currentLocale);
 // Regroupement des achievements
 const groupedAchievements = groupAchievementsByCategoryAndYear(artist);
 
-console.log(exhibitions);
-
 ---
 
 <Layout title={ artist?.name?? "Artist" } currentLocale={currentLocale}>
@@ -70,7 +68,7 @@ console.log(exhibitions);
             <li><a class="block transition duration-300" href="#works">{t('pageArtists.works')}</a></li>
           )}
           { limitedEditionArtworks.length > 0 && (
-            <li><a class="block transition duration-300" href="#limited-edition">{t('pageArtists.limitedEditions')}</a></li>
+            <li><a class="block transition duration-300" href="#limited-edition">{t('pageArtists.limitedEdition')}</a></li>
           )}
           { artist?.biography && (
             <li><a class="block transition duration-300" href="#biography">{t('pageArtists.biography')}</a></li>
