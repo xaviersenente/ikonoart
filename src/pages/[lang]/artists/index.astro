@@ -1,7 +1,7 @@
 ---
 import Layout from '../../../layouts/Layout.astro';
 import ArtistCard from '../../../components/ArtistCard.astro';
-import { getArtistsGroupedByLevel } from "../../../services/collections";
+import { getArtistsGroupedByType } from "../../../services/collections";
 import { generateI18nPaths, getCurrentLocale, usePageMeta, useTranslations } from '../../../i18n/utils';
 import type { Locale } from '../../../i18n/ui';
 
@@ -18,25 +18,25 @@ const t = useTranslations(currentLocale);
 const { title, description } = usePageMeta(currentLocale, 'pageArtists');
 
 // Récupération des artistes regroupés par niveau
-const artistsGrouped = await getArtistsGroupedByLevel(currentLocale);
+const artistsGrouped = await getArtistsGroupedByType(currentLocale);
 
 // Ordre d'affichage des niveaux
-const levelOrder = ["Emerging artist", "Mid-Career artist", "Established Artist"];
+const typeOrder = ["Represented", "Exhibited", "Exclusive", "Collection"];
 
 ---
 
 <Layout title={title} description={description}>
   <main class="main-container mt-16 lg:mt-34">
     <h1 class="text-4xl my-8">{title}</h1>
-  	{levelOrder.map((level) => {
+  	{typeOrder.map((type) => {
       
-      const artists = artistsGrouped[level];
+      const artists = artistsGrouped[type];
       if (!artists || artists.length === 0) return null;
       
       return (
         <section class="mb-16">
           <h2 class="text-2xl font-medium mb-8 border-b border-gray-300 pb-4">
-            {t(`pageArtists.levels.${level.toLowerCase().replace(/[-\s]/g, '_')}`)}
+            {t(`pageArtists.artistTypes.${type.toLowerCase().replace(/[-\s]/g, '_')}`)}
           </h2>
           <div class="grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
             {artists.map((artist, index) => (
