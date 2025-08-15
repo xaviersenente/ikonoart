@@ -98,7 +98,20 @@
       "art_and_craft": "Art & Craft",
       "digital": "Digital Art",
       "video": "Video Art",
-      "collage": "Collage"
+      "collage": "Collage",
+      "lithography": "Lithography",
+      "giclee": "Giclee",
+      "etching": "Etching",
+      "digital_print": "Digital Print",
+      "silk_print": "Silk Print",
+      "ceramic": "Ceramic",
+      "glass": "Glass",
+      "bronze": "Bronze",
+      "terracotta": "Terracotta",
+      "watercolor": "Watercolor",
+      "carcoil": "Carcoil",
+      "gouache": "Gouache",
+      "pastel": "Pastel"
     },
     "subject": {
       "abstract": "Abstract",
@@ -109,7 +122,8 @@
       "nature": "Nature",
       "urban": "Urban",
       "society": "Society",
-      "still_life": "Still Life"
+      "still_life": "Still Life",
+      "surrealism": "Surrealism"
     }
   },
   "pageHome": {
@@ -122,7 +136,7 @@
     },
     "sections": {
       "artistsHighlights": "Artists highlights",
-      "ikonoartExclusive": "Ikonoart exclusive representative",
+      "ikonoartExclusive": "Ikono art exclusive representative",
       "artworksHighlights": "Artworks highlights",
       "ikonoartServices": "Ikono art Services",
       "classicCollection": "The classic Collection",
@@ -144,6 +158,11 @@
       "exhibited": "Exhibited Artist",
       "exclusive": "Exclusive Artist",
       "collection": "Collection Artist"
+    },
+    "levels": {
+      "established_artist": "Established Artists",
+      "mid_career_artist": "Mid-Career Artists",
+      "emerging_artist": "Emerging Artists"
     }
   },
   "pageArtworks": {

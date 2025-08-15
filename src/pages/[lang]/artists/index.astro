@@ -1,8 +1,8 @@
 ---
 import Layout from '../../../layouts/Layout.astro';
 import ArtistCard from '../../../components/ArtistCard.astro';
-import { getArtists } from "../../../services/collections";
-import { generateI18nPaths, getCurrentLocale, usePageMeta } from '../../../i18n/utils';
+import { getArtistsGroupedByLevel } from "../../../services/collections";
+import { generateI18nPaths, getCurrentLocale, usePageMeta, useTranslations } from '../../../i18n/utils';
 import type { Locale } from '../../../i18n/ui';
 
 // Génération des chemins statiques pour chaque langue
@@ -12,25 +12,43 @@ export const getStaticPaths = async () => {
 
 // Récupération de la locale courante avec fallback
 const currentLocale: Locale = getCurrentLocale(Astro.currentLocale);
+const t = useTranslations(currentLocale);
 
 // Récupération des métadonnées de page traduites
 const { title, description } = usePageMeta(currentLocale, 'pageArtists');
 
-// Récupération des articles au moment du rendu côté serveur
-const artists = await getArtists(currentLocale);
+// Récupération des artistes regroupés par niveau
+const artistsGrouped = await getArtistsGroupedByLevel(currentLocale);
+
+// Ordre d'affichage des niveaux
+const levelOrder = ["Emerging artist", "Mid-Career artist", "Established Artist"];
+
 ---
 
 <Layout title={title} description={description}>
   <main class="main-container mt-16 lg:mt-34">
     <h1 class="text-4xl my-8">{title}</h1>
-  	<div class="grid gap-10 sm:grid-cols-2 lg:grid-cols-4 ">
-      {artists.map((artist, index) => (
-        <ArtistCard 
-          artist={artist} 
-          currentLocale={currentLocale}
-          priority={index < 4}
-        />
-      ))}
-    </div>
+  	{levelOrder.map((level) => {
+      
+      const artists = artistsGrouped[level];
+      if (!artists || artists.length === 0) return null;
+      
+      return (
+        <section class="mb-16">
+          <h2 class="text-2xl font-medium mb-8 border-b border-gray-300 pb-4">
+            {t(`pageArtists.levels.${level.toLowerCase().replace(/[-\s]/g, '_')}`)}
+          </h2>
+          <div class="grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
+            {artists.map((artist, index) => (
+              <ArtistCard 
+                artist={artist} 
+                currentLocale={currentLocale}
+                priority={index < 4}
+              />
+            ))}
+          </div>
+        </section>
+      );
+    })}
   </main>
 </Layout>

@@ -109,7 +109,21 @@
       "nature": "自然",
       "urban": "都市",
       "society": "社会",
-      "still_life": "静物画"
+      "still_life": "静物画",
+      "surrealism": "シュルレアリスム",
+      "lithography": "リソグラフィー",
+      "giclee": "ジークレー",
+      "etching": "エッチング",
+      "digital_print": "デジタルプリント",
+      "silk_print": "シルクプリント",
+      "ceramic": "セラミック",
+      "glass": "ガラス",
+      "bronze": "ブロンズ",
+      "terracotta": "テラコッタ",
+      "watercolor": "水彩",
+      "carcoil": "カーコイル",
+      "gouache": "ガッシュ",
+      "pastel": "パステル"
     }
   },
   "pageHome": {
@@ -144,6 +158,11 @@
       "exhibited": "展示アーティスト",
       "exclusive": "独占アーティスト",
       "collection": "コレクションアーティスト"
+    },
+    "levels": {
+      "established_artist": "確立されたアーティスト",
+      "mid_career_artist": "中堅アーティスト",
+      "emerging_artist": "新進気鋭のアーティスト"
     }
   },
   "pageArtworks": {

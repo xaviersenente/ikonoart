@@ -17,6 +17,32 @@ export async function getArtists(lang: string = "en"): Promise<Artist[]> {
 }
 
 /**
+ * Récupère les artistes regroupés par level
+ * @param lang - Langue des résultats
+ * @returns Un objet avec les artistes regroupés par niveau
+ */
+export async function getArtistsGroupedByLevel(
+  lang: string = "en"
+): Promise<Record<string, Artist[]>> {
+  const artists = await getArtists(lang);
+
+  // Grouper les artistes par level
+  const grouped = artists.reduce(
+    (acc, artist) => {
+      const level = artist.level || "Other";
+      if (!acc[level]) {
+        acc[level] = [];
+      }
+      acc[level].push(artist);
+      return acc;
+    },
+    {} as Record<string, Artist[]>
+  );
+
+  return grouped;
+}
+
+/**
  * Récupère un artiste spécifique par son ID
  * @param artistId - ID de l'artiste
  * @param lang - Langue des résultats

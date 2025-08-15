@@ -24,6 +24,7 @@ export interface HeroCarouselItem {
   heroCarouselImg: Image;
   heroCarouselTitle: string;
   heroCarouselText: string;
+  heroCarouselUrl: string;
 }
 
 export interface Artist {
