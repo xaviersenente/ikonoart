@@ -106,14 +106,17 @@ export async function getArtworksByArtist(
   artistId: string,
   lang: string = "en"
 ): Promise<{ standard: Artwork[]; limitedEdition: Artwork[] }> {
-  const artworks = await getCollection<Artwork>("artwork", {
+  const artworks = await getCollection("artwork", {
     locale: lang,
     filter: { "artist._id": artistId },
   });
 
+  // Inverse l'ordre pour avoir les plus récentes en premier
+  const reversed = [...artworks].reverse();
+
   return {
-    standard: artworks.filter((artwork) => !artwork.limited_edition),
-    limitedEdition: artworks.filter(
+    standard: reversed.filter((artwork) => !artwork.limited_edition),
+    limitedEdition: reversed.filter(
       (artwork) => artwork.limited_edition === true
     ),
   };

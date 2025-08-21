@@ -3,6 +3,7 @@ import Layout from '../../../layouts/Layout.astro';
 import ArtistCard from '../../../components/ArtistCard.astro';
 import { getArtistsGroupedByType } from "../../../services/collections";
 import { generateI18nPaths, getCurrentLocale, usePageMeta, useTranslations } from '../../../i18n/utils';
+import SectionTitle from '../../../components/SectionTitle.astro';
 import type { Locale } from '../../../i18n/ui';
 
 // Génération des chemins statiques pour chaque langue
@@ -35,9 +36,10 @@ const typeOrder = ["Represented", "Exhibited", "Exclusive", "Collection"];
       
       return (
         <section class="mb-16">
-          <h2 class="text-2xl font-medium mb-8 border-b border-gray-300 pb-4">
+          {/* <h2 class="text-2xl font-medium mb-8 border-b border-gray-300 pb-4">
             {t(`pageArtists.artistTypes.${type.toLowerCase().replace(/[-\s]/g, '_')}`)}
-          </h2>
+          </h2> */}
+          <SectionTitle currentLocale={currentLocale} text={t(`pageArtists.artistTypes.${type.toLowerCase().replace(/[-\s]/g, '_')}`)}/>
           <div class="grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
             {artists.map((artist, index) => (
               <ArtistCard 

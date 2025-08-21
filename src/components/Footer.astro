@@ -13,36 +13,52 @@ const t = useTranslations(currentLocale);
     <a class="max-lg:col-span-2" href={`/${currentLocale}/`} aria-label="Accueil">
       <LogoFooter width="120"/>
     </a>
-    <nav class="">
-      <h3 class="uppercase mb-4 opacity-70">{t('footer.nav1_title')}</h3>
+    <nav>
+      <h3 class="uppercase mb-4 opacity-70">{t('footer.ikonoart')}</h3>
       <ul>
-        <li><a href={`/${currentLocale}/artists/`}>{t('footer.nav1_item1')}</a></li>
-        <li><a href={`/${currentLocale}/artworks/`}>{t('footer.nav1_item2')}</a></li>
+        <li><a href={`/${currentLocale}/artists/`}>{t('footer.artists')}</a></li>
+        <li><a href={`/${currentLocale}/artworks/`}>{t('footer.artworks')}</a></li>
+        <li><a href={`/${currentLocale}/exhibitions/`}>{t('footer.exhibitions')}</a></li>
       </ul>
     </nav>
-    <nav class="">
-      <h3 class="uppercase mb-4 opacity-70">{t('footer.nav2_title')}</h3>
+    <nav>
+      <h3 class="uppercase mb-4 opacity-70">{t('footer.services')}</h3>
       <ul>
-        <li><a href={`/${currentLocale}/order-process`}>{t('footer.nav2_item1')}</a></li>
-        <li><a href={`/${currentLocale}/portfolio-reading`}>{t('footer.nav2_item2')}</a></li>
-        <li><a href={`/${currentLocale}/rental`}>{t('footer.nav2_item3')}</a></li>
-        <!-- <li><a href={`/${currentLocale}/`}>{t('footer.nav2_item4')}</a></li> -->
+        <li><a href={`/${currentLocale}/customers-collectors`}>{t('footer.customers')}</a></li>
+        <li><a href={`/${currentLocale}/exhibition-curation`}>{t('footer.exhibition_curation')}</a></li>
+        <li><a href={`/${currentLocale}/artist-representation
+`}>{t('footer.artist_support')}</a></li>
+        <li><a href={`/${currentLocale}/studio-rental`}>{t('footer.studio_rental')}</a></li>
       </ul>
     </nav>
-    <div class="">
-      <h3 class="uppercase mb-4 opacity-70">{t('footer.nav3_title')}</h3>
+    <div>
+      <h3 class="uppercase mb-4 opacity-70">{t('footer.allikono')}</h3>
       <ul>
-        <li><a href="https://ikono.photo/">{t('footer.nav3_item1')}</a></li>
-        <li><a href="https://ikono.photo/ikono-lifeshot/">{t('footer.nav3_item2')}</a></li>
-        <!-- <li><a href="">{t('footer.nav3_item3')}</a></li> -->
-        <!-- <li><a href="">{t('footer.nav3_item4')}</a></li> -->
+        <li><a href="https://ikono.photo/">{t('footer.ikono')}</a></li>
+        <li><a href="https://ikono.photo/">{t('footer.ikono_photo')}</a></li>
+        <!-- <li><a href="https://ikono.photo/ikono-lifeshot/">{t('footer.ikono_lifeshot')}</a></li> -->
+        <li><a href="">{t('footer.ikono_prolab')}</a></li>
+        <!-- <li><a href="">{t('footer.ikono_design')}</a></li> -->
+        <li><a href="">{t('footer.studio_ikono')}</a></li>
       </ul>
     </div>
-    <nav class="">
-      <h3 class="uppercase mb-4 opacity-70">{t('footer.nav4_title')}</h3>
+    <nav>
+      <h3 class="uppercase mb-4 opacity-70">{t('footer.about')}</h3>
       <ul>
-        <li><a href={`/${currentLocale}/contact`}>{t('footer.nav4_item1')}</a></li>
-        <li><a href={`/${currentLocale}/social-media`}>{t('footer.nav4_item2')}</a></li>
+        <li><a href={`/${currentLocale}/about-ikono-art`}>{t('footer.ikonoart')}</a></li>
+        <li><a href={`/${currentLocale}/contact`}>{t('footer.contact')}</a></li>
+        <li><a href="https://www.facebook.com/profile.php?id=61573683393711">{t('footer.facebook')}</a></li>
+        <li><a href="https://www.instagram.com/ikono_art/">{t('footer.instagram')}</a></li>
+        <li><a href="https://www.linkedin.com/company/ikono-art/">{t('footer.linkedin')}</a></li>
+      </ul>
+    </nav>
+  </div>
+  <div class="max-w-8xl mx-auto px-4 py-8 border-t border-t-white/20 text-white/50 flex justify-between">
+    <p>© 2025 ikono gk – All rights reserved</p>
+    <nav>
+      <ul class="flex gap-8">
+        <li><a href={`/${currentLocale}/legal-notice`}>Legal Notice</a></li>
+        <li><a href={`/${currentLocale}/privacy-policy`}>Privacy Policy</a></li>
       </ul>
     </nav>
   </div>

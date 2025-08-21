@@ -83,6 +83,16 @@
     p {
       @apply pb-3;
     }
+    ul,
+    ol {
+      @apply pl-4;
+    }
+    ul {
+      @apply list-disc;
+    }
+    ol {
+      @apply list-decimal;
+    }
   }
   /* Styles spécifiques pour la popup d'enquête */
   #enquiry-popup {
