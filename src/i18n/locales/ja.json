@@ -146,10 +146,12 @@
       "artistsHighlights": "アーティストのハイライト",
       "ikonoartExclusive": "イコノアート専属代理店",
       "artworksHighlights": "アートワークのハイライト",
+      "aboutIkono": "イコノアートについて",
       "ikonoartServices": "イコノアートサービス",
       "classicCollection": "クラシックなコレクション",
       "japeneseCollection": "日本のコレクション"
     },
+    "about": "IKONO ARTは、2021年から東京を拠点とするクリエイティブ＆カルチャースタジオです。アートビジネスに特化した活動とサービスを展開し、新進気鋭のアーティストから著名なアーティストまで、幅広いアートコレクションを持つアーティスト、団体、企業に対し、展覧会キュレーションのご提案を行っています。アーティストの代理としてプロジェクトを企画し、スタジオレンタルを通して、あらゆるアーティストに日本での活動機会をご提供しています。",
     "exhibition_curation": "展覧会とキュレーション",
     "ikono_exhibitions": "Ikono展",
     "external_curation": "外部キュレーション",

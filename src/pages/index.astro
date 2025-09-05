@@ -1,17 +1,5 @@
 ---
-import Layout from '../layouts/Layout.astro';
-
-import { languages, ui, defaultLang } from '../i18n/ui';
-
-// Génération des chemins statiques pour chaque langue
-export const getStaticPaths = async () => {
-  // Utilisation de l'objet languages pour récupérer les clés de langue dynamiquement
-  return Object.keys(languages).map(lang => ({ params: { lang } }));
-}
-
-const title = "Artists";
+redirect: "/en"
 ---
 
-<Layout title={title}>
-  test
-</Layout>
+<!-- Cette page redirige automatiquement vers la version anglaise par défaut -->

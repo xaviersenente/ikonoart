@@ -43,6 +43,9 @@
     @apply !bg-black;
     transform: scale(1) !important;
   }
+  .fade-carousel .splide__arrow {
+    @apply !bg-white/50;
+  }
   /* Effet de survol amélioré pour le bouton de soumission */
   .submit-button {
     @apply relative overflow-hidden;
@@ -92,6 +95,9 @@
     }
     ol {
       @apply list-decimal;
+    }
+    strong {
+      @apply font-semibold;
     }
   }
   /* Styles spécifiques pour la popup d'enquête */

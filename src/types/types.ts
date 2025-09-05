@@ -83,6 +83,8 @@ export interface HomePage {
   introText: string;
   exclusiveTitle: string;
   exclusiveText: string;
+  aboutIkonoartTitle: string;
+  aboutIkonoartText: string;
   exclusiveImage: Image;
   exclusiveLogo: Image;
   carouselArtists?: Reference[];
