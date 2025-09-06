@@ -1,6 +1,6 @@
 ---
 import { ClientRouter } from "astro:transitions";
-import PasswordProtection from '../components/PasswordProtection.astro';
+// import PasswordProtection from '../components/PasswordProtection.astro';
 import { getCurrentLocale, useTranslations } from '../i18n/utils';
 import type { Locale } from '../i18n/ui';
 
@@ -134,7 +134,7 @@ const metaDescription = description || t('meta.defaultDescription') || '';
 	</head>
 	<body>
     <!-- La protection par mot de passe -->
-    {import.meta.env.PROD && <PasswordProtection />}
+    <!-- {import.meta.env.PROD && <PasswordProtection />} -->
 		<Header/>
     <slot />
 		<Footer/>

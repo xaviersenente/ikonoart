@@ -1,11 +1,26 @@
 ---
 import Layout from "../layouts/Layout.astro";
+import { generateI18nPaths, getCurrentLocale, usePageMeta, useTranslations } from '../i18n/utils';
+
+// Génération des chemins statiques pour chaque langue
+export const getStaticPaths = async () => {
+  return generateI18nPaths();
+}
 
 const title = "Ikonoart - 404";
 ---
 
 <Layout title={title}>
-  <div>
-    <h1>404</h1>
-  </div>
+  <main class="main-container mt-16 lg:mt-34 lg:grid grid-cols-4">
+    <div class="col-span-4 flex flex-col items-center text-center space-y-6">
+      <h1 class="text-8xl font-bold text-gray-900">404</h1>
+      <p class="text-xl text-gray-600">Oops! The page you’re looking for doesn’t exist.</p>
+      <a
+        href="/"
+        class="inline-block px-6 py-3 bg-black text-white text-lg font-medium transition"
+      >
+        Back to Home
+      </a>
+    </div>
+  </main>
 </Layout>

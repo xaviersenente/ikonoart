@@ -151,11 +151,11 @@
       "classicCollection": "クラシックなコレクション",
       "japeneseCollection": "日本のコレクション"
     },
-    "about": "IKONO ARTは、2021年から東京を拠点とするクリエイティブ＆カルチャースタジオです。アートビジネスに特化した活動とサービスを展開し、新進気鋭のアーティストから著名なアーティストまで、幅広いアートコレクションを持つアーティスト、団体、企業に対し、展覧会キュレーションのご提案を行っています。アーティストの代理としてプロジェクトを企画し、スタジオレンタルを通して、あらゆるアーティストに日本での活動機会をご提供しています。",
     "exhibition_curation": "展覧会とキュレーション",
     "ikono_exhibitions": "Ikono展",
     "external_curation": "外部キュレーション",
-    "institutions": "機関、美術館、ギャラリー",
+    "institutions": "各種機関・企業",
+    "museum": "美術館・ギャラリー",
     "rental_artworks": "レンタル作品",
 
     "customer_collectors": "お客様とコレクターの皆様",
@@ -165,18 +165,18 @@
     "framing_service": "額装サービス",
     "display_installation": "展示と設置",
 
-    "artist_representation": "アーティストの代理",
+    "artist_representation": "アーティストサポート",
     "representation_japan": "日本における代理",
-    "artist_support": "アーティストサポート",
+    "artist_support": "アーティストステートメント作成",
     "project_development": "プロジェクト開発",
     "portofolio_reading": "ポートフォリオ閲覧",
     "copyright_management": "著作権管理",
 
     "studio_rental": "スタジオレンタル",
     "creative_space": "クリエイティブスペース",
-    "m2studio": "1000㎡のスタジオ",
+    "m2studio": "あらゆるアーティストに対応",
     "material_available": "素材をご用意しております",
-    "calm_inspiring": "静かでインスピレーションあふれる空間",
+    "calm_inspiring": "静かで広々としていて明るい",
     "near_narita_airport": "成田空港近く"
   },
   "pageArtists": {

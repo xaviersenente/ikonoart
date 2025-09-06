@@ -148,14 +148,14 @@
       "artworksHighlights": "Artworks highlights",
       "aboutIkono": "About Ikono Art",
       "ikonoartServices": "Ikono art Services",
-      "classicCollection": "The classic Collection",
+      "classicCollection": "Classic Collection",
       "japeneseCollection": "Japanese Collection"
     },
-    "about": "IKONO ART is a creative and cultural studio, based in Tokyo from 2021. We specialize our activities and services in art business, proposing exhibition curation for artist, institutions or compagnies with a large artworks collection from emerging to established artists. We represent artist , develop their projects and propose an opportinity to any artist to work in Japan with our studio rental.",
     "exhibition_curation": "Exhibition & Curation",
     "ikono_exhibitions": "Ikono exhibitions",
     "external_curation": "External Curation",
-    "institutions": "Institutions, Museum, Galleries",
+    "institutions": "Institutions & Companies",
+    "museum": "Museum & Galleries",
     "rental_artworks": "Rental artworks",
 
     "customer_collectors": "Customer & collectors",
@@ -165,18 +165,18 @@
     "framing_service": "Framing Service",
     "display_installation": "Display & installation",
 
-    "artist_representation": "Artist Representation",
+    "artist_representation": "Artist Support",
     "representation_japan": "Representation in Japan",
-    "artist_support": "Artist support",
+    "artist_support": "Artist statement",
     "project_development": "Project development",
     "portofolio_reading": "Portofolio reading",
     "copyright_management": "Copyright management",
 
     "studio_rental": "Studio Rental",
     "creative_space": "Creative Space",
-    "m2studio": "1000 m2 Studio",
+    "m2studio": "For any artist",
     "material_available": "Material available",
-    "calm_inspiring": "Calm and inspiring",
+    "calm_inspiring": "Calm, Spacious & bright",
     "near_narita_airport": "Near Narita Airport"
   },
   "pageArtists": {
