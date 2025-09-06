@@ -220,6 +220,16 @@ class SplideManager {
         },
       },
 
+      // Breakpoints optimisés
+      breakpoints: {
+        1024: {
+          height: "auto",
+        },
+        768: {
+          height: 550,
+        },
+      },
+
       // Preload pour un fade plus fluide
       preloadPages: 1,
 

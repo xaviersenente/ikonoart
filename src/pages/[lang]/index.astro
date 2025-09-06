@@ -66,9 +66,9 @@ const heroCarousel = homePage.heroCarousel;
               lazy={false}
               classes="w-full"
             />
-            <div class="absolute px-24 py-12 min-w-3xl left-0 bottom-0 z-10 text-white bg-linear-to-r from-[rgba(43,36,51,1)] to-[rgba(43,36,51,0)]">
-              <h3 class="text-4xl font-medium uppercase">{carousel.heroCarouselTitle}</h3>
-              <p class="text-xl max-w-2xl mt-2">{carousel.heroCarouselText}</p>
+            <div class="absolute px-8 py-12 left-0 bottom-0 z-10 text-white bg-linear-to-r from-[rgba(43,36,51,1)] to-[rgba(43,36,51,0)] md:min-w-3xl md:px-24">
+              <h3 class="text-xl font-medium uppercase lg:text-4xl">{carousel.heroCarouselTitle}</h3>
+              <p class="text-sm mt-2 lg:text-xl lg:max-w-2xl">{carousel.heroCarouselText}</p>
               {carousel.heroCarouselUrl && (
                 <a class="uppercase font-medium text-sm border border-white px-5 py-3 mt-4 inline-block transition-all hover:bg-white hover:text-black" href={carousel.heroCarouselUrl}>{t('common.readMore')}</a>
               )}
@@ -85,7 +85,7 @@ const heroCarousel = homePage.heroCarousel;
       <div class="hidden lg:flex lg:items-center lg:justify-center"><Logo class="w-80 h-80"/></div>
       <div>
         <h1 class="text-4xl font-medium mb-12">{homePage.introTitle}</h1>
-        <div class="text-xl wysiwyg" set:html={homePage.introText}></div>
+        <div class="wysiwyg lg:text-xl" set:html={homePage.introText}></div>
       </div>
     </div>
   </div>
@@ -119,18 +119,18 @@ const heroCarousel = homePage.heroCarousel;
 
   <section class="main-container">
     <SectionTitle currentLocale={currentLocale} text="pageHome.sections.ikonoartExclusive"/>
-    <div class="lg:grid lg:grid-cols-12 lg:gap-8">
+    <div class="grid gap-8 lg:grid-cols-12">
       <ImageCockpit 
         image={homePage.exclusiveImage} 
         width={900} 
         height={900}
         quality={70}
         resize="thumbnail"
-        classesContainer="col-start-1 col-span-5"
+        classesContainer="lg:col-start-1 lg:col-span-5"
       />
-      <div class="col-start-7 col-span-6 flex flex-col gap-8">
+      <div class="lg:col-start-7 lg:col-span-6 flex flex-col gap-8">
         <h2 class="text-4xl font-medium">{homePage.exclusiveTitle}</h2>
-        <div class="text-xl wysiwyg" set:html={homePage.exclusiveText}></div>
+        <div class="wysiwyg lg:text-xl" set:html={homePage.exclusiveText}></div>
         <ImageCockpit 
           image={homePage.exclusiveLogo} 
           width={500} 
@@ -170,12 +170,12 @@ const heroCarousel = homePage.heroCarousel;
     </section>
   )}
 
-  <section class="text-white bg-linear-to-bl from-(--darkikonoart) to-(--verydarkikonoart) p-12 mt-24">
+  <section class="text-white bg-linear-to-bl from-(--darkikonoart) to-(--verydarkikonoart) py-12 mt-24">
     <div class="main-container">
-      <div class="grid grid-cols-2 gap-8">
+      <div class="grid gap-8 lg:grid-cols-2">
         <div class="">
           <h2 class="py-24 text-3xl font-medium uppercase">{homePage.aboutIkonoartTitle}</h2>
-          <div class="text-xl wysiwyg" set:html={homePage.aboutIkonoartText}></div>
+          <div class="wysiwyg lg:text-xl" set:html={homePage.aboutIkonoartText}></div>
           <a class="uppercase font-medium text-sm border border-white px-5 py-3 mt-12 inline-block transition-all hover:bg-white hover:text-black" href="/">{t('common.readMore')}</a>
         </div>
         <Image src={AboutIkonoArt} alt="Curation" class="" />

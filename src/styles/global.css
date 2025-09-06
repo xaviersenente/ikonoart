@@ -36,6 +36,9 @@
   .splide__arrow {
     @apply !bg-transparent;
   }
+  .fade-carousel .splide__slide img {
+    @apply max-md:!h-[550px] max-md:object-cover;
+  }
   .home-carousel .splide__pagination {
     @apply !static !mt-8;
   }
