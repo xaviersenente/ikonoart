@@ -295,7 +295,10 @@ class EnquiryPopup {
     this.setFormLoadingState(true);
 
     try {
-      const formData = new FormData(this.elements.form);
+      const form = this.elements.form;
+      const formData = new FormData(form);
+      // S'assurer que Netlify identifie le formulaire
+      formData.append("form-name", "artwork-enquiry");
 
       // Envoyer le formulaire à Netlify
       const response = await fetch("/", {
