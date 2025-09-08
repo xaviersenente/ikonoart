@@ -1,0 +1,51 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="Message envoyé - Ikono Art">
+  <main class="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-md w-full space-y-8 text-center">
+      <div>
+        <div class="mx-auto h-12 w-12 text-green-500 mb-4">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+        </div>
+        
+        <h1 class="text-3xl font-bold text-gray-900 mb-4">
+          Message envoyé !
+        </h1>
+        
+        <p class="text-lg text-gray-600 mb-8">
+          Votre demande d'information a été transmise avec succès. 
+          Nous vous répondrons dans les plus brefs délais.
+        </p>
+        
+        <div class="space-y-4">
+          <a 
+            href="/" 
+            class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-black hover:bg-gray-800 transition-colors"
+          >
+            Retour à l'accueil
+          </a>
+          
+          <div>
+            <a 
+              href="/artworks" 
+              class="inline-flex items-center px-6 py-3 border border-gray-300 text-base font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 transition-colors"
+            >
+              Voir toutes les œuvres
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</Layout>
+
+<script>
+  // Rediriger automatiquement après 10 secondes
+  setTimeout(() => {
+    window.location.href = '/';
+  }, 10000);
+</script>
