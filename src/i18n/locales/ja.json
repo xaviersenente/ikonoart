@@ -94,6 +94,13 @@
     "message": "メッセージ",
     "details": "お問い合わせの詳細をご記入ください..."
   },
+  "success": {
+    "title": "メッセージ送信完了",
+    "heading": "メッセージを送信しました！",
+    "message": "お問い合わせを正常に受け付けました。できるだけ早くご返信いたします。",
+    "backHome": "ホームに戻る",
+    "viewArtworks": "すべての作品を見る"
+  },
   "fieldValues": {
     "medium": {
       "oil_painting": "油彩画",

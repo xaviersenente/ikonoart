@@ -1,8 +1,22 @@
 ---
-import Layout from '../layouts/Layout.astro';
+import Layout from '../../layouts/Layout.astro';
+import { languages } from '../../i18n/ui';
+import { useTranslations } from '../../i18n/utils';
+import type { Locale } from '../../i18n/ui';
+
+// Générer les chemins statiques pour chaque langue
+export async function getStaticPaths() {
+  return Object.keys(languages).map(lang => ({
+    params: { lang }
+  }));
+}
+
+const { lang } = Astro.params as { lang: string };
+const currentLocale = lang as Locale;
+const t = useTranslations(currentLocale);
 ---
 
-<Layout title="Message envoyé - Ikono Art">
+<Layout title={`${t('success.title')} - Ikono Art`}>
   <main class="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
     <div class="max-w-md w-full space-y-8 text-center">
       <div>
@@ -13,28 +27,27 @@ import Layout from '../layouts/Layout.astro';
         </div>
         
         <h1 class="text-3xl font-bold text-gray-900 mb-4">
-          Message envoyé !
+          {t('success.heading')}
         </h1>
         
         <p class="text-lg text-gray-600 mb-8">
-          Votre demande d'information a été transmise avec succès. 
-          Nous vous répondrons dans les plus brefs délais.
+          {t('success.message')}
         </p>
         
         <div class="space-y-4">
           <a 
-            href="/" 
+            href={`/${lang}`}
             class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-black hover:bg-gray-800 transition-colors"
           >
-            Retour à l'accueil
+            {t('success.backHome')}
           </a>
           
           <div>
             <a 
-              href="/artworks" 
+              href={`/${lang}/artworks`}
               class="inline-flex items-center px-6 py-3 border border-gray-300 text-base font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 transition-colors"
             >
-              Voir toutes les œuvres
+              {t('success.viewArtworks')}
             </a>
           </div>
         </div>
@@ -44,8 +57,9 @@ import Layout from '../layouts/Layout.astro';
 </Layout>
 
 <script>
-  // Rediriger automatiquement après 10 secondes
+  // Rediriger automatiquement après 10 secondes vers la page d'accueil dans la bonne langue
+  const currentLang = document.documentElement.lang || 'en';
   setTimeout(() => {
-    window.location.href = '/';
+    window.location.href = `/${currentLang}`;
   }, 10000);
 </script>

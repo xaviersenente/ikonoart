@@ -94,6 +94,13 @@
     "message": "Message",
     "details": "Please provide details about your enquiry..."
   },
+  "success": {
+    "title": "Message Sent",
+    "heading": "Message Sent!",
+    "message": "Your enquiry has been successfully submitted. We will get back to you as soon as possible.",
+    "backHome": "Back to Home",
+    "viewArtworks": "View All Artworks"
+  },
   "fieldValues": {
     "medium": {
       "oil_painting": "Oil painting",
