@@ -1,5 +1,5 @@
 // Configuration de l'API Cockpit
-export const COCKPIT_BASE_URL = "https://ikonoart.xaviersenente.fr";
+export const COCKPIT_BASE_URL = "https://cockpit.ikono.art";
 const COCKPIT_API_URL = `${COCKPIT_BASE_URL}/api`;
 
 // Récupération sécurisée du token depuis les variables d'environnement
