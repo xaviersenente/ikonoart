@@ -27,6 +27,14 @@ export default defineConfig({
     enabled: false,
   },
   integrations: [sitemap(), vue()],
+  image: {
+    // Autorise l'optimisation au build des images servies par Cockpit.
+    // Utilisé uniquement par ImageCockpitNative.astro, sur les visuels
+    // au-dessus de la ligne de flottaison : accueil, portraits d'artistes,
+    // couvertures d'expositions. Le catalogue des œuvres continue de passer
+    // par les URLs Cockpit, pour ne pas alourdir le build de ~1 Go.
+    remotePatterns: [{ protocol: "https", hostname: "cockpit.ikono.art" }],
+  },
   env: {
     schema: {
       // Requis : le build échoue si le token est absent, plutôt que de se

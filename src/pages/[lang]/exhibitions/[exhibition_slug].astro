@@ -1,6 +1,6 @@
 ---
 import Layout from "../../../layouts/Layout.astro";
-import ImageCockpit from '../../../components/ImageCockpit.astro';
+import ImageCockpit from '../../../components/ImageCockpitNative.astro';
 import ArtworkCard from '../../../components/ArtworkCard.astro';
 import SectionTitle from '../../../components/SectionTitle.astro';
 import { languages } from '../../../i18n/ui';
@@ -62,9 +62,8 @@ const dateRange = formatDateRange(exhibition?.start_date, exhibition?.end_date);
       <div class="lg:col-span-2 max-lg:row-start-1">
         <ImageCockpit 
           image={exhibition?.image} 
-          width={1600} 
-          height={1600} 
-          resize="bestFit" 
+          width={1600}
+          height={1600}
           classes="max-h-[calc(100dvh-250px)] w-auto"
           priority={true}
           lazy={false}

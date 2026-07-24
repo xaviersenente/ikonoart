@@ -1,6 +1,6 @@
 ---
 import { getRelativeLocaleUrl } from 'astro:i18n';
-import ImageCockpit from '../components/ImageCockpit.astro';
+import ImageCockpit from '../components/ImageCockpitNative.astro';
 import { formatDateRange } from '../js/dateFormatter.js';
 import type { Exhibition } from '../types/types';
 
@@ -19,9 +19,8 @@ const dateRange = formatDateRange(exhibition.start_date, exhibition.end_date, cu
   <a href={cardLink}>
     <ImageCockpit 
       image={exhibition.image} 
-      width={700} 
+      width={700}
       height={500}
-      resize="thumbnail"
       quality={65}
       priority={priority}
       sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"

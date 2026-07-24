@@ -1,0 +1,101 @@
+---
+// Variante de ImageCockpit.astro qui laisse Astro télécharger et optimiser
+// l'image au build, au lieu de demander une URL de vignette à Cockpit.
+//
+// Résultat : l'image est servie depuis /_astro/, sans aller-retour réseau au
+// build ni dépendance au dossier /storage/tmp/ du CMS. En contrepartie chaque
+// original est téléchargé et retraité, donc on réserve ce composant aux
+// visuels au-dessus de la ligne de flottaison. Le catalogue des œuvres, chargé
+// en lazy et beaucoup plus volumineux, reste sur ImageCockpit.astro.
+import { Image } from "astro:assets";
+import { COCKPIT_BASE_URL } from "../services/cockpitImages";
+
+interface ImageData {
+  _id: string;
+  path?: string;
+  altText?: string;
+  title?: string;
+}
+
+interface Props {
+  image: ImageData;
+  hoverImage?: ImageData | null;
+  width?: number;
+  height?: number;
+  quality?: number;
+  classes?: string;
+  classesContainer?: string;
+  legend?: boolean;
+  priority?: boolean;
+  lazy?: boolean;
+  sizes?: string;
+}
+
+const {
+  image,
+  hoverImage = null,
+  width = 400,
+  height = 600,
+  quality = 70,
+  classes = "",
+  classesContainer = "",
+  legend = false,
+  priority = false,
+  lazy = true,
+  sizes = "(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw",
+} = Astro.props;
+
+// Même stratégie que ImageCockpit.astro : `priority` prime sur `lazy`.
+const loadingStrategy = priority ? "eager" : lazy ? "lazy" : "eager";
+
+// Sans `path` on ne peut pas construire l'URL de l'original : on laisse la
+// place vide plutôt que de casser le rendu.
+if (!image?.path) {
+  return null;
+}
+
+const srcFor = (img: ImageData) => `${COCKPIT_BASE_URL}/storage/uploads${img.path}`;
+
+// Trois largeurs, comme le srcset construit à la main dans ImageCockpit.astro.
+const widths = [Math.round(width * 0.5), Math.round(width * 0.75), width];
+---
+
+<figure class={`${classesContainer} relative group`}>
+  <Image
+    src={srcFor(image)}
+    alt={image.altText ?? "image"}
+    width={width}
+    height={height}
+    widths={widths}
+    sizes={sizes}
+    quality={quality}
+    format="webp"
+    loading={loadingStrategy}
+    decoding={priority ? "sync" : "async"}
+    class={`${classes} transition-opacity duration-300 ${hoverImage?.path ? "group-hover:opacity-0" : ""}`}
+  />
+
+  {
+    hoverImage?.path && (
+      <Image
+        src={srcFor(hoverImage)}
+        alt={hoverImage.altText ?? "image au survol"}
+        width={width}
+        height={height}
+        widths={widths}
+        sizes={sizes}
+        quality={quality}
+        format="webp"
+        loading="lazy"
+        decoding="async"
+        class={`${classes} absolute top-0 left-0 transition-opacity duration-300 opacity-0 group-hover:opacity-100`}
+      />
+    )
+  }
+
+  {
+    legend && image.title && (
+      <figcaption class="text-sm text-gray-600 mt-2">{image.title}</figcaption>
+    )
+  }
+</figure>
