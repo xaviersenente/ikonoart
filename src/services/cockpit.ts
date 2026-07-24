@@ -43,8 +43,79 @@ interface CollectionParams {
   populate?: number;
 }
 
+// Plafond de requêtes simultanées vers Cockpit. Le build génère ~1000 pages
+// et plusieurs d'entre elles lancent des rafales de requêtes parallèles
+// (Promise.all) : sans plafond, l'API répond 429 et le build échoue.
+const MAX_CONCURRENT_REQUESTS = 6;
+const MAX_RETRIES = 4;
+const RETRY_BASE_DELAY = 500; // ms, doublé à chaque tentative
+
+let activeRequests = 0;
+const pendingRequests: Array<() => void> = [];
+
+async function acquireSlot(): Promise<void> {
+  if (activeRequests < MAX_CONCURRENT_REQUESTS) {
+    activeRequests++;
+    return;
+  }
+  // Le slot est transmis directement par releaseSlot : pas de réincrément ici.
+  await new Promise<void>((resolve) => pendingRequests.push(resolve));
+}
+
+function releaseSlot(): void {
+  const next = pendingRequests.shift();
+  if (next) {
+    next();
+  } else {
+    activeRequests--;
+  }
+}
+
+const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
+/**
+ * Erreur HTTP renvoyée par Cockpit, porteuse du statut pour décider d'un retry.
+ */
+class CockpitHttpError extends Error {
+  constructor(
+    readonly status: number,
+    statusText: string,
+    readonly retryAfter: string | null = null
+  ) {
+    super(`Erreur API Cockpit (${status}): ${statusText}`);
+    this.name = "CockpitHttpError";
+  }
+
+  /** 429 et 5xx sont transitoires ; les autres 4xx ne s'amélioreront pas. */
+  get retryable(): boolean {
+    return this.status === 429 || this.status >= 500;
+  }
+}
+
+/**
+ * Calcule le délai avant nouvelle tentative : backoff exponentiel avec jitter,
+ * ou en-tête Retry-After si l'API en fournit un plus long.
+ */
+function getRetryDelay(error: Error, attempt: number): number {
+  const backoff = RETRY_BASE_DELAY * 2 ** attempt + Math.random() * 250;
+
+  if (error instanceof CockpitHttpError && error.retryAfter) {
+    const seconds = Number(error.retryAfter);
+    if (!Number.isNaN(seconds)) {
+      return Math.max(backoff, seconds * 1000);
+    }
+    const date = Date.parse(error.retryAfter);
+    if (!Number.isNaN(date)) {
+      return Math.max(backoff, date - Date.now());
+    }
+  }
+
+  return backoff;
+}
+
 /**
  * Fonction générique pour effectuer des requêtes à l'API Cockpit avec gestion d'erreurs améliorée.
+ * Réessaie automatiquement les erreurs transitoires (429, 5xx, timeout, réseau).
  * @param endpoint - L'URL de l'endpoint Cockpit
  * @param options - Options pour la requête
  * @returns Les données retournées par l'API
@@ -56,41 +127,90 @@ async function fetchCockpit<T = any>(
   const url = `${COCKPIT_API_URL}/${endpoint}`;
   const timeout = options.timeout || 10000; // 10 secondes par défaut
 
-  const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), timeout);
+  let lastError: Error = new Error("Erreur inconnue lors de la requête API");
 
-  try {
-    const response = await fetch(url, {
-      ...options,
-      signal: controller.signal,
-      headers: {
-        "Content-Type": "application/json",
-        ...options.headers,
-      },
-    });
-
-    clearTimeout(timeoutId);
-
-    if (!response.ok) {
-      throw new Error(
-        `Erreur API Cockpit (${response.status}): ${response.statusText}`
-      );
+  for (let attempt = 0; attempt <= MAX_RETRIES; attempt++) {
+    if (attempt > 0) {
+      await sleep(getRetryDelay(lastError, attempt - 1));
     }
 
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    clearTimeout(timeoutId);
+    await acquireSlot();
 
-    if (error instanceof Error) {
-      if (error.name === "AbortError") {
-        throw new Error("Timeout: La requête a pris trop de temps");
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), timeout);
+
+    try {
+      const response = await fetch(url, {
+        ...options,
+        signal: controller.signal,
+        headers: {
+          "Content-Type": "application/json",
+          ...options.headers,
+        },
+      });
+
+      if (!response.ok) {
+        throw new CockpitHttpError(
+          response.status,
+          response.statusText,
+          response.headers.get("retry-after")
+        );
       }
-      throw error;
-    }
 
-    throw new Error("Erreur inconnue lors de la requête API");
+      return (await response.json()) as T;
+    } catch (error) {
+      if (error instanceof CockpitHttpError) {
+        if (!error.retryable) throw error;
+        lastError = error;
+      } else if (error instanceof Error) {
+        lastError =
+          error.name === "AbortError"
+            ? new Error("Timeout: La requête a pris trop de temps")
+            : error;
+      }
+    } finally {
+      clearTimeout(timeoutId);
+      releaseSlot();
+    }
   }
+
+  throw lastError;
+}
+
+// Cache des réponses de contenu. Les ~1000 pages générées repartagent très
+// largement les mêmes requêtes (mêmes collections, mêmes items) : sans cache,
+// chaque page refait l'appel réseau et sature l'API.
+// En dev on garde un TTL court pour continuer à voir les changements Cockpit.
+const CONTENT_CACHE_TTL = import.meta.env.DEV ? 5_000 : Infinity;
+
+interface ContentCacheEntry {
+  promise: Promise<any>;
+  timestamp: number;
+}
+
+const contentCache = new Map<string, ContentCacheEntry>();
+
+/**
+ * Variante de fetchCockpit qui mutualise les requêtes identiques.
+ * Le cache stocke la promesse, ce qui déduplique aussi les appels concurrents.
+ */
+function fetchCockpitCached<T = any>(
+  endpoint: string,
+  options: FetchOptions = {}
+): Promise<T> {
+  const cached = contentCache.get(endpoint);
+  if (cached && Date.now() - cached.timestamp < CONTENT_CACHE_TTL) {
+    return cached.promise as Promise<T>;
+  }
+
+  const promise = fetchCockpit<T>(endpoint, options).catch((error) => {
+    // Un échec ne doit pas être mis en cache : la page suivante doit réessayer.
+    contentCache.delete(endpoint);
+    throw error;
+  });
+
+  contentCache.set(endpoint, { promise, timestamp: Date.now() });
+  return promise;
 }
 
 /**
@@ -135,7 +255,7 @@ export async function getCollection<T = any>(
       ...params,
     });
 
-    const data = await fetchCockpit<T[]>(
+    const data = await fetchCockpitCached<T[]>(
       url.replace(`${COCKPIT_API_URL}/`, "")
     );
     return data || [];
@@ -166,7 +286,9 @@ export async function getCollectionItem<T = any>(
       ...params,
     });
 
-    const data = await fetchCockpit<T>(url.replace(`${COCKPIT_API_URL}/`, ""));
+    const data = await fetchCockpitCached<T>(
+      url.replace(`${COCKPIT_API_URL}/`, "")
+    );
     return data || null;
   } catch (error) {
     console.error(
@@ -195,7 +317,9 @@ export async function getSingleton<T = any>(
       ...params,
     });
 
-    const data = await fetchCockpit<T>(url.replace(`${COCKPIT_API_URL}/`, ""));
+    const data = await fetchCockpitCached<T>(
+      url.replace(`${COCKPIT_API_URL}/`, "")
+    );
     return data || null;
   } catch (error) {
     console.error(
@@ -330,6 +454,10 @@ export async function getOptimizedImage(
 
   const imageUrl = `${COCKPIT_API_URL}/assets/image/${imageId}?${params.toString()}`;
 
+  // Même plafond de concurrence que les requêtes de contenu : les assets
+  // tapent le même serveur et comptent dans le même quota.
+  await acquireSlot();
+
   try {
     // Appel à l'API Cockpit avec timeout
     const controller = new AbortController();
@@ -361,6 +489,8 @@ export async function getOptimizedImage(
         error
       );
     }
+  } finally {
+    releaseSlot();
   }
 
   // Fallback vers l'URL de base sans optimisation
