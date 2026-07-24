@@ -1,0 +1,159 @@
+---
+// Grille de galerie avec visionneuse plein écran.
+//
+// La grille réutilise `card-grid`, comme les autres grilles du site. Chaque
+// vignette est recadrée en carré pour garder un rythme régulier ; la
+// visionneuse, elle, sert l'image en `bestFit`, qui conserve les proportions
+// d'origine.
+import { getOptimizedImage } from "../services/cockpitImages";
+
+interface GalleryImage {
+  _id: string;
+  altText?: string;
+  title?: string;
+  width?: number;
+  height?: number;
+}
+
+interface Props {
+  images: GalleryImage[];
+  /** Libellé accessible du bouton d'ouverture, déjà traduit. */
+  zoomLabel?: string;
+}
+
+const { images, zoomLabel = "Enlarge image" } = Astro.props;
+---
+
+<div class="card-grid" data-gallery>
+  {
+    images.map((image, index) => (
+      <button
+        type="button"
+        class="group relative block w-full cursor-zoom-in overflow-hidden focus:outline-none focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2"
+        data-gallery-item
+        data-index={index}
+        data-full={getOptimizedImage(image._id, {
+          width: 2000,
+          height: 2000,
+          resize: "bestFit",
+          quality: 80,
+        })}
+        data-alt={image.altText ?? ""}
+        aria-label={zoomLabel}
+      >
+        <img
+          src={getOptimizedImage(image._id, {
+            width: 700,
+            height: 700,
+            resize: "thumbnail",
+            quality: 65,
+          })}
+          alt={image.altText ?? ""}
+          width={700}
+          height={700}
+          loading="lazy"
+          decoding="async"
+          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+          class="aspect-square w-full object-cover transition-transform duration-500 group-hover:scale-105"
+        />
+      </button>
+    ))
+  }
+</div>
+
+<!-- Visionneuse -->
+<div
+  id="gallery-lightbox"
+  class="fixed inset-0 z-50 hidden"
+  role="dialog"
+  aria-modal="true"
+  aria-label={zoomLabel}
+>
+  <div class="absolute inset-0 bg-black/90" data-lightbox-overlay></div>
+
+  <button
+    type="button"
+    class="absolute top-4 right-4 z-10 p-2 text-white/70 transition hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-white"
+    data-lightbox-close
+    aria-label="Close"
+  >
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="28"
+      height="28"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    >
+      <line x1="18" y1="6" x2="6" y2="18"></line>
+      <line x1="6" y1="6" x2="18" y2="18"></line>
+    </svg>
+  </button>
+
+  <!-- Sur mobile les flèches passent sous l'image : à 390 px de large elles
+       chevauchaient la photo. À partir de md elles reviennent sur les côtés. -->
+  <button
+    type="button"
+    class="absolute bottom-4 left-6 z-10 rounded-full bg-black/40 p-2 text-white/70 transition hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-white md:top-1/2 md:bottom-auto md:left-6 md:-translate-y-1/2 md:bg-transparent md:p-3"
+    data-lightbox-prev
+    aria-label="Previous"
+  >
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="40"
+      height="40"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.5"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    >
+      <polyline points="15 18 9 12 15 6"></polyline>
+    </svg>
+  </button>
+
+  <button
+    type="button"
+    class="absolute right-6 bottom-4 z-10 rounded-full bg-black/40 p-2 text-white/70 transition hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-white md:top-1/2 md:right-6 md:bottom-auto md:-translate-y-1/2 md:bg-transparent md:p-3"
+    data-lightbox-next
+    aria-label="Next"
+  >
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="40"
+      height="40"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.5"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    >
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </button>
+
+  <figure
+    class="pointer-events-none absolute inset-0 flex flex-col items-center justify-center px-4 pt-14 pb-20 md:p-16"
+  >
+    <!-- `object-contain` : l'image garde ses proportions d'origine -->
+    <img
+      class="max-h-full max-w-full object-contain opacity-0 transition-opacity duration-200"
+      data-lightbox-image
+      alt=""
+    />
+    <figcaption
+      class="mt-4 text-sm text-white/60 tabular-nums"
+      data-lightbox-counter
+    >
+    </figcaption>
+  </figure>
+</div>
+
+<script>
+  import "../js/galleryLightbox.ts";
+</script>

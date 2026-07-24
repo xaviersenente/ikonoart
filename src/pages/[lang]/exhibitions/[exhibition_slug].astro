@@ -1,9 +1,7 @@
 ---
 import Layout from "../../../layouts/Layout.astro";
 import ImageCockpit from '../../../components/ImageCockpitNative.astro';
-// Les visuels de galerie restent servis par Cockpit : ils sont sous la ligne
-// de flottaison et pèsent ~320 Mo d'originaux, trop pour être retraités au build.
-import ImageCockpitRemote from '../../../components/ImageCockpit.astro';
+import GalleryLightbox from '../../../components/GalleryLightbox.astro';
 import ArtworkCard from '../../../components/ArtworkCard.astro';
 import SectionTitle from '../../../components/SectionTitle.astro';
 import { languages } from '../../../i18n/ui';
@@ -83,6 +81,11 @@ const galleryImages = (exhibition?.galery ?? []).filter(
     </div>
 
     
+    {galleryImages.length > 0 && (
+      <SectionTitle currentLocale={currentLocale} text="pageExhibitions.gallery"/>
+      <GalleryLightbox images={galleryImages} zoomLabel={t('pageExhibitions.enlarge')} />
+    )}
+
     {exhibitionArtworks && exhibitionArtworks.length > 0 && (
       <SectionTitle currentLocale={currentLocale} text="pageExhibitions.works"/>
       <div class="card-grid">
@@ -91,22 +94,6 @@ const galleryImages = (exhibition?.galery ?? []).filter(
             artwork={artwork}
             currentLocale={currentLocale}
             priority={index < 6}
-          />
-        ))}
-      </div>
-    )}
-
-    {galleryImages.length > 0 && (
-      <SectionTitle currentLocale={currentLocale} text="pageExhibitions.gallery"/>
-      <div class="card-grid">
-        {galleryImages.map((image) => (
-          <ImageCockpitRemote
-            image={image}
-            width={700}
-            height={700}
-            quality={65}
-            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-            classes="aspect-square object-cover w-full"
           />
         ))}
       </div>
