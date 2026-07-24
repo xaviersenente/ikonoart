@@ -9,7 +9,9 @@ import vue from "@astrojs/vue";
 // https://astro.build/config
 export default defineConfig({
   // Requis par @astrojs/sitemap, et utilisé pour les URLs canoniques.
-  site: "https://ikonoart.com",
+  // Doit correspondre au domaine principal servi par Netlify : ikonoart.com
+  // redirige vers un autre site.
+  site: "https://ikono.art",
   // Astro 7 est passé par défaut à `'jsx'`, qui supprime les espaces entre
   // éléments inline au lieu de les collapser. Cela mangeait par exemple
   // l'espace de `<strong>Medium :</strong>\n{valeur}`. On conserve les
