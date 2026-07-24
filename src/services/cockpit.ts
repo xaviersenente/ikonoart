@@ -8,7 +8,6 @@ const COCKPIT_API_TOKEN =
   "API-16d53b4cf6f170aa278382e9af9926d36281cee9";
 
 // Cache en mémoire pour les URLs d'images
-const imageUrlCache = new Map<string, string>();
 const CACHE_DURATION = 1000 * 60 * 60; // 1 heure
 
 interface CacheEntry {
@@ -329,48 +328,6 @@ export async function getSingleton<T = any>(
     return null;
   }
 }
-
-/**
- * Récupère l'URL optimisée d'une image via l'API de Cockpit
- * @param imageId - ID de l'image dans Cockpit
- * @param options - Options de redimensionnement
- * @returns L'URL de l'image optimisée
- */
-// export async function getOptimizedImage(
-//   imageId: string,
-//   options: {
-//     width?: number;
-//     height?: number;
-//     resize?: "thumbnail" | "bestFit" | "resize" | "fitToWidth" | "fitToHeight";
-//     quality?: number;
-//     format?: "webp" | "jpeg" | "png";
-//   } = {}
-// ): Promise<string> {
-//   const {
-//     width = 800,
-//     height = 600,
-//     resize = "bestFit",
-//     quality = 70,
-//     format = "webp",
-//   } = options;
-
-//   const imageUrl = `${COCKPIT_API_URL}/assets/image/${imageId}?w=${width}&h=${height}&m=${resize}&q=${quality}&mime=${format}`;
-
-//   try {
-//     const response = await fetch(imageUrl);
-//     if (response.ok) {
-//       const optimizedUrl = await response.text(); // Cockpit retourne l'URL en texte brut
-//       return optimizedUrl;
-//     }
-//   } catch (error) {
-//     console.error(
-//       "Erreur lors de la récupération de l'image optimisée:",
-//       error
-//     );
-//   }
-
-//   return imageUrl;
-// }
 
 /**
  * Fonction de cache intelligente avec expiration
