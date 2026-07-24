@@ -10,6 +10,11 @@ import vue from "@astrojs/vue";
 export default defineConfig({
   // Requis par @astrojs/sitemap, et utilisé pour les URLs canoniques.
   site: "https://ikonoart.com",
+  // Astro 7 est passé par défaut à `'jsx'`, qui supprime les espaces entre
+  // éléments inline au lieu de les collapser. Cela mangeait par exemple
+  // l'espace de `<strong>Medium :</strong>\n{valeur}`. On conserve les
+  // règles HTML précédentes.
+  compressHTML: true,
   // Avec les transitions de vue, le prefetch est activé par défaut.
   // Garder le prefetch, mais seulement pour les liens avec `data-astro-prefetch`.
   // prefetch: {
