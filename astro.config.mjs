@@ -8,6 +8,8 @@ import vue from "@astrojs/vue";
 
 // https://astro.build/config
 export default defineConfig({
+  // Requis par @astrojs/sitemap, et utilisé pour les URLs canoniques.
+  site: "https://ikonoart.com",
   // Avec les transitions de vue, le prefetch est activé par défaut.
   // Garder le prefetch, mais seulement pour les liens avec `data-astro-prefetch`.
   // prefetch: {
