@@ -1,17 +1,21 @@
 <script setup lang="ts">
-  import { ref, computed, onMounted } from "vue";
-  import { getArtistById } from "../services/collections";
+  import { computed } from "vue";
   import type { Artwork, Artist } from "../types/types";
   import ImageCockpit from "../components/ImageCockpit.vue";
 
   interface Props {
     artwork: Artwork;
     currentLocale: string;
+    // Résolu côté serveur et transmis en prop : la liste des artistes est déjà
+    // chargée par la page, inutile de la redemander à l'API depuis le
+    // navigateur.
+    artist?: Artist | null;
     classes?: string;
     priority?: boolean;
   }
 
   const props = withDefaults(defineProps<Props>(), {
+    artist: null,
     classes: "",
     priority: false,
   });
@@ -19,24 +23,6 @@
   const cardLink = computed(
     () => `/${props.currentLocale}/artworks/${props.artwork.slug}`
   );
-
-  const artist = ref<Artist | null>(null);
-
-  onMounted(async () => {
-    if (props.artwork.artist?._id) {
-      try {
-        artist.value = await getArtistById(
-          props.artwork.artist._id,
-          props.currentLocale
-        );
-      } catch (error) {
-        console.warn(
-          `Erreur lors de la récupération de l'artiste ${props.artwork.artist._id}:`,
-          error
-        );
-      }
-    }
-  });
 </script>
 
 <template>

@@ -1,6 +1,6 @@
 <script setup lang="ts">
   import { ref, computed, onMounted } from "vue";
-  import { getOptimizedImage } from "../services/cockpit";
+  import { getOptimizedImage } from "../services/cockpitImages";
 
   interface ImageData {
     _id: string;

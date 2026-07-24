@@ -39,6 +39,12 @@
   const mediums = ref([]);
   const subjects = ref([]);
 
+  // Index des artistes par _id, pour que chaque carte reçoive le sien en prop
+  // plutôt que d'interroger l'API depuis le navigateur.
+  const artistById = computed(() =>
+    Object.fromEntries(props.artists.map((artist) => [artist._id, artist]))
+  );
+
   // Fonction pour mélanger un tableau (algorithme Fisher-Yates)
   function shuffleArray(array) {
     const shuffled = [...array];
@@ -313,6 +319,7 @@
           v-for="artwork in visibleArtworks"
           :key="artwork._id"
           :artwork="artwork"
+          :artist="artistById[artwork.artist?._id] || null"
           :currentLocale="props.currentLocale"
         />
       </div>

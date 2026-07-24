@@ -1,5 +1,5 @@
 // @ts-check
-import { defineConfig } from "astro/config";
+import { defineConfig, envField } from "astro/config";
 
 import tailwindcss from "@tailwindcss/vite";
 import sitemap from "@astrojs/sitemap";
@@ -27,6 +27,16 @@ export default defineConfig({
     enabled: false,
   },
   integrations: [sitemap(), vue()],
+  env: {
+    schema: {
+      // Requis : le build échoue si le token est absent, plutôt que de se
+      // rabattre silencieusement sur une valeur codée en dur.
+      COCKPIT_API_TOKEN: envField.string({
+        context: "server",
+        access: "secret",
+      }),
+    },
+  },
   i18n: {
     locales: ["en", "ja"],
     defaultLocale: "en",
