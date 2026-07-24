@@ -7,59 +7,32 @@ class SplideManager {
     this.instances = [];
     this.intersectionObserver = null;
     this.lazyCarousels = new Set();
-    this.isTransitioning = false;
-    this.transitionDelay = 300; // Délai en ms pour la transition
     this.init();
   }
 
   init() {
+    // `astro:page-load` couvre le chargement initial et chaque navigation
+    // du ClientRouter : c'est le seul point d'initialisation nécessaire.
     document.addEventListener("astro:page-load", () => this.initCarousels());
 
-    // Gérer les transitions avec délai
-    document.addEventListener("astro:before-preparation", () =>
-      this.handleBeforeTransition()
-    );
-    document.addEventListener("astro:after-preparation", () =>
-      this.handleAfterTransition()
-    );
+    // Destruction juste avant le remplacement du DOM : à ce moment les
+    // instances tiennent encore leurs nœuds, donc le nettoyage est complet.
+    document.addEventListener("astro:before-swap", () => this.destroyAll());
 
-    // Écouter les événements de navigation pour détecter les transitions
-    document.addEventListener("astro:before-swap", () =>
-      this.prepareForTransition()
+    // Un seul écouteur pour toutes les instances, au lieu d'un par carrousel.
+    document.addEventListener("visibilitychange", () =>
+      this.toggleAutoplay(!document.hidden)
     );
 
     this.setupIntersectionObserver();
   }
 
-  // Nouvelle méthode pour préparer la transition
-  prepareForTransition() {
-    this.isTransitioning = true;
-
-    // Masquer visuellement les carousels pendant la transition
+  toggleAutoplay(shouldPlay) {
     this.instances.forEach((instance) => {
-      if (instance && instance.root) {
-        instance.root.style.opacity = "0";
-        instance.root.style.pointerEvents = "none";
-
-        // Pause l'autoplay si actif
-        if (instance.Components.Autoplay) {
-          instance.Components.Autoplay.pause();
-        }
-      }
+      const autoplay = instance?.Components?.Autoplay;
+      if (!autoplay) return;
+      shouldPlay ? autoplay.play() : autoplay.pause();
     });
-  }
-
-  handleBeforeTransition() {
-    // Ne pas détruire immédiatement, attendre la fin de la transition
-    setTimeout(() => {
-      if (this.isTransitioning) {
-        this.destroyAll();
-      }
-    }, this.transitionDelay);
-  }
-
-  handleAfterTransition() {
-    this.isTransitioning = false;
   }
 
   setupIntersectionObserver() {
@@ -82,37 +55,28 @@ class SplideManager {
     );
   }
 
+  // La destruction est synchrone : un `destroy()` différé pouvait s'exécuter
+  // après qu'un nouveau carrousel avait été monté sur le même élément, et
+  // démontait alors le carrousel fraîchement initialisé.
   destroyAll() {
-    // Vérifier si on est en train de faire une transition
-    if (this.isTransitioning) {
-      return; // Ne pas détruire pendant la transition
-    }
-
     this.instances.forEach((instance) => {
-      if (instance && typeof instance.destroy === "function") {
-        try {
-          // Arrêter l'autoplay en premier
-          if (instance.Components.Autoplay) {
-            instance.Components.Autoplay.pause();
-          }
-
-          // Masquer visuellement avant destruction
-          if (instance.root) {
-            instance.root.style.transition = "opacity 0.2s ease-out";
-            instance.root.style.opacity = "0";
-          }
-
-          // Détruire après un court délai
-          setTimeout(() => {
-            instance.destroy();
-          }, 200);
-        } catch (error) {
-          console.warn("Erreur lors de la destruction du carousel:", error);
-        }
+      if (!instance || typeof instance.destroy !== "function") return;
+      try {
+        instance.Components?.Autoplay?.pause();
+        instance.destroy();
+      } catch (error) {
+        console.warn("Erreur lors de la destruction du carousel:", error);
       }
     });
 
     this.instances = [];
+
+    // Sans `unobserve`, l'observer garde indéfiniment des références sur des
+    // nœuds détachés, et les entrées restées dans le Set ne sont plus jamais
+    // initialisables.
+    this.lazyCarousels.forEach((element) =>
+      this.intersectionObserver?.unobserve(element)
+    );
     this.lazyCarousels.clear();
   }
 
@@ -304,30 +268,22 @@ class SplideManager {
 
       instance.mount();
       this.instances.push(instance);
-
-      // Log pour debug (à retirer en production)
-      console.log(`Carousel ${element.className} initialisé avec succès`);
     } catch (error) {
       console.error("Erreur lors de l'initialisation du carousel:", error);
     }
   }
 
   setupCarouselEvents(instance) {
-    // Événement pour la performance - pause l'autoplay si tab en arrière-plan
-    document.addEventListener("visibilitychange", () => {
-      if (document.hidden) {
-        instance.Components.Autoplay?.pause();
-      } else {
-        instance.Components.Autoplay?.play();
-      }
-    });
+    // La pause en arrière-plan est gérée globalement dans init(), pour ne pas
+    // empiler un écouteur `visibilitychange` par carrousel.
 
-    // Événement pour l'accessibilité
+    // Événement pour l'accessibilité.
+    // `preventScroll` est indispensable : sans lui, chaque avance de l'autoplay
+    // ramenait le défilement de la page sur le carrousel, toutes les 5 s.
     instance.on("move", (newIndex) => {
-      // Annonce le changement de slide pour les lecteurs d'écran
       const activeSlide = instance.Components.Slides.getAt(newIndex);
       if (activeSlide && activeSlide.slide) {
-        activeSlide.slide.focus();
+        activeSlide.slide.focus({ preventScroll: true });
       }
     });
 
