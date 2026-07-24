@@ -27,6 +27,9 @@ export default defineConfig({
     defaultLocale: "en",
     routing: {
       prefixDefaultLocale: true,
+      // Depuis Astro 6 la valeur par défaut est `false` : on la remet
+      // explicitement à `true` pour conserver le comportement précédent.
+      redirectToDefaultLocale: true,
     },
   },
 });
