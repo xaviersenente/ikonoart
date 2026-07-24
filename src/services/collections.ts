@@ -2,6 +2,57 @@ import { getCollection, getCollectionItem } from "./cockpit";
 import type { Artist, Artwork, Exhibition, HomePage } from "../types/types";
 
 /**
+ * Index par `_id` d'une collection complète, mémorisé par (collection, langue).
+ *
+ * Les `getStaticPaths` récupèrent déjà la collection entière pour construire
+ * les routes ; refaire ensuite un appel par page pour un seul item revenait à
+ * ~1000 requêtes réseau par build. Résoudre depuis la collection ramène ça à
+ * un appel par collection et par langue.
+ *
+ * Vérifié côté API : `content/items/<collection>` renvoie exactement le même
+ * document que `content/item/<collection>/<id>`, et ne masque aucun item.
+ */
+const collectionIndexes = new Map<string, Promise<Map<string, any>>>();
+
+function getCollectionIndex<T extends { _id: string }>(
+  collectionName: string,
+  lang: string
+): Promise<Map<string, T>> {
+  const key = `${collectionName}:${lang}`;
+
+  let index = collectionIndexes.get(key);
+  if (!index) {
+    index = getCollection<T>(collectionName, { locale: lang }).then(
+      (items) => new Map(items.map((item) => [item._id, item]))
+    );
+    collectionIndexes.set(key, index);
+  }
+
+  return index as Promise<Map<string, T>>;
+}
+
+/**
+ * Récupère un item d'une collection depuis son index, sans appel réseau
+ * supplémentaire. Retourne null si l'item n'existe pas (référence orpheline).
+ */
+async function findInCollection<T extends { _id: string }>(
+  collectionName: string,
+  itemId: string,
+  lang: string
+): Promise<T | null> {
+  const item = (await getCollectionIndex<T>(collectionName, lang)).get(itemId);
+
+  if (!item) {
+    console.warn(
+      `Référence orpheline : l'élément ${itemId} est introuvable dans la collection ${collectionName}`
+    );
+    return null;
+  }
+
+  return item;
+}
+
+/**
  * Récupère la liste des artistes avec tri par type
  * @param lang - Langue des résultats
  * @returns Un tableau d'artistes triés
@@ -52,7 +103,7 @@ export async function getArtistById(
   artistId: string,
   lang: string = "en"
 ): Promise<Artist | null> {
-  return getCollectionItem<Artist>("artist", artistId, { locale: lang });
+  return findInCollection<Artist>("artist", artistId, lang);
 }
 
 /**
@@ -93,7 +144,7 @@ export async function getArtworkById(
   artworkId: string,
   lang: string = "en"
 ): Promise<Artwork | null> {
-  return getCollectionItem<Artwork>("artwork", artworkId, { locale: lang });
+  return findInCollection<Artwork>("artwork", artworkId, lang);
 }
 
 /**
@@ -106,10 +157,12 @@ export async function getArtworksByArtist(
   artistId: string,
   lang: string = "en"
 ): Promise<{ standard: Artwork[]; limitedEdition: Artwork[] }> {
-  const artworks = await getCollection("artwork", {
-    locale: lang,
-    filter: { "artist._id": artistId },
-  });
+  // Filtré depuis la collection déjà chargée plutôt que par une requête
+  // filtrée par artiste, qui coûtait un aller-retour réseau par artiste.
+  const allArtworks = await getArtworks(lang);
+  const artworks = allArtworks.filter(
+    (artwork) => artwork.artist?._id === artistId
+  );
 
   // Inverse l'ordre pour avoir les plus récentes en premier
   const reversed = [...artworks].reverse();
@@ -199,9 +252,7 @@ export async function getExhibitionById(
   exhibitionId: string,
   lang: string = "en"
 ): Promise<Exhibition | null> {
-  return getCollectionItem<Exhibition>("exhibition", exhibitionId, {
-    locale: lang,
-  });
+  return findInCollection<Exhibition>("exhibition", exhibitionId, lang);
 }
 
 /**
@@ -259,7 +310,7 @@ export async function getPageById(
   pageId: string,
   lang: string = "en"
 ): Promise<any | null> {
-  return getCollectionItem("page", pageId, { locale: lang });
+  return findInCollection<any>("page", pageId, lang);
 }
 
 /**
