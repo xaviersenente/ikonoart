@@ -1,6 +1,9 @@
 ---
 import Layout from "../../../layouts/Layout.astro";
 import ImageCockpit from '../../../components/ImageCockpitNative.astro';
+// Les visuels de galerie restent servis par Cockpit : ils sont sous la ligne
+// de flottaison et pèsent ~320 Mo d'originaux, trop pour être retraités au build.
+import ImageCockpitRemote from '../../../components/ImageCockpit.astro';
 import ArtworkCard from '../../../components/ArtworkCard.astro';
 import SectionTitle from '../../../components/SectionTitle.astro';
 import { languages } from '../../../i18n/ui';
@@ -37,6 +40,12 @@ const exhibitionArtworks: Artwork[] = await getArtworksByExhibition(exhibition_i
 
 // Formatage des dates de début et de fin
 const dateRange = formatDateRange(exhibition?.start_date, exhibition?.end_date);
+
+// Le champ Asset multiple de Cockpit peut contenir des entrées nulles quand un
+// asset a été retiré : on ne garde que celles réellement exploitables.
+const galleryImages = (exhibition?.galery ?? []).filter(
+  (image): image is NonNullable<typeof image> => Boolean(image?._id)
+);
 
 ---
 
@@ -78,10 +87,26 @@ const dateRange = formatDateRange(exhibition?.start_date, exhibition?.end_date);
       <SectionTitle currentLocale={currentLocale} text="pageExhibitions.works"/>
       <div class="card-grid">
         {exhibitionArtworks.map((artwork, index) => (
-          <ArtworkCard 
-            artwork={artwork} 
+          <ArtworkCard
+            artwork={artwork}
             currentLocale={currentLocale}
             priority={index < 6}
+          />
+        ))}
+      </div>
+    )}
+
+    {galleryImages.length > 0 && (
+      <SectionTitle currentLocale={currentLocale} text="pageExhibitions.gallery"/>
+      <div class="card-grid">
+        {galleryImages.map((image) => (
+          <ImageCockpitRemote
+            image={image}
+            width={700}
+            height={700}
+            quality={65}
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+            classes="aspect-square object-cover w-full"
           />
         ))}
       </div>

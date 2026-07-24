@@ -74,6 +74,9 @@ export interface Exhibition {
   artist?: Reference;
   artworks?: Reference[]; // Plus cohérent avec le type Reference
   description?: string;
+  // Champ Asset multiple de Cockpit. Le tableau peut contenir des entrées
+  // nulles lorsqu'un asset a été retiré côté CMS : toujours filtrer.
+  galery?: (Image | null)[];
 }
 
 export interface HomePage {
