@@ -1,5 +1,5 @@
 ---
-import { getOptimizedImage } from "../services/cockpitImages";
+import { getOptimizedImage, buildSrcSet } from "../services/cockpitImages";
 
 interface ImageData {
   _id: string;
@@ -46,8 +46,8 @@ if (!image?._id) {
 // Optimisation contextuelle de la qualité
 const contextualQuality = width > 1200 ? Math.max(quality, 80) : quality;
 
-// URL principale optimisée
-const optimizedUrl = await getOptimizedImage(image._id, {
+// Les URLs sont désormais construites localement, sans appel réseau.
+const optimizedUrl = getOptimizedImage(image._id, {
   width,
   height,
   resize,
@@ -56,8 +56,8 @@ const optimizedUrl = await getOptimizedImage(image._id, {
 });
 
 // URL hover (uniquement si nécessaire)
-const optimizedHoverUrl = hoverImage?._id 
-  ? await getOptimizedImage(hoverImage._id, {
+const optimizedHoverUrl = hoverImage?._id
+  ? getOptimizedImage(hoverImage._id, {
       width,
       height,
       resize,
@@ -68,30 +68,13 @@ const optimizedHoverUrl = hoverImage?._id
 
 // Génération simplifiée du srcset (uniquement pour les grandes images)
 const shouldGenerateSrcset = width > 600;
-let srcSet = '';
-
-if (shouldGenerateSrcset) {
-  try {
-    const breakpoints = [Math.round(width * 0.5), Math.round(width * 0.75), width];
-    const srcsetPromises = breakpoints.map(async (bp) => {
-      const scaledHeight = Math.round((height * bp) / width);
-      const url = await getOptimizedImage(image._id, {
-        width: bp,
-        height: scaledHeight,
-        resize,
-        quality: bp <= width * 0.5 ? 60 : contextualQuality,
-        format
-      });
-      return `${url} ${bp}w`;
-    });
-    
-    const srcsetResults = await Promise.all(srcsetPromises);
-    srcSet = srcsetResults.join(', ');
-  } catch (error) {
-    console.warn('Erreur génération srcset:', error);
-    srcSet = '';
-  }
-}
+const srcSet = shouldGenerateSrcset
+  ? buildSrcSet(
+      image._id,
+      [Math.round(width * 0.5), Math.round(width * 0.75), width],
+      { width, height, resize, quality: contextualQuality, format }
+    )
+  : '';
 
 // Loading strategy
 const loadingStrategy = priority ? "eager" : (lazy ? "lazy" : "eager");

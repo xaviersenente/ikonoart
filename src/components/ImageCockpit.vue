@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { ref, computed, onMounted } from "vue";
+  import { computed, ref } from "vue";
   import { getOptimizedImage } from "../services/cockpitImages";
 
   interface ImageData {
@@ -40,11 +40,8 @@
   });
 
   // État réactif
-  const optimizedUrl = ref<string | null>(null);
-  const optimizedHoverUrl = ref<string | null>(null);
   const isHovered = ref(false);
-  const isLoading = ref(true);
-  const hasError = ref(false);
+  const hasError = computed(() => !props.image?._id);
 
   // Optimisation contextuelle harmonisée avec Astro
   const contextualQuality = computed(() =>
@@ -58,44 +55,31 @@
     props.priority ? "eager" : props.lazy ? "lazy" : "eager"
   );
 
-  // Chargement des images optimisées
-  onMounted(async () => {
-    if (!props.image?._id) {
-      hasError.value = true;
-      isLoading.value = false;
-      return;
-    }
+  // Les URLs sont construites localement : plus d'appel réseau au montage,
+  // donc plus d'état de chargement ni de squelette intermédiaire.
+  const optimizedUrl = computed(() =>
+    props.image?._id
+      ? getOptimizedImage(props.image._id, {
+          width: props.width,
+          height: props.height,
+          resize: props.resize,
+          quality: contextualQuality.value,
+          format: props.format,
+        })
+      : null
+  );
 
-    try {
-      // Image principale
-      optimizedUrl.value = await getOptimizedImage(props.image._id, {
-        width: props.width,
-        height: props.height,
-        resize: props.resize,
-        quality: contextualQuality.value,
-        format: props.format,
-      });
-
-      // Image hover si nécessaire
-      if (props.hoverImage?._id) {
-        optimizedHoverUrl.value = await getOptimizedImage(
-          props.hoverImage._id,
-          {
-            width: props.width,
-            height: props.height,
-            resize: props.resize,
-            quality: contextualQuality.value,
-            format: props.format,
-          }
-        );
-      }
-    } catch (error) {
-      console.error("Erreur lors du chargement des images:", error);
-      hasError.value = true;
-    } finally {
-      isLoading.value = false;
-    }
-  });
+  const optimizedHoverUrl = computed(() =>
+    props.hoverImage?._id
+      ? getOptimizedImage(props.hoverImage._id, {
+          width: props.width,
+          height: props.height,
+          resize: props.resize,
+          quality: contextualQuality.value,
+          format: props.format,
+        })
+      : null
+  );
 
   // Gestion des interactions hover
   const handleMouseEnter = () => {
@@ -115,16 +99,9 @@
     @mouseenter="handleMouseEnter"
     @mouseleave="handleMouseLeave"
   >
-    <!-- État de chargement -->
-    <div
-      v-if="isLoading"
-      :class="`${classes} image-skeleton`"
-      :style="`width: ${width}px; height: ${height}px; aspect-ratio: ${width}/${height}`"
-    />
-
     <!-- État d'erreur -->
     <div
-      v-else-if="hasError"
+      v-if="hasError"
       :class="`${classes} bg-gray-200 flex items-center justify-center text-gray-500`"
       :style="`width: ${width}px; height: ${height}px; aspect-ratio: ${width}/${height}`"
     >
@@ -160,7 +137,7 @@
 
     <!-- Légende harmonisée -->
     <figcaption
-      v-if="legend && image.title && !isLoading && !hasError"
+      v-if="legend && image.title && !hasError"
       class="text-sm text-gray-600 mt-2"
     >
       {{ image.title }}

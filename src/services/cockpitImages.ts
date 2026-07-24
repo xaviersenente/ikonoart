@@ -8,16 +8,6 @@
 export const COCKPIT_BASE_URL = "https://cockpit.ikono.art";
 export const COCKPIT_API_URL = `${COCKPIT_BASE_URL}/api`;
 
-// Cache en mémoire pour les URLs d'images
-const CACHE_DURATION = 1000 * 60 * 60; // 1 heure
-
-interface CacheEntry {
-  url: string;
-  timestamp: number;
-}
-
-const imageCacheWithTimestamp = new Map<string, CacheEntry>();
-
 // Interface pour les options d'optimisation
 export interface ImageOptimizationOptions {
   width?: number;
@@ -59,27 +49,6 @@ export const sleep = (ms: number) =>
   new Promise((resolve) => setTimeout(resolve, ms));
 
 /**
- * Fonction de cache intelligente avec expiration
- */
-function getCachedUrl(cacheKey: string): string | null {
-  const cached = imageCacheWithTimestamp.get(cacheKey);
-  if (cached && Date.now() - cached.timestamp < CACHE_DURATION) {
-    return cached.url;
-  }
-  if (cached) {
-    imageCacheWithTimestamp.delete(cacheKey); // Nettoie le cache expiré
-  }
-  return null;
-}
-
-function setCachedUrl(cacheKey: string, url: string): void {
-  imageCacheWithTimestamp.set(cacheKey, {
-    url,
-    timestamp: Date.now(),
-  });
-}
-
-/**
  * Détection du support des formats modernes
  */
 function getSupportedFormat(preferredFormat: string): string {
@@ -100,12 +69,25 @@ function getOptimalQuality(width: number, quality: number): number {
 }
 
 /**
- * Fonction principale d'optimisation d'images avec cache
+ * Construit l'URL d'une image Cockpit redimensionnée.
+ *
+ * Le paramètre `o=1` fait servir l'image binaire directement, au lieu de
+ * renvoyer en texte l'URL d'une vignette dans /storage/tmp/. La fonction
+ * n'a donc plus aucun appel réseau à faire : elle assemble une URL.
+ *
+ * C'est ce qui corrige les images cassées. L'ancienne version résolvait
+ * l'URL par un fetch au build, sans retry et avec un timeout de 5 s ; au
+ * moindre aléa réseau elle retombait sur `/assets/image/<id>` sans
+ * paramètres, une URL qui répond 400. Un échec passager gravait donc une
+ * image cassée dans le HTML.
+ *
+ * Cockpit répond avec `cache-control: public, max-age=2592000, immutable`
+ * et un ETag, et met la vignette en cache de son côté.
  */
-export async function getOptimizedImage(
+export function getOptimizedImage(
   imageId: string,
   options: ImageOptimizationOptions = {}
-): Promise<string> {
+): string {
   const {
     width = 800,
     height = 600,
@@ -119,16 +101,6 @@ export async function getOptimizedImage(
   const supportedFormat = getSupportedFormat(format);
   const optimalQuality = getOptimalQuality(width, quality);
 
-  // Clé de cache unique
-  const cacheKey = `${imageId}-${width}x${height}-${resize}-${optimalQuality}-${supportedFormat}`;
-
-  // Vérification du cache
-  const cachedUrl = getCachedUrl(cacheKey);
-  if (cachedUrl) {
-    return cachedUrl;
-  }
-
-  // Construction de l'URL optimisée
   const params = new URLSearchParams({
     w: width.toString(),
     h: height.toString(),
@@ -136,124 +108,32 @@ export async function getOptimizedImage(
     q: optimalQuality.toString(),
     mime: supportedFormat,
     ...(progressive && { progressive: "1" }),
+    o: "1",
   });
 
-  const imageUrl = `${COCKPIT_API_URL}/assets/image/${imageId}?${params.toString()}`;
-
-  await acquireSlot();
-
-  try {
-    // Appel à l'API Cockpit avec timeout
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 5000);
-
-    const response = await fetch(imageUrl, {
-      signal: controller.signal,
-      headers: {
-        Accept: "text/plain, */*",
-      },
-    });
-
-    clearTimeout(timeoutId);
-
-    if (response.ok) {
-      // Cockpit retourne l'URL optimisée en texte brut
-      const optimizedUrl = await response.text();
-      setCachedUrl(cacheKey, optimizedUrl);
-      return optimizedUrl;
-    } else {
-      console.warn(`Image non trouvée (${response.status}): ${imageId}`);
-    }
-  } catch (error) {
-    if (error.name === "AbortError") {
-      console.warn(`Timeout lors du chargement de l'image: ${imageId}`);
-    } else {
-      console.error(
-        "Erreur lors de la récupération de l'image optimisée:",
-        error
-      );
-    }
-  } finally {
-    releaseSlot();
-  }
-
-  // Fallback vers l'URL de base sans optimisation
-  const fallbackUrl = `${COCKPIT_API_URL}/assets/image/${imageId}`;
-  setCachedUrl(cacheKey, fallbackUrl);
-  return fallbackUrl;
+  return `${COCKPIT_API_URL}/assets/image/${imageId}?${params.toString()}`;
 }
 
 /**
- * Génération de srcset optimisé pour responsive images - Corrigé pour Cockpit
+ * Construit un srcset à partir d'une liste de largeurs.
  */
-export async function generateResponsiveSrcSet(
+export function buildSrcSet(
   imageId: string,
-  baseOptions: ImageOptimizationOptions = {},
-  breakpoints: number[] = [320, 480, 768, 1024, 1200]
-): Promise<string> {
+  widths: number[],
+  baseOptions: ImageOptimizationOptions = {}
+): string {
   const { width = 800, height = 600, quality } = baseOptions;
 
-  const srcsetPromises = breakpoints
-    .filter((bp) => bp <= width * 1.5) // Évite les upscaling excessifs
-    .map(async (bp) => {
+  return widths
+    .map((bp) => {
       const scaledHeight = Math.round((height * bp) / width);
-
-      try {
-        const optimizedUrl = await getOptimizedImage(imageId, {
-          ...baseOptions,
-          width: bp,
-          height: scaledHeight,
-          quality: getOptimalQuality(bp, quality || 70),
-        });
-        return `${optimizedUrl} ${bp}w`;
-      } catch (error) {
-        console.warn(`Erreur génération srcset pour ${bp}w:`, error);
-        return null;
-      }
-    });
-
-  const srcsetResults = await Promise.all(srcsetPromises);
-  const validSrcset = srcsetResults.filter(Boolean);
-
-  return validSrcset.length > 0 ? validSrcset.join(", ") : "";
-}
-
-/**
- * Preload intelligent des images critiques
- */
-export function preloadCriticalImages(
-  imageIds: string[],
-  options: ImageOptimizationOptions = {}
-): void {
-  if (typeof document === "undefined") return; // SSR safety
-
-  imageIds.forEach(async (imageId) => {
-    const url = await getOptimizedImage(imageId, {
-      quality: 60, // Qualité réduite pour le preload
-      ...options,
-    });
-
-    const link = document.createElement("link");
-    link.rel = "preload";
-    link.as = "image";
-    link.href = url;
-    document.head.appendChild(link);
-  });
-}
-
-/**
- * Nettoyage périodique du cache
- */
-export function cleanupImageCache(): void {
-  const now = Date.now();
-  for (const [key, entry] of imageCacheWithTimestamp.entries()) {
-    if (now - entry.timestamp > CACHE_DURATION) {
-      imageCacheWithTimestamp.delete(key);
-    }
-  }
-}
-
-// Nettoyage automatique du cache toutes les 30 minutes
-if (typeof setInterval !== "undefined") {
-  setInterval(cleanupImageCache, 30 * 60 * 1000);
+      const url = getOptimizedImage(imageId, {
+        ...baseOptions,
+        width: bp,
+        height: scaledHeight,
+        quality: getOptimalQuality(bp, quality || 70),
+      });
+      return `${url} ${bp}w`;
+    })
+    .join(", ");
 }
